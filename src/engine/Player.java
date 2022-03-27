@@ -1,12 +1,13 @@
 package engine;
 import java.util.ArrayList;
+import model.world.*;
 
 public class Player {
 	private String name;
 	private Champion leader;
 	private ArrayList<Champion> team;
 
-	Player(String name) {
+	public Player(String name) {
 		this.name = name;
 		this.team = new ArrayList<Champion>();
 	}
