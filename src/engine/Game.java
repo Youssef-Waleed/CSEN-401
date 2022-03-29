@@ -101,6 +101,8 @@ public class Game {
 		}
 		for(int i=0;i<DataBase.length;i++)
 		{
+			if(DataBase[i][0]==null||DataBase[i][1]==null||DataBase[i][2]==null||DataBase[i][3]==null||DataBase[i][4]==null||DataBase[i][5]==null||DataBase[i][6]==null||DataBase[i][0]=="CC"&&DataBase[i][7]==null)
+				break;
 			Effect effect=null;
 			switch(DataBase[i][7]){
 			case"Shield":effect= new Shield(DataBase[i][7],Integer.parseInt(DataBase[i][8]));break; 
@@ -130,6 +132,8 @@ public class Game {
 		}
 		for(int i=0;i<DataBase.length;i++)
 		{
+			if(DataBase[i][0]==null||DataBase[i][1]==null||DataBase[i][2]==null||DataBase[i][3]==null||DataBase[i][4]==null||DataBase[i][5]==null||DataBase[i][6]==null||DataBase[i][7]==null||DataBase[i][8]==null||DataBase[i][9]==null||DataBase[i][10]==null)
+				break;
 			switch(DataBase[i][0])
 			{
 			case "A": availableChampions.add(new AntiHero(DataBase[i][1],Integer.parseInt(DataBase[i][2]),Integer.parseInt(DataBase[i][3]),Integer.parseInt(DataBase[i][4]),Integer.parseInt(DataBase[i][5]),Integer.parseInt(DataBase[i][6]),Integer.parseInt(DataBase[i][7])));break;
