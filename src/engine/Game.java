@@ -92,7 +92,7 @@ public class Game {
 	}
 	public static void loadAbilities(String filePath) throws Exception 
 	{
-		BufferedReader br= new BufferedReader(new FileReader("Abilities.csv"));
+		BufferedReader br = new BufferedReader(new FileReader(filePath));
 		String[][] DataBase=new String[45][8];
 		String Line=br.readLine();
 		for(int i = 0;Line!=null;i++){
@@ -119,8 +119,39 @@ public class Game {
 			}
 		}
 	}
-	public static void loadChampions(String filePath)
+	public static void loadChampions(String filePath) throws Exception
 	{
+		BufferedReader br = new BufferedReader(new FileReader(filePath));
+		String[][] DataBase=new String[15][11];
+		String Line=br.readLine();
+		for(int i = 0;Line!=null;i++){
+		     DataBase[i]=Line.split(",");
+		     Line=br.readLine();
+		}
+		for(int i=0;i<DataBase.length;i++)
+		{
+			switch(DataBase[i][0])
+			{
+			case "A": availableChampions.add(new AntiHero(DataBase[i][1],Integer.parseInt(DataBase[i][2]),Integer.parseInt(DataBase[i][3]),Integer.parseInt(DataBase[i][4]),Integer.parseInt(DataBase[i][5]),Integer.parseInt(DataBase[i][6]),Integer.parseInt(DataBase[i][7])));break;
+			case "H": availableChampions.add(new Hero(DataBase[i][1],Integer.parseInt(DataBase[i][2]),Integer.parseInt(DataBase[i][3]),Integer.parseInt(DataBase[i][4]),Integer.parseInt(DataBase[i][5]),Integer.parseInt(DataBase[i][6]),Integer.parseInt(DataBase[i][7])));break;
+			case "V": availableChampions.add(new Villain(DataBase[i][1],Integer.parseInt(DataBase[i][2]),Integer.parseInt(DataBase[i][3]),Integer.parseInt(DataBase[i][4]),Integer.parseInt(DataBase[i][5]),Integer.parseInt(DataBase[i][6]),Integer.parseInt(DataBase[i][7])));break;
+			}
+			int A1 = -1;
+			int A2 = -1;
+			int A3 = -1;
+			for(int j=0;j<availableAbilities.size();j++)
+			{
+				if(DataBase[i][8].equals(availableAbilities.get(j).getName()))
+					A1=j;
+				if(DataBase[i][9].equals(availableAbilities.get(j).getName()))
+					A2=j;
+				if(DataBase[i][10].equals(availableAbilities.get(j).getName()))
+					A3=j;
+			}
+			availableChampions.get(i).getAbilities().add(availableAbilities.get(A1));
+			availableChampions.get(i).getAbilities().add(availableAbilities.get(A2));
+			availableChampions.get(i).getAbilities().add(availableAbilities.get(A3));
+		}
 		
 	}
 	
