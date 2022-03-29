@@ -7,6 +7,7 @@ import java.awt.Point;
 
 //Class
 public class Champion {
+<<<<<<< HEAD
 	private String name;
 	private int maxHP;
 	private int currentHP;
@@ -24,6 +25,29 @@ public class Champion {
 	public int getCurrentHP() {
 		return currentHP;
 	}
+=======
+private String name;
+private int maxHP;
+private int currentHP;
+private int mana;
+private int maxActionPointsPerTurn;
+private int currentActionPoints;
+private int attackRange;
+private int attackDamage;
+private int speed;
+private ArrayList<Ability> abilities;
+private ArrayList<Effect> appliedEffects;
+private Condition condition;
+private Point location;
+	
+	public int getCurrentHP() {
+	return currentHP;
+}
+
+public void setCurrentHP(int currentHp) {
+	this.currentHP = currentHp;
+}
+>>>>>>> 193c69ff4aee6da9ed341f34306d982921ffa460
 
 	public void setCurrentHP(int currentHp) {
 		this.currentHP = currentHp;
@@ -85,9 +109,15 @@ public class Champion {
 		this.location = location;
 	}
 
+<<<<<<< HEAD
 	public String getName() {
 		return name;
 	}
+=======
+public int getMaxHP() {
+	return maxHP;
+}
+>>>>>>> 193c69ff4aee6da9ed341f34306d982921ffa460
 
 	public int getMaxHP() {
 		return maxHP;
@@ -101,6 +131,7 @@ public class Champion {
 		return abilities;
 	}
 
+<<<<<<< HEAD
 	public ArrayList<Effect> getAppliedEffects() {
 		return appliedEffects;
 	}
@@ -114,6 +145,17 @@ public class Champion {
 		this.speed = speed;
 		this.attackRange = attackRange;
 		this.attackDamage = attackDamage;
+=======
+	public Champion(String name, int maxHP, int mana, int maxActions, int speed, int attackRange,
+			int attackDamage) {
+		this.name=name;
+		this.maxHP= maxHP;
+		this.mana=mana;
+		this.maxActionPointsPerTurn=maxActions;
+		this.speed= speed;
+		this.attackRange=attackRange;
+		this.attackDamage=attackDamage;
+>>>>>>> 193c69ff4aee6da9ed341f34306d982921ffa460
 		abilities = new ArrayList<Ability>();
 		appliedEffects = new ArrayList<Effect>();
 		condition = Condition.ACTIVE;

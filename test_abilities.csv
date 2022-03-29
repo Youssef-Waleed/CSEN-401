@@ -1,3 +1,15 @@
+<<<<<<< HEAD
 DMG,Shield throw,47,17,12,TEAMTARGET,8,17,
 HEL,I can do this all day,26,35,5,TEAMTARGET,21,45,
 CC,Shield Up,31,49,42,DIRECTIONAL,43,Shield,28
+=======
+<<<<<<< HEAD
+DMG,Shield throw,30,19,19,TEAMTARGET,39,26,
+HEL,I can do this all day,3,41,21,DIRECTIONAL,38,12,
+CC,Shield Up,31,31,46,SINGLETARGET,22,Shield,5
+=======
+DMG,Shield throw,26,36,30,SINGLETARGET,2,35,
+HEL,I can do this all day,3,29,22,SINGLETARGET,24,1,
+CC,Shield Up,33,47,47,DIRECTIONAL,11,Shield,38
+>>>>>>> adf2ff60061b47e79006516f479c6638956e5cea
+>>>>>>> 193c69ff4aee6da9ed341f34306d982921ffa460
