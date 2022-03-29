@@ -68,8 +68,8 @@ public class Game {
 	}
 	private void placeChampions()
 	{
-		ArrayList firstTeam = firstPlayer.getTeam();
-		ArrayList secondTeam = secondPlayer.getTeam();
+		ArrayList<Champion> firstTeam = firstPlayer.getTeam();
+		ArrayList<Champion> secondTeam = secondPlayer.getTeam();
 		for(int i=0;i<firstTeam.size();i++)
 		{
 			board[0][i+1]=firstTeam.get(i);
