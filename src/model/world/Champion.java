@@ -116,7 +116,6 @@ public ArrayList<Effect> getAppliedEffects() {
 		abilities = new ArrayList<Ability>();
 		appliedEffects = new ArrayList<Effect>();
 		condition= Condition.ACTIVE;
-		location= new Point();
 		
 	}
 
