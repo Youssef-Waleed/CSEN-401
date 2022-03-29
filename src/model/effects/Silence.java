@@ -4,7 +4,7 @@ package model.effects;
 
 public class Silence extends Effect{
 
-	Silence(String name, int duration, EffectType type) {
+	public Silence(String name, int duration) {
 		super(name, duration, EffectType.DEBUFF);
 	}
 

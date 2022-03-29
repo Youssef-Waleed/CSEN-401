@@ -4,7 +4,7 @@ package model.effects;
 
 public class Embrace extends Effect{
 
-	Embrace(String name, int duration, EffectType type) {
+	public Embrace(String name, int duration) {
 		super(name, duration, EffectType.BUFF);
 	}
 

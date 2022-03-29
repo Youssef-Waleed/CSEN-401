@@ -41,4 +41,8 @@ public class Ability {
 	public AreaOfEffect getCastArea() {
 		return castArea;
 	}
+	public String toString()
+	{
+		return "Name: "+name+"cost: "+manaCost+"cooldown: "+baseCooldown+"range: "+castRange+"Area: "+castArea+"req: "+requiredActionPoints; 
+	}
 }

@@ -4,7 +4,7 @@ package model.effects;
 
 public class Stun extends Effect{
 
-	Stun(String name, int duration, EffectType type) {
+	public Stun(String name, int duration) {
 		super(name, duration, EffectType.DEBUFF);
 	}
 

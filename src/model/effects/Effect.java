@@ -5,7 +5,7 @@ public class Effect {
 	private int duration;
 	private EffectType type;
 
-	Effect(String name, int duration, EffectType type) {
+	public Effect(String name, int duration, EffectType type) {
 		this.name = name;
 		this.duration = duration;
 		this.type = type;
