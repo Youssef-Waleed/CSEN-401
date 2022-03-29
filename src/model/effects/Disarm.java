@@ -1,11 +1,15 @@
 package model.effects;
+
 import model.effects.EffectType;
 
+public class Disarm extends Effect {
 
-public class Disarm extends Effect{
-
-	Disarm(String name, int duration, EffectType type) {
+	public Disarm(String name, int duration) {
 		super(name, duration, EffectType.DEBUFF);
+	}
+
+	public Disarm(int duration) {
+		super("Disarm", duration, EffectType.DEBUFF);
 	}
 
 }

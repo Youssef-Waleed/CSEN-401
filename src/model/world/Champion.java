@@ -5,7 +5,7 @@ import model.effects.*;
 import java.awt.Point;
 
 //Class
-abstract public class Champion {
+public class Champion {
 private String name;
 private int maxHp;
 private int currentHp;
