@@ -43,6 +43,6 @@ public class Ability {
 	}
 	/*public String toString()
 	{
-		return "Name: "+name+"cost: "+manaCost+"cooldown: "+baseCooldown+"range: "+castRange+"Area: "+castArea+"req: "+requiredActionPoints; 
+		return "Name: "+name+"cost: "+manaCost+"Cooldown: "+baseCooldown+"range: "+castRange+"Area: "+castArea+"req: "+requiredActionPoints; 
 	}*/
 }

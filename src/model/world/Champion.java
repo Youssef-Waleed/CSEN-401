@@ -1,4 +1,5 @@
 package model.world;
+
 import java.util.*;
 import model.abilities.*;
 import model.effects.*;
@@ -6,117 +7,117 @@ import java.awt.Point;
 
 //Class
 public class Champion {
-private String name;
-private int maxHp;
-private int currentHp;
-private int mana;
-private int maxActionPointsPerTurn;
-private int currentActionPoints;
-private int attackRange;
-private int attackDamage;
-private int speed;
-private ArrayList<Ability> abilities;
-private ArrayList<Effect> appliedEffects;
-private Condition condition;
-private Point location;
-	
-	public int getCurrentHp() {
-	return currentHp;
-}
+	private String name;
+	private int maxHP;
+	private int currentHP;
+	private int mana;
+	private int maxActionPointsPerTurn;
+	private int currentActionPoints;
+	private int attackRange;
+	private int attackDamage;
+	private int speed;
+	private ArrayList<Ability> abilities;
+	private ArrayList<Effect> appliedEffects;
+	private Condition condition;
+	private Point location;
 
-public void setCurrentHp(int currentHp) {
-	this.currentHp = currentHp;
-}
+	public int getCurrentHP() {
+		return currentHP;
+	}
 
-public int getMana() {
-	return mana;
-}
+	public void setCurrentHP(int currentHp) {
+		this.currentHP = currentHp;
+	}
 
-public void setMana(int mana) {
-	this.mana = mana;
-}
+	public int getMana() {
+		return mana;
+	}
 
-public int getMaxActionPointsPerTurn() {
-	return maxActionPointsPerTurn;
-}
+	public void setMana(int mana) {
+		this.mana = mana;
+	}
 
-public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
-	this.maxActionPointsPerTurn = maxActionPointsPerTurn;
-}
+	public int getMaxActionPointsPerTurn() {
+		return maxActionPointsPerTurn;
+	}
 
-public int getCurrentActionPoints() {
-	return currentActionPoints;
-}
+	public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
+		this.maxActionPointsPerTurn = maxActionPointsPerTurn;
+	}
 
-public void setCurrentActionPoints(int currentActionPoints) {
-	this.currentActionPoints = currentActionPoints;
-}
+	public int getCurrentActionPoints() {
+		return currentActionPoints;
+	}
 
-public int getAttackDamage() {
-	return attackDamage;
-}
+	public void setCurrentActionPoints(int currentActionPoints) {
+		this.currentActionPoints = currentActionPoints;
+	}
 
-public void setAttackDamage(int attackDamage) {
-	this.attackDamage = attackDamage;
-}
+	public int getAttackDamage() {
+		return attackDamage;
+	}
 
-public int getSpeed() {
-	return speed;
-}
+	public void setAttackDamage(int attackDamage) {
+		this.attackDamage = attackDamage;
+	}
 
-public void setSpeed(int speed) {
-	this.speed = speed;
-}
+	public int getSpeed() {
+		return speed;
+	}
 
-public Condition getCondition() {
-	return condition;
-}
+	public void setSpeed(int speed) {
+		this.speed = speed;
+	}
 
-public void setCondition(Condition condition) {
-	this.condition = condition;
-}
+	public Condition getCondition() {
+		return condition;
+	}
 
-public Point getLocation() {
-	return location;
-}
+	public void setCondition(Condition condition) {
+		this.condition = condition;
+	}
 
-public void setLocation(Point location) {
-	this.location = location;
-}
+	public Point getLocation() {
+		return location;
+	}
 
-public String getName() {
-	return name;
-}
+	public void setLocation(Point location) {
+		this.location = location;
+	}
 
-public int getMaxHp() {
-	return maxHp;
-}
+	public String getName() {
+		return name;
+	}
 
-public int getAttackRange() {
-	return attackRange;
-}
+	public int getMaxHP() {
+		return maxHP;
+	}
 
-public ArrayList<Ability> getAbilities() {
-	return abilities;
-}
+	public int getAttackRange() {
+		return attackRange;
+	}
 
-public ArrayList<Effect> getAppliedEffects() {
-	return appliedEffects;
-}
+	public ArrayList<Ability> getAbilities() {
+		return abilities;
+	}
 
-	public Champion(String name, int maxHP, int mana, int maxActions, int speed, int attackRange,
-			int attackDamage) {
-		this.name=name;
-		this.maxHp= maxHP;
-		this.mana=mana;
-		this.maxActionPointsPerTurn=maxActions;
-		this.speed= speed;
-		this.attackRange=attackRange;
-		this.attackDamage=attackDamage;
+	public ArrayList<Effect> getAppliedEffects() {
+		return appliedEffects;
+	}
+
+	public Champion(String name, int maxHP, int mana, int maxActions,
+			int speed, int attackRange, int attackDamage) {
+		this.name = name;
+		this.maxHP = maxHP;
+		this.mana = mana;
+		this.maxActionPointsPerTurn = maxActions;
+		this.speed = speed;
+		this.attackRange = attackRange;
+		this.attackDamage = attackDamage;
 		abilities = new ArrayList<Ability>();
 		appliedEffects = new ArrayList<Effect>();
-		condition= Condition.ACTIVE;
-		
+		condition = Condition.ACTIVE;
+
 	}
 
 }
