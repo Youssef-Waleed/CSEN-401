@@ -73,7 +73,7 @@ public class Game {
 		for(int i=0;i<firstTeam.size();i++)
 		{
 			board[0][i+1]=firstTeam.get(i);
-			board[BOARDHEIGHT][i+1]=secondTeam.get(i);
+			board[BOARDHEIGHT-1][i+1]=secondTeam.get(i);
 		}
 	}
 	private void placeCovers()

@@ -5,10 +5,10 @@ import model.effects.*;
 import java.awt.Point;
 
 //Class
-abstract public class Champion {
+public class Champion {
 private String name;
-private int maxHp;
-private int currentHp;
+private int maxHP;
+private int currentHP;
 private int mana;
 private int maxActionPointsPerTurn;
 private int currentActionPoints;
@@ -20,12 +20,12 @@ private ArrayList<Effect> appliedEffects;
 private Condition condition;
 private Point location;
 	
-	public int getCurrentHp() {
-	return currentHp;
+	public int getCurrentHP() {
+	return currentHP;
 }
 
-public void setCurrentHp(int currentHp) {
-	this.currentHp = currentHp;
+public void setCurrentHP(int currentHp) {
+	this.currentHP = currentHp;
 }
 
 public int getMana() {
@@ -88,8 +88,8 @@ public String getName() {
 	return name;
 }
 
-public int getMaxHp() {
-	return maxHp;
+public int getMaxHP() {
+	return maxHP;
 }
 
 public int getAttackRange() {
@@ -107,7 +107,7 @@ public ArrayList<Effect> getAppliedEffects() {
 	public Champion(String name, int maxHP, int mana, int maxActions, int speed, int attackRange,
 			int attackDamage) {
 		this.name=name;
-		this.maxHp= maxHP;
+		this.maxHP= maxHP;
 		this.mana=mana;
 		this.maxActionPointsPerTurn=maxActions;
 		this.speed= speed;
