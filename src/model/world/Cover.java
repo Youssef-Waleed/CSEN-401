@@ -23,7 +23,7 @@ public Point getLocation() {
 
 	public Cover(int x, int y) {
 		this.currentHP= (int)(100+(Math.random())*900);
-		Point p= new Point(x,y);
+		location = new Point(x,y);
 	}
 	
 }

@@ -1,8 +1,9 @@
 package engine;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-
+import java.awt.Point;
 import model.world.*;
 import model.abilities.*;
 import model.effects.Effect;
@@ -24,7 +25,20 @@ public class Game {
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	private PriorityQueue turnOrder;
-	private static int BOARDHEIGHT;
+	private final static int BOARDHEIGHT=5;
+	private final static int BOARDWIDTH=5;
+	public Game(Player first, Player second) throws Exception
+	{
+		firstPlayer=first;
+		secondPlayer=second;
+		availableChampions= new ArrayList<Champion>();
+		availableAbilities= new ArrayList<Ability>();
+		board = new Object[BOARDHEIGHT][BOARDWIDTH];
+		turnOrder = new PriorityQueue(6);
+		placeChampions();
+		placeCovers();
+		
+	}
 	public Player getFirstPlayer() {
 		return firstPlayer;
 	}
@@ -49,22 +63,11 @@ public class Game {
 	public PriorityQueue getTurnOrder() {
 		return turnOrder;
 	}
-	public static int getBOARDHEIGHT() {
+	public int getBoardheight() {
 		return BOARDHEIGHT;
 	}
-	public static int getBOARDWIDTH() {
+	public int getBoardwidth() {
 		return BOARDWIDTH;
-	}
-	private static int BOARDWIDTH;
-	public Game(Player first, Player second)
-	{
-		firstPlayer=first;
-		secondPlayer=second;
-		board = new Object[5][5];
-		BOARDHEIGHT = 5;
-		BOARDWIDTH = 5;
-		placeChampions();
-		placeCovers();
 	}
 	private void placeChampions()
 	{
@@ -72,7 +75,15 @@ public class Game {
 		ArrayList<Champion> secondTeam = secondPlayer.getTeam();
 		for(int i=0;i<firstTeam.size();i++)
 		{
-			board[0][i+1]=firstTeam.get(i);
+			
+				firstTeam.get(i).setLocation(new Point(0,i+1));
+				board[0][i+1]=firstTeam.get(i);
+			
+		}
+		for(int i=0;i<secondTeam.size();i++)
+		{
+			
+			secondTeam.get(i).setLocation(new Point(BOARDHEIGHT-1,i+1));
 			board[BOARDHEIGHT-1][i+1]=secondTeam.get(i);
 		}
 	}
@@ -84,8 +95,8 @@ public class Game {
 		{
 			while(x==0&&y==0||x==BOARDWIDTH-1&&y==BOARDHEIGHT-1||x==0&&y==BOARDHEIGHT-1||x==BOARDWIDTH-1||y==0||board[y][x]!=null)
 			{
-				x=(int)(Math.random()*5);
-				y=(int)(Math.random()*5);
+				x=(int)(Math.random()*4);
+				y=(int)(Math.random()*4);
 			}
 			board[y][x]=new Cover(x,y);
 		}
@@ -93,7 +104,7 @@ public class Game {
 	public static void loadAbilities(String filePath) throws Exception 
 	{
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
-		String[][] DataBase=new String[45][8];
+		String[][] DataBase=new String[45][9];
 		String Line=br.readLine();
 		for(int i = 0;Line!=null;i++){
 		     DataBase[i]=Line.split(",");
@@ -105,14 +116,14 @@ public class Game {
 				break;
 			Effect effect=null;
 			switch(DataBase[i][7]){
-			case"Shield":effect= new Shield(DataBase[i][7],Integer.parseInt(DataBase[i][8]));break; 
-			case"PowerUp":effect= new PowerUp(DataBase[i][7],Integer.parseInt(DataBase[i][8]));break;
-			case"Shock":effect= new Shock(DataBase[i][7],Integer.parseInt(DataBase[i][8]));break;
-			case"Silence":effect= new Silence(DataBase[i][7],Integer.parseInt(DataBase[i][8]));break;
-			case"SpeedUp":effect= new SpeedUp(DataBase[i][7],Integer.parseInt(DataBase[i][8]));break;
-			case"Stun":effect= new Stun(DataBase[i][7],Integer.parseInt(DataBase[i][8]));break;
-			case"Embrace":effect= new Embrace(DataBase[i][7],Integer.parseInt(DataBase[i][8]));break;
-			case"Root":effect= new Root(DataBase[i][7],Integer.parseInt(DataBase[i][8]));break;
+			case"Shield":effect= new Shield(Integer.parseInt(DataBase[i][8]));break; 
+			case"PowerUp":effect= new PowerUp(Integer.parseInt(DataBase[i][8]));break;
+			case"Shock":effect= new Shock(Integer.parseInt(DataBase[i][8]));break;
+			case"Silence":effect= new Silence(Integer.parseInt(DataBase[i][8]));break;
+			case"SpeedUp":effect= new SpeedUp(Integer.parseInt(DataBase[i][8]));break;
+			case"Stun":effect= new Stun(Integer.parseInt(DataBase[i][8]));break;
+			case"Embrace":effect= new Embrace(Integer.parseInt(DataBase[i][8]));break;
+			case"Root":effect= new Root(Integer.parseInt(DataBase[i][8]));break;
 			}
 			switch(DataBase[i][0]){
 			case "CC":availableAbilities.add(new CrowdControlAbility(DataBase[i][1],Integer.parseInt(DataBase[i][2]),Integer.parseInt(DataBase[i][4]),Integer.parseInt(DataBase[i][3]),AreaOfEffect.valueOf(DataBase[i][5]),Integer.parseInt(DataBase[i][6]),effect));break;
@@ -152,9 +163,12 @@ public class Game {
 				if(DataBase[i][10].equals(availableAbilities.get(j).getName()))
 					A3=j;
 			}
-			availableChampions.get(i).getAbilities().add(availableAbilities.get(A1));
-			availableChampions.get(i).getAbilities().add(availableAbilities.get(A2));
-			availableChampions.get(i).getAbilities().add(availableAbilities.get(A3));
+			if(A1 != -1)
+				availableChampions.get(i).getAbilities().add(availableAbilities.get(A1));
+			if(A2 != -1)
+				availableChampions.get(i).getAbilities().add(availableAbilities.get(A2));
+			if(A3 != -1)
+				availableChampions.get(i).getAbilities().add(availableAbilities.get(A3));
 		}
 		
 	}

@@ -21,12 +21,33 @@ public class Champion {
 	private Condition condition;
 	private Point location;
 
+	
+
+	public Champion(String name, int maxHP, int mana, int maxActions,
+			int speed, int attackRange, int attackDamage) {
+		this.name = name;
+		this.maxHP = (maxHP>=0?maxHP:0);
+		this.currentHP=(maxHP>=0?maxHP:0);
+		this.mana = mana;
+		this.maxActionPointsPerTurn = maxActions;
+		this.currentActionPoints= maxActions;
+		this.speed = speed;
+		this.attackRange = attackRange;
+		this.attackDamage = attackDamage;
+		abilities = new ArrayList<Ability>();
+		appliedEffects = new ArrayList<Effect>();
+		condition = Condition.ACTIVE;
+
+	}
+
 	public int getCurrentHP() {
 		return currentHP;
 	}
 
 public void setCurrentHP(int currentHp) {
-	this.currentHP = currentHp;
+	if (currentHp>maxHP)
+		return;
+	currentHP=(currentHp>=0?currentHp:0);
 }
 
 	public int getMana() {
@@ -95,21 +116,6 @@ public void setCurrentHP(int currentHp) {
 
 	public ArrayList<Ability> getAbilities() {
 		return abilities;
-	}
-
-	public Champion(String name, int maxHP, int mana, int maxActions,
-			int speed, int attackRange, int attackDamage) {
-		this.name = name;
-		this.maxHP = maxHP;
-		this.mana = mana;
-		this.maxActionPointsPerTurn = maxActions;
-		this.speed = speed;
-		this.attackRange = attackRange;
-		this.attackDamage = attackDamage;
-		abilities = new ArrayList<Ability>();
-		appliedEffects = new ArrayList<Effect>();
-		condition = Condition.ACTIVE;
-
 	}
 
 	public ArrayList<Effect> getAppliedEffects() {
