@@ -34,8 +34,8 @@ public class Champion {
 		this.speed = speed;
 		this.attackRange = attackRange;
 		this.attackDamage = attackDamage;
-		abilities = new ArrayList<Ability>();
-		appliedEffects = new ArrayList<Effect>();
+		abilities = new ArrayList<>(3);
+		appliedEffects = new ArrayList<>();
 		condition = Condition.ACTIVE;
 
 	}

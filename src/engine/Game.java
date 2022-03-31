@@ -6,15 +6,7 @@ import java.util.ArrayList;
 import java.awt.Point;
 import model.world.*;
 import model.abilities.*;
-import model.effects.Effect;
-import model.effects.Embrace;
-import model.effects.PowerUp;
-import model.effects.Root;
-import model.effects.Shield;
-import model.effects.Shock;
-import model.effects.Silence;
-import model.effects.SpeedUp;
-import model.effects.Stun;
+import model.effects.*;
 
 public class Game {
 	private Player firstPlayer;
@@ -31,8 +23,9 @@ public class Game {
 	{
 		firstPlayer=first;
 		secondPlayer=second;
-		availableChampions= new ArrayList<Champion>();
-		availableAbilities= new ArrayList<Ability>();
+		availableChampions= new ArrayList<>();
+		availableAbilities= new ArrayList<>();
+		
 		board = new Object[BOARDHEIGHT][BOARDWIDTH];
 		turnOrder = new PriorityQueue(6);
 		placeChampions();
@@ -104,11 +97,16 @@ public class Game {
 	public static void loadAbilities(String filePath) throws Exception 
 	{
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
-		String[][] DataBase=new String[45][9];
 		String Line=br.readLine();
-		for(int i = 0;Line!=null;i++){
-		     DataBase[i]=Line.split(",");
-		     Line=br.readLine();
+		ArrayList<String> ss = new ArrayList<>();
+		while(Line  != null)
+		{
+			ss.add(Line);
+			Line=br.readLine();
+		}
+		String[][] DataBase=new String[ss.size()][9];
+		for(int i = 0;i<ss.size();i++){
+		     DataBase[i]=ss.get(i).split(",");
 		}
 		for(int i=0;i<DataBase.length;i++)
 		{
@@ -124,6 +122,8 @@ public class Game {
 			case"Stun":effect= new Stun(Integer.parseInt(DataBase[i][8]));break;
 			case"Embrace":effect= new Embrace(Integer.parseInt(DataBase[i][8]));break;
 			case"Root":effect= new Root(Integer.parseInt(DataBase[i][8]));break;
+			case "Dodge": effect= new Dodge(Integer.parseInt(DataBase[i][8]));break;
+			case "Disarm": effect= new Disarm(Integer.parseInt(DataBase[i][8]));break;
 			}
 			switch(DataBase[i][0]){
 			case "CC":availableAbilities.add(new CrowdControlAbility(DataBase[i][1],Integer.parseInt(DataBase[i][2]),Integer.parseInt(DataBase[i][4]),Integer.parseInt(DataBase[i][3]),AreaOfEffect.valueOf(DataBase[i][5]),Integer.parseInt(DataBase[i][6]),effect));break;
@@ -135,11 +135,17 @@ public class Game {
 	public static void loadChampions(String filePath) throws Exception
 	{
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
-		String[][] DataBase=new String[15][11];
+		
 		String Line=br.readLine();
-		for(int i = 0;Line!=null;i++){
-		     DataBase[i]=Line.split(",");
-		     Line=br.readLine();
+		ArrayList<String> ss = new ArrayList<>();
+		while(Line  != null)
+		{
+			ss.add(Line);
+			Line=br.readLine();
+		}
+		String[][] DataBase=new String[ss.size()][11];
+		for(int i = 0;i<ss.size();i++){
+		     DataBase[i]=ss.get(i).split(",");
 		}
 		for(int i=0;i<DataBase.length;i++)
 		{
