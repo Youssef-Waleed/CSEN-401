@@ -46,8 +46,11 @@ public class Champion {
 
 public void setCurrentHP(int currentHp) {
 	if (currentHp>maxHP)
-		return;
-	currentHP=(currentHp>=0?currentHp:0);
+		currentHP=maxHP;
+	else if(currentHp<0)
+		currentHP=0;
+	else
+		currentHP=currentHp;
 }
 
 	public int getMana() {
@@ -71,7 +74,12 @@ public void setCurrentHP(int currentHp) {
 	}
 
 	public void setCurrentActionPoints(int currentActionPoints) {
-		this.currentActionPoints = currentActionPoints;
+		if(currentActionPoints<0)
+			this.currentActionPoints = 0;
+		else if(currentActionPoints>maxActionPointsPerTurn)
+		    this.currentActionPoints = maxActionPointsPerTurn;
+		else
+			this.currentActionPoints = currentActionPoints;
 	}
 
 	public int getAttackDamage() {
