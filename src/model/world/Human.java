@@ -30,7 +30,7 @@ public void setCurrentHealth(int currentHealth) {
 	else if (currentHealth > maxHealth)
 		currentHealth = maxHealth;
 	else
-		currentHealth = currentHealth;
+		this.currentHealth = currentHealth;
 }
 
 
