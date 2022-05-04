@@ -4018,7 +4018,7 @@ public class M1PublicTests {
 			}
 
 		} else if (a1.getClass().equals(Class.forName(ccAbilitiesPath))) {
-
+			
 			Field f6 = Class.forName(ccAbilitiesPath).getDeclaredField("effect");
 			f6.setAccessible(true);
 			Object d11f = (Object) f6.get(a1);

@@ -1,12 +1,13 @@
 package exceptions;
 
 public class NotEnoughResourcesException extends GameActionException {
-	public NotEnoughResourcesException()
-	{
+
+	public NotEnoughResourcesException() {
 		super();
 	}
-	public NotEnoughResourcesException(String s)
-	{
+
+	public NotEnoughResourcesException(String s) {
 		super(s);
+		
 	}
 }

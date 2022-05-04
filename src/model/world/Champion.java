@@ -1,11 +1,12 @@
 package model.world;
 
-import java.util.*;
-import model.abilities.*;
-import model.effects.*;
 import java.awt.Point;
+import java.util.ArrayList;
 
-//Class
+
+import model.abilities.Ability;
+import model.effects.Effect;
+
 public class Champion {
 	private String name;
 	private int maxHP;
@@ -20,38 +21,53 @@ public class Champion {
 	private ArrayList<Effect> appliedEffects;
 	private Condition condition;
 	private Point location;
-
 	
 
-	public Champion(String name, int maxHP, int mana, int maxActions,
-			int speed, int attackRange, int attackDamage) {
+	public Champion(String name, int maxHP, int mana, int actions, int speed, int attackRange, int attackDamage) {
 		this.name = name;
-		this.maxHP = (maxHP>=0?maxHP:0);
-		this.currentHP=(maxHP>=0?maxHP:0);
+		this.maxHP = maxHP;
 		this.mana = mana;
-		this.maxActionPointsPerTurn = maxActions;
-		this.currentActionPoints= maxActions;
+		this.currentHP = this.maxHP;
+		this.maxActionPointsPerTurn = actions;
 		this.speed = speed;
 		this.attackRange = attackRange;
 		this.attackDamage = attackDamage;
-		abilities = new ArrayList<>(3);
-		appliedEffects = new ArrayList<>();
-		condition = Condition.ACTIVE;
+		this.condition = Condition.ACTIVE;
+		this.abilities = new ArrayList<Ability>();
+		this.appliedEffects = new ArrayList<Effect>();
+		this.currentActionPoints=maxActionPointsPerTurn;
+	}
+
+	public int getMaxHP() {
+		return maxHP;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setCurrentHP(int hp) {
+
+		if (hp < 0) {
+			currentHP = 0;
+			
+		} 
+		else if (hp > maxHP)
+			currentHP = maxHP;
+		else
+			currentHP = hp;
 
 	}
 
+	
 	public int getCurrentHP() {
+
 		return currentHP;
 	}
 
-public void setCurrentHP(int currentHp) {
-	if (currentHp>maxHP)
-		currentHP=maxHP;
-	else if(currentHp<0)
-		currentHP=0;
-	else
-		currentHP=currentHp;
-}
+	public ArrayList<Effect> getAppliedEffects() {
+		return appliedEffects;
+	}
 
 	public int getMana() {
 		return mana;
@@ -59,27 +75,6 @@ public void setCurrentHP(int currentHp) {
 
 	public void setMana(int mana) {
 		this.mana = mana;
-	}
-
-	public int getMaxActionPointsPerTurn() {
-		return maxActionPointsPerTurn;
-	}
-
-	public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
-		this.maxActionPointsPerTurn = maxActionPointsPerTurn;
-	}
-
-	public int getCurrentActionPoints() {
-		return currentActionPoints;
-	}
-
-	public void setCurrentActionPoints(int currentActionPoints) {
-		if(currentActionPoints<0)
-			this.currentActionPoints = 0;
-		else if(currentActionPoints>maxActionPointsPerTurn)
-		    this.currentActionPoints = maxActionPointsPerTurn;
-		else
-			this.currentActionPoints = currentActionPoints;
 	}
 
 	public int getAttackDamage() {
@@ -94,8 +89,11 @@ public void setCurrentHP(int currentHp) {
 		return speed;
 	}
 
-	public void setSpeed(int speed) {
-		this.speed = speed;
+	public void setSpeed(int currentSpeed) {
+		if (currentSpeed < 0)
+			this.speed = 0;
+		else
+			this.speed = currentSpeed;
 	}
 
 	public Condition getCondition() {
@@ -110,12 +108,8 @@ public void setCurrentHP(int currentHp) {
 		return location;
 	}
 
-	public void setLocation(Point location) {
-		this.location = location;
-	}
-
-	public int getMaxHP() {
-		return maxHP;
+	public void setLocation(Point currentLocation) {
+		this.location = currentLocation;
 	}
 
 	public int getAttackRange() {
@@ -126,11 +120,28 @@ public void setCurrentHP(int currentHp) {
 		return abilities;
 	}
 
-	public ArrayList<Effect> getAppliedEffects() {
-		return appliedEffects;
+	public int getCurrentActionPoints() {
+		return currentActionPoints;
 	}
 
-	public String getName() {
-		return name;
+	public void setCurrentActionPoints(int currentActionPoints) {
+		if(currentActionPoints>maxActionPointsPerTurn)
+			currentActionPoints=maxActionPointsPerTurn;
+		else 
+			if(currentActionPoints<0)
+			currentActionPoints=0;
+		this.currentActionPoints = currentActionPoints;
 	}
+
+	public int getMaxActionPointsPerTurn() {
+		return maxActionPointsPerTurn;
+	}
+
+	public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
+		this.maxActionPointsPerTurn = maxActionPointsPerTurn;
+	}
+
+	
+	
+
 }

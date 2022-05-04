@@ -1,8 +1,8 @@
 package exceptions;
 
-import java.lang.Exception;
+@SuppressWarnings("serial")
+public abstract class GameActionException extends Exception {
 
-public class GameActionException extends Exception {
 	public GameActionException() {
 		super();
 	}
@@ -10,4 +10,5 @@ public class GameActionException extends Exception {
 	public GameActionException(String s) {
 		super(s);
 	}
+
 }
