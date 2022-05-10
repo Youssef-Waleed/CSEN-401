@@ -1,10 +1,15 @@
 package model.abilities;
 
-public  class HealingAbility extends Ability {
+import java.util.ArrayList;
+
+import model.world.Damageable;
+
+public class HealingAbility extends Ability {
 	private int healAmount;
 
-	public HealingAbility(String name,int cost, int baseCoolDown, int castRadius, AreaOfEffect area,int required, int healingAmount) {
-		super(name,cost, baseCoolDown, castRadius, area,required);
+	public HealingAbility(String name, int cost, int baseCoolDown,
+			int castRadius, AreaOfEffect area, int required, int healingAmount) {
+		super(name, cost, baseCoolDown, castRadius, area, required);
 		this.healAmount = healingAmount;
 	}
 
@@ -16,8 +21,11 @@ public  class HealingAbility extends Ability {
 		this.healAmount = healAmount;
 	}
 
-	
-
-	
+	@Override
+	public void execute(ArrayList<Damageable> targets) {
+		for (int i = 0; i < targets.size(); i++) {
+			targets.get(i).setCurrentHP(targets.get(i).getCurrentHP() + healAmount);
+		}
+	}
 
 }
