@@ -45,6 +45,15 @@ public abstract class Champion implements Damageable, Comparable{
 				remove(targets.get(i));
 				apply(targets.get(i));
 			}
+		else if(this instanceof Villain)
+			for(int i=0;i<targets.size();i++)
+			{
+				if((targets.get(i).currentHP/targets.get(i).maxHP)<0.3)
+					targets.get(i).setCondition(Condition.valueOf("KNOCKEDOUT"));
+			}
+		else
+		
+		
 	}
 	
 	public int compareTo(Object other)
