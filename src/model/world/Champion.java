@@ -2,10 +2,9 @@ package model.world;
 
 import java.awt.Point;
 import java.util.ArrayList;
-
-
+import model.world.*;
 import model.abilities.Ability;
-import model.effects.Effect;
+import model.effects.*;
 
 public abstract class Champion implements Damageable, Comparable{
 	private String name;
@@ -40,7 +39,12 @@ public abstract class Champion implements Damageable, Comparable{
 	
 	public void useLeaderAbility(ArrayList<Champion> targets)
 	{
-		
+		if(this instanceof Hero)
+			for(int i=0;i<targets.size();i++)
+			{
+				remove(targets.get(i));
+				apply(targets.get(i));
+			}
 	}
 	
 	public int compareTo(Object other)
