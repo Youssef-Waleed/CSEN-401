@@ -42,8 +42,11 @@ public abstract class Champion implements Damageable, Comparable{
 		if(this instanceof Hero)
 			for(int i=0;i<targets.size();i++)
 			{
-				remove(targets.get(i));
-				apply(targets.get(i));
+				for(int j=0;j<targets.size();j++)
+				    if(targets.get(i).appliedEffects.get(j).getType().equals("DEBUFF")) 
+				    	targets.get(i).appliedEffects.remove(targets.get(i));
+				Embrace E = new Embrace(2);
+				E.apply(targets.get(i));
 			}
 		else if(this instanceof Villain)
 			for(int i=0;i<targets.size();i++)
