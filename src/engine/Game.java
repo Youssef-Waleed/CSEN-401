@@ -507,7 +507,8 @@ public class Game {
 				}
 			}
 		}
-		this.getCurrentChampion().useLeaderAbility(targets);
+		if(targets != null)
+			this.getCurrentChampion().useLeaderAbility(targets);
 	}
 	
 }
