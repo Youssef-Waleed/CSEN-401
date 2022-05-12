@@ -463,6 +463,51 @@ public class Game {
 		}
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-2);
 	}
-	
+	public void useLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException, CloneNotSupportedException{
+		boolean firstLeader = false;
+		if(this.getCurrentChampion() != firstPlayer.getLeader() && this.getCurrentChampion() != secondPlayer.getLeader() )
+			throw new LeaderNotCurrentException("It is not the leader's turn.");
+		else if(this.getCurrentChampion() == firstPlayer.getLeader())
+			firstLeader = true;
+		ArrayList<Champion> targets = new ArrayList<>();
+		Player current = null;
+		Player opponent = null;
+		boolean abilityUsed = false;
+		if(firstLeader){
+			current = firstPlayer;
+			opponent = secondPlayer;
+			abilityUsed = firstLeaderAbilityUsed;
+		}
+		else{
+			current = secondPlayer;
+			opponent = firstPlayer;
+			abilityUsed = secondLeaderAbilityUsed;
+		}
+		if(abilityUsed)
+			throw new LeaderAbilityAlreadyUsedException("Leader ability already used.");
+		else{
+			if(this.getCurrentChampion() instanceof Hero){
+				for(int i = 0; i < 3; i++){
+					if(current.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
+						targets.add(current.getTeam().get(i));
+				}
+			}
+			else if(this.getCurrentChampion() instanceof Villain){
+				for(int i = 0; i < 3; i++){
+					if(opponent.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
+						targets.add(opponent.getTeam().get(i));
+				}
+			}
+			else{
+				for(int i = 0; i < 3; i++){
+					if(current.getTeam().get(i) != current.getLeader() && current.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
+						targets.add(current.getTeam().get(i));
+					if(opponent.getTeam().get(i) != opponent.getLeader() && opponent.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
+						targets.add(current.getTeam().get(i));
+				}
+			}
+		}
+		this.getCurrentChampion().useLeaderAbility(targets);
+	}
 	
 }

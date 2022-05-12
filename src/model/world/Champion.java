@@ -2,6 +2,7 @@ package model.world;
 
 import java.awt.Point;
 import java.util.ArrayList;
+
 import model.world.*;
 import model.abilities.Ability;
 import model.effects.*;
@@ -37,16 +38,18 @@ public abstract class Champion implements Damageable, Comparable{
 		this.currentActionPoints=maxActionPointsPerTurn;
 	}
 	
-	public void useLeaderAbility(ArrayList<Champion> targets)
+	public void useLeaderAbility(ArrayList<Champion> targets) throws CloneNotSupportedException
 	{
-		if(this instanceof Hero)
+		if(this instanceof Hero){
+			Embrace E = new Embrace(2);
 			for(int i=0;i<targets.size();i++)
 			{
 				for(int j=0;j<targets.size();j++)
 				    if(targets.get(i).appliedEffects.get(j).getType().equals("DEBUFF")) 
 				    	targets.get(i).appliedEffects.remove(targets.get(i));
-				Embrace E = new Embrace(2);
-				E.apply(targets.get(i));
+				
+				((Embrace)E.clone()).apply(targets.get(i));
+			}
 			}
 		else if(this instanceof Villain)
 			for(int i=0;i<targets.size();i++)
@@ -54,9 +57,12 @@ public abstract class Champion implements Damageable, Comparable{
 				if((targets.get(i).currentHP/targets.get(i).maxHP)<0.3)
 					targets.get(i).setCondition(Condition.valueOf("KNOCKEDOUT"));
 			}
-		else
-			for(int i=0;i<targets.size();i++)
-				targets.get(i).setCondition(Condition.valueOf("INACTIVE"));
+		else{
+			Stun s = new Stun(2);
+			for(int i=0;i<targets.size();i++){
+				((Stun)s.clone()).apply(targets.get(i));
+			}
+		}
 	}
 	
 	public int compareTo(Object other)
@@ -170,7 +176,6 @@ public abstract class Champion implements Damageable, Comparable{
 	public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
 		this.maxActionPointsPerTurn = maxActionPointsPerTurn;
 	}
-
 	
 	
 
