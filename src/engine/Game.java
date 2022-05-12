@@ -282,7 +282,7 @@ public class Game {
 			throw new NotEnoughResourcesException("Not enough action points.");
 		switch(d){
 		case UP: 
-			if(this.getCurrentChampion().getLocation().y < BOARDHEIGHT-1){
+			if(this.getCurrentChampion().getLocation().y < BOARDHEIGHT){
 				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+1] == null)
 					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y+1));
 				else
@@ -293,7 +293,7 @@ public class Game {
 			break;
 		
 		case DOWN: 
-			if(this.getCurrentChampion().getLocation().y > 0){
+			if(this.getCurrentChampion().getLocation().y >= 0){
 				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-1] == null)
 					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y-1));
 				else
@@ -304,7 +304,7 @@ public class Game {
 			break;
 		
 		case LEFT: 
-			if(this.getCurrentChampion().getLocation().x > 0){
+			if(this.getCurrentChampion().getLocation().x >= 0){
 				if(board[this.getCurrentChampion().getLocation().x-1][this.getCurrentChampion().getLocation().y] == null)
 					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x-1, this.getCurrentChampion().getLocation().y));
 				else
@@ -315,7 +315,7 @@ public class Game {
 			break;
 		
 		case RIGHT: 
-			if(this.getCurrentChampion().getLocation().x < BOARDWIDTH-1){
+			if(this.getCurrentChampion().getLocation().x < BOARDWIDTH){
 				if(board[this.getCurrentChampion().getLocation().x+1][this.getCurrentChampion().getLocation().y] == null)
 					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x+1, this.getCurrentChampion().getLocation().y));
 				else
@@ -327,7 +327,8 @@ public class Game {
 			}
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-1);
 	}
-	public void attack(Direction d) throws ChampionDisarmedException{
+	
+	public void attack(Direction d) throws ChampionDisarmedException, NotEnoughResourcesException{
 		boolean cond = false;
 		boolean first = false;
 		for(int i = 0; i < this.getCurrentChampion().getAppliedEffects().size(); i++){
@@ -338,26 +339,130 @@ public class Game {
 		}
 		if(cond)
 			throw new ChampionDisarmedException("The champion is disarmed.");
-		
+		if(this.getCurrentChampion().getCurrentActionPoints() < 2)
+			throw new NotEnoughResourcesException("Not enough action points.");
 		if(firstPlayer.getTeam().contains(this.getCurrentChampion()))
 			first = true;
-		int i = 1;
+		Point l = null;
 		switch(d){
 		case UP:
-			for(i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().y+i < BOARDHEIGHT-1; i++){
+			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().y+i < BOARDHEIGHT; i++){
 				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i] != null){
-					if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i] instanceof Cover)
+					if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i] instanceof Cover){
+						l = new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y+i);
 						break;
+					}
 					else{
-						if(first && secondPlayer.getTeam().contains(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i]))
+						if(first && secondPlayer.getTeam().contains(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i])){
+							l = new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y+i);
 							break;
-						else if(!first && firstPlayer.getTeam().contains(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i]))
+						}
+						else if(!first && firstPlayer.getTeam().contains(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i])){
+							l = new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y+i);
 							break;
+						}
 					}
 				}
 			}
-			
+			break;
+		case DOWN:
+			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().y-i >= 0; i++){
+				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i] != null){
+					if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i] instanceof Cover){
+						l = new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y-i);
+						break;
+					}
+					else{
+						if(first && secondPlayer.getTeam().contains(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i])){
+							l = new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y-i);
+							break;
+						}
+						else if(!first && firstPlayer.getTeam().contains(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i])){
+							l = new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y-i);
+							break;
+						}
+					}
+				}
+			}
+			break;
+		case LEFT:
+			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().x-i >= 0; i++){
+				if(board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y] != null){
+					if(board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y] instanceof Cover){
+						l = new Point(this.getCurrentChampion().getLocation().x-i, this.getCurrentChampion().getLocation().y);
+						break;
+					}
+					else{
+						if(first && secondPlayer.getTeam().contains(board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y])){
+							l = new Point(this.getCurrentChampion().getLocation().x-i, this.getCurrentChampion().getLocation().y);
+							break;
+						}
+						else if(!first && firstPlayer.getTeam().contains(board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y])){
+							l = new Point(this.getCurrentChampion().getLocation().x-i, this.getCurrentChampion().getLocation().y);
+							break;
+						}
+					}
+				}
+			}
+			break;
+		case RIGHT:
+			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().x+i < BOARDWIDTH; i++){
+				if(board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y] != null){
+					if(board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y] instanceof Cover){
+						l = new Point(this.getCurrentChampion().getLocation().x+i, this.getCurrentChampion().getLocation().y);
+						break;
+					}
+					else{
+						if(first && secondPlayer.getTeam().contains(board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y])){
+							l = new Point(this.getCurrentChampion().getLocation().x+i, this.getCurrentChampion().getLocation().y);
+							break;
+						}
+						else if(!first && firstPlayer.getTeam().contains(board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y])){
+							l = new Point(this.getCurrentChampion().getLocation().x+i, this.getCurrentChampion().getLocation().y);
+							break;
+						}
+					}
+				}
+			}
+			break;
 		}
+		if(l != null){
+			Damageable target = null;
+			if(board[l.x][l.y] instanceof Cover){
+				target = (Cover) board[l.x][l.y];
+				target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
+				if(target.getCurrentHP() == 0)
+					board[l.x][l.y] = null;
+			}
+			else{
+				target = (Champion) board[l.x][l.y];
+				if(this.getCurrentChampion() instanceof Hero){
+					if(target instanceof Hero)
+						target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
+					else
+						target.setCurrentHP((int) (target.getCurrentHP() - (this.getCurrentChampion().getAttackDamage()*1.5)));
+				}
+				else if(this.getCurrentChampion() instanceof Villain){
+					if(target instanceof Villain)
+						target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
+					else
+						target.setCurrentHP((int) (target.getCurrentHP() - (this.getCurrentChampion().getAttackDamage()*1.5)));
+				}
+				else{
+					if(target instanceof AntiHero)
+						target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
+					else
+						target.setCurrentHP((int) (target.getCurrentHP() - (this.getCurrentChampion().getAttackDamage()*1.5)));
+				}
+			}
+			if(target.getCurrentHP() == 0){
+				board[l.x][l.y] = null;
+				((Champion)target).setLocation(null);
+				((Champion)target).setCondition(Condition.KNOCKEDOUT);
+			}
+		}
+		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-2);
 	}
+	
 	
 }
