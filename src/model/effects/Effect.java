@@ -69,6 +69,7 @@ public abstract class Effect implements Cloneable{
 		}
 		else if(this instanceof Root)
 		{
+		if(c.getCondition() != Condition.INACTIVE)
 			c.setCondition(Condition.ROOTED);
 			c.getAppliedEffects().add(new Root(this.duration));
 		}
@@ -134,6 +135,7 @@ public abstract class Effect implements Cloneable{
 		}
 		else if(this instanceof Root)
 		{
+		if(c.getCondition() != Condition.INACTIVE)
 			c.setCondition(Condition.ACTIVE);
 			c.getAppliedEffects().remove(this);
 		}
@@ -161,7 +163,16 @@ public abstract class Effect implements Cloneable{
 			c.getAppliedEffects().remove(this);
 		}
 		else if(this instanceof Stun){
-			
+			boolean cond = false;
+		for(int i = 0; i < c.getAppliedEffects().size(); i++){
+			if(c.getAppliedEffects().get(i) instanceof Root){
+				cond = true;
+				break;
+			}
+		}
+		if(cond)
+			c.setCondition(Condition.ROOTED);
+		else
 			c.setCondition(Condition.ACTIVE);
 			c.getAppliedEffects().remove(this);
 		}

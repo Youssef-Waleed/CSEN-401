@@ -6,27 +6,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import model.abilities.Ability;
-import model.abilities.AreaOfEffect;
-import model.abilities.CrowdControlAbility;
-import model.abilities.DamagingAbility;
-import model.abilities.HealingAbility;
-import model.effects.Disarm;
-import model.effects.Dodge;
-import model.effects.Effect;
-import model.effects.Embrace;
-import model.effects.PowerUp;
-import model.effects.Root;
-import model.effects.Shield;
-import model.effects.Shock;
-import model.effects.Silence;
-import model.effects.SpeedUp;
-import model.effects.Stun;
-import model.world.AntiHero;
-import model.world.Champion;
-import model.world.Cover;
-import model.world.Hero;
-import model.world.Villain;
+import exceptions.*;
+import model.abilities.*;
+import model.effects.*;
+import model.world.*;
 
 public class Game {
 	private static ArrayList<Champion> availableChampions;
@@ -50,6 +33,10 @@ public class Game {
 		turnOrder = new PriorityQueue(6);
 		placeChampions();
 		placeCovers();
+		for (int i = 0; i < firstPlayer.getTeam().size() && i < secondPlayer.getTeam().size(); i++) {
+			turnOrder.insert(firstPlayer.getTeam().get(i));
+			turnOrder.insert(secondPlayer.getTeam().get(i));
+		}
 	}
 
 	public static void loadAbilities(String filePath) throws IOException {
@@ -114,16 +101,27 @@ public class Game {
 			}
 			switch (content[0]) {
 			case "CC":
-				a = new CrowdControlAbility(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[4]),
-						Integer.parseInt(content[3]), ar, Integer.parseInt(content[6]), e);
+				a = new CrowdControlAbility(content[1],
+						Integer.parseInt(content[2]),
+						Integer.parseInt(content[4]),
+						Integer.parseInt(content[3]), ar,
+						Integer.parseInt(content[6]), e);
 				break;
 			case "DMG":
-				a = new DamagingAbility(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[4]),
-						Integer.parseInt(content[3]), ar, Integer.parseInt(content[6]), Integer.parseInt(content[7]));
+				a = new DamagingAbility(content[1],
+						Integer.parseInt(content[2]),
+						Integer.parseInt(content[4]),
+						Integer.parseInt(content[3]), ar,
+						Integer.parseInt(content[6]),
+						Integer.parseInt(content[7]));
 				break;
 			case "HEL":
-				a = new HealingAbility(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[4]),
-						Integer.parseInt(content[3]), ar, Integer.parseInt(content[6]), Integer.parseInt(content[7]));
+				a = new HealingAbility(content[1],
+						Integer.parseInt(content[2]),
+						Integer.parseInt(content[4]),
+						Integer.parseInt(content[3]), ar,
+						Integer.parseInt(content[6]),
+						Integer.parseInt(content[7]));
 				break;
 			}
 			availableAbilities.add(a);
@@ -140,19 +138,28 @@ public class Game {
 			Champion c = null;
 			switch (content[0]) {
 			case "A":
-				c = new AntiHero(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[3]),
-						Integer.parseInt(content[4]), Integer.parseInt(content[5]), Integer.parseInt(content[6]),
+				c = new AntiHero(content[1], Integer.parseInt(content[2]),
+						Integer.parseInt(content[3]),
+						Integer.parseInt(content[4]),
+						Integer.parseInt(content[5]),
+						Integer.parseInt(content[6]),
 						Integer.parseInt(content[7]));
 				break;
 
 			case "H":
-				c = new Hero(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[3]),
-						Integer.parseInt(content[4]), Integer.parseInt(content[5]), Integer.parseInt(content[6]),
+				c = new Hero(content[1], Integer.parseInt(content[2]),
+						Integer.parseInt(content[3]),
+						Integer.parseInt(content[4]),
+						Integer.parseInt(content[5]),
+						Integer.parseInt(content[6]),
 						Integer.parseInt(content[7]));
 				break;
 			case "V":
-				c = new Villain(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[3]),
-						Integer.parseInt(content[4]), Integer.parseInt(content[5]), Integer.parseInt(content[6]),
+				c = new Villain(content[1], Integer.parseInt(content[2]),
+						Integer.parseInt(content[3]),
+						Integer.parseInt(content[4]),
+						Integer.parseInt(content[5]),
+						Integer.parseInt(content[6]),
 						Integer.parseInt(content[7]));
 				break;
 			}
@@ -201,7 +208,7 @@ public class Game {
 			c.setLocation(new Point(BOARDHEIGHT - 1, i));
 			i++;
 		}
-	
+
 	}
 
 	public static ArrayList<Champion> getAvailableChampions() {
@@ -243,4 +250,75 @@ public class Game {
 	public static int getBoardheight() {
 		return BOARDHEIGHT;
 	}
+	public Champion getCurrentChampion(){
+		return (Champion) turnOrder.peekMin();
+	}
+	public Player checkGameOver(){
+		boolean cond1 = true;
+		for(int i = 0; i < firstPlayer.getTeam().size(); i++){
+			if(firstPlayer.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT){
+				cond1 = false;
+				break;
+			}
+		}
+		boolean cond2 = true;
+		for(int i = 0; i < secondPlayer.getTeam().size(); i++){
+			if(secondPlayer.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT){
+				cond2 = false;
+				break;
+			}
+		}
+		if(cond1)
+			return secondPlayer;
+		if(cond2)
+			return firstPlayer;
+		return null;
+	}
+	public void move(Direction d) throws UnallowedMovementException{
+		if(this.getCurrentChampion().getCondition() == Condition.ROOTED){
+			throw new UnallowedMovementException("The champion is rooted.");
+		}
+		switch(d){
+		case UP: if(this.getCurrentChampion().getLocation().y < BOARDHEIGHT-1){
+			if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+1] == null)
+				this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y+1));
+			else
+				throw new UnallowedMovementException("This is an invlaid movement");
+			}
+		else
+			throw new UnallowedMovementException("This is an invlaid movement");
+		break;
+		
+		case DOWN: if(this.getCurrentChampion().getLocation().y > 0){
+			if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-1] == null)
+				this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y-1));
+			else
+				throw new UnallowedMovementException("This is an invlaid movement");
+			}
+		else
+			throw new UnallowedMovementException("This is an invlaid movement");
+		break;
+		
+		case LEFT: if(this.getCurrentChampion().getLocation().x > 0){
+			if(board[this.getCurrentChampion().getLocation().x-1][this.getCurrentChampion().getLocation().y] == null)
+				this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x-1, this.getCurrentChampion().getLocation().y));
+			else
+				throw new UnallowedMovementException("This is an invlaid movement");
+			}
+		else
+			throw new UnallowedMovementException("This is an invlaid movement");
+		break;
+		
+		case RIGHT: if(this.getCurrentChampion().getLocation().x < BOARDWIDTH-1){
+			if(board[this.getCurrentChampion().getLocation().x+1][this.getCurrentChampion().getLocation().y] == null)
+				this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x+1, this.getCurrentChampion().getLocation().y));
+			else
+				throw new UnallowedMovementException("This is an invlaid movement");
+			}
+		else
+			throw new UnallowedMovementException("This is an invlaid movement");
+		break;
+		}
+	}
+	
 }

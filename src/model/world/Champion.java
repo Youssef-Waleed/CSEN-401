@@ -65,7 +65,7 @@ public abstract class Champion implements Damageable, Comparable{
 		if(speed - Other.speed == 0)
 			return name.compareTo(Other.name);
 		else
-			return speed - Other.speed;
+			return Other.speed - speed;
 	}
 
 	public int getMaxHP() {
