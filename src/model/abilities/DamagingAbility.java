@@ -2,6 +2,7 @@ package model.abilities;
 
 import java.util.ArrayList;
 
+import model.effects.Shield;
 import model.world.*;
 
 public class DamagingAbility extends Ability {
@@ -24,9 +25,17 @@ public class DamagingAbility extends Ability {
 
 	@Override
 	public void execute(ArrayList<Damageable> targets) {
+		boolean shield= false;
 		for (int i = 0; i < targets.size(); i++) {
-			targets.get(i).setCurrentHP(targets.get(i).getCurrentHP() - damageAmount);
+			if(targets.get(i) instanceof Champion)
+				for(int j =0; j<((Champion)targets.get(i)).getAppliedEffects().size(); j++)
+					if(((Champion)targets.get(i)).getAppliedEffects().get(i) instanceof Shield )
+						shield=true;
+			if(!shield)			
+				targets.get(i).setCurrentHP(targets.get(i).getCurrentHP() - damageAmount);
+			
+			}
 		}
-	}
+	
 
 }

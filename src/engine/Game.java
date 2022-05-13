@@ -531,4 +531,81 @@ public class Game {
 			this.getCurrentChampion().useLeaderAbility(targets);
 	}
 	
+	public void castAbility(Ability a, Direction d) throws AbilityUseException{
+	
+		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
+			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Silence)
+				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
+		
+		ArrayList<Damageable> targets = new ArrayList<>();
+		
+		switch(d){
+		
+		case UP:
+			for(int i = 1; i <= a.getCastRange() && this.getCurrentChampion().getLocation().y+i < BOARDHEIGHT; i++){
+				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i] != null){
+					targets.add((Damageable) board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i]);
+					}
+				}
+			break;
+		
+			case DOWN:
+				for(int i = 1; i <= a.getCastRange() && this.getCurrentChampion().getLocation().y-i >= 0; i++){
+					if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i] != null){
+						targets.add((Damageable) board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i]);
+					}
+				}
+				break;
+				
+			case LEFT:
+				for(int i = 1; i <=  a.getCastRange() && this.getCurrentChampion().getLocation().x-i >= 0; i++){
+					if(board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y] != null){
+						targets.add((Damageable) board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y]);
+					}
+				}
+				break;
+				
+			case RIGHT:
+				for(int i = 1; i <=  a.getCastRange() && this.getCurrentChampion().getLocation().x+i < BOARDWIDTH; i++){
+					if(board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y] != null){
+						targets.add((Damageable) board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y]);
+					}	
+				}
+				break;
+		}
+		Player current = null;
+		Player opponent = null;
+		if(firstPlayer.getTeam().contains(this.getCurrentChampion())){
+			current = firstPlayer;
+			opponent = secondPlayer;
+		}
+		else{
+			current = secondPlayer;
+			opponent = firstPlayer;
+		}
+		
+		ArrayList<Damageable> allies = new ArrayList<>();
+		ArrayList<Damageable> enemies = new ArrayList<>();
+		ArrayList<Damageable> covers = new ArrayList<>();
+		for(int i= 0; i<targets.size(); i++){
+			if(targets.get(i) instanceof Cover)
+				covers.add(targets.get(i));	
+			else{
+				if(current.getTeam().contains(targets.get(i)))
+					allies.add(targets.get(i));
+				else
+					enemies.add(targets.get(i));
+			}
+		}
+		if(a instanceof CrowdControlAbility){
+			
+			if(((CrowdControlAbility)a).getEffect().getType() == EffectType.DEBUFF);
+				
+		}
+			
+		
+		
+	}
+	
+	
 }
