@@ -176,6 +176,17 @@ public abstract class Champion implements Damageable, Comparable{
 	public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
 		this.maxActionPointsPerTurn = maxActionPointsPerTurn;
 	}
+	public void updateTimers(){
+		for(int i = 0; i < abilities.size(); i++)
+			if(abilities.get(i).getCurrentCooldown() != 0)
+				abilities.get(i).setCurrentCooldown(abilities.get(i).getCurrentCooldown()-1);
+		for(int i = 0; i < appliedEffects.size(); i++){
+			appliedEffects.get(i).setDuration(appliedEffects.get(i).getDuration()-1);
+			if(appliedEffects.get(i).getDuration() == 0)
+				appliedEffects.get(i).remove(this);
+		}
+		
+	}
 	
 	
 

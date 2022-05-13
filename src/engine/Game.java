@@ -33,11 +33,8 @@ public class Game {
 		turnOrder = new PriorityQueue(6);
 		placeChampions();
 		placeCovers();
-		for (int i = 0; i < firstPlayer.getTeam().size() && i < secondPlayer.getTeam().size(); i++) {
-			turnOrder.insert(firstPlayer.getTeam().get(i));
-			turnOrder.insert(secondPlayer.getTeam().get(i));
+		prepareChampionTurns();
 		}
-	}
 
 	public static void loadAbilities(String filePath) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -541,6 +538,9 @@ public class Game {
 			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
 		if(this.getCurrentChampion().getCurrentActionPoints() < a.getRequiredActionPoints())
 			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
+		if(a.getCurrentCooldown() != 0){
+			throw new NotEnoughResourcesException("This ability is on cooldown.");
+		}
 		
 		ArrayList<Damageable> targets = new ArrayList<>();
 		
@@ -614,7 +614,8 @@ public class Game {
 		}
 		
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana() - a.getManaCost());
-		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()- a.getRequiredActionPoints());	
+		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()- a.getRequiredActionPoints());
+		a.setCurrentCooldown(a.getBaseCooldown());
 	}
 	
 	public void castAbility(Ability a, int x, int y) throws Exception{
@@ -622,6 +623,9 @@ public class Game {
 			throw new InvalidTargetException();
 		if(this.getCurrentChampion().getMana()<a.getManaCost()||this.getCurrentChampion().getCurrentActionPoints()<a.getRequiredActionPoints())
 			throw new NotEnoughResourcesException();
+		if(a.getCurrentCooldown() != 0){
+			throw new NotEnoughResourcesException("This ability is on cooldown.");
+		}
 		Damageable target = (Damageable)board[x][y];
 		boolean first = false;
 		if(firstPlayer.getTeam().contains(this.getCurrentChampion()))
@@ -650,26 +654,25 @@ public class Game {
 		Point l = this.getCurrentChampion().getLocation();
 		Distance = Math.abs(l.x-x) + Math.abs(l.y-y);
 		if(Distance>a.getCastRange())
-			throw new InvalidTargetException();
+			throw new AbilityUseException("Target out of range.");
 		ArrayList targets = new ArrayList<>();
 		targets.add(target);
 		a.execute(targets);
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana()-a.getManaCost());
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-a.getRequiredActionPoints());
+		a.setCurrentCooldown(a.getBaseCooldown());
 	}
 	
 	
 	public void endTurn(){
-		turnOrder.remove();
-		for(int i=0; !turnOrder.isEmpty(); i++)
-			if(this.getCurrentChampion().getCondition() == Condition.INACTIVE)
-				turnOrder.remove();
-			else
-				break;
-		if(turnOrder.isEmpty())
-			prepareChampionTurns();
-		
-		//this.getCurrentChampion()
+		do{
+			this.getCurrentChampion().updateTimers();
+			turnOrder.remove();
+			if(turnOrder.isEmpty())
+				prepareChampionTurns();
+		}while(this.getCurrentChampion().getCondition() == Condition.INACTIVE);
+		this.getCurrentChampion().updateTimers();
+		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getMaxActionPointsPerTurn());
 	}
 	
 	private void prepareChampionTurns(){
@@ -683,6 +686,7 @@ public class Game {
 		
 		
 	}
+	
 	
 	
 }
