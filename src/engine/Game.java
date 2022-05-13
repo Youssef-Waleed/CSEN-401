@@ -617,5 +617,46 @@ public class Game {
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()- a.getRequiredActionPoints());	
 	}
 	
+	public void castAbility(Ability a, int x, int y) throws Exception{
+		if(board[x][y]==null)
+			throw new InvalidTargetException();
+		if(this.getCurrentChampion().getMana()<a.getManaCost()||this.getCurrentChampion().getCurrentActionPoints()<a.getRequiredActionPoints())
+			throw new NotEnoughResourcesException();
+		Damageable target = (Damageable)board[x][y];
+		boolean first = false;
+		if(firstPlayer.getTeam().contains(this.getCurrentChampion()))
+			first = true ;
+		String targetType;
+		if(target instanceof Cover )
+			targetType="Cover";
+		if(firstPlayer.getTeam().contains(target)&&first || secondPlayer.getTeam().contains(target)&&!first)
+			targetType="Ally";
+		else
+			targetType="Enemy";
+		switch(targetType){
+		case "Ally":
+			if(a instanceof DamagingAbility || (a instanceof CrowdControlAbility && ((CrowdControlAbility)a).getEffect().getType()==EffectType.DEBUFF))
+				throw new InvalidTargetException();
+			break;
+		case "Enemy":
+			if(a instanceof HealingAbility || (a instanceof CrowdControlAbility && ((CrowdControlAbility)a).getEffect().getType()==EffectType.BUFF))
+				throw new InvalidTargetException();
+			break;
+		case "Cover":
+			if(a instanceof CrowdControlAbility || a instanceof HealingAbility)
+				throw new InvalidTargetException();
+		}
+		int Distance=0;
+		Point l = this.getCurrentChampion().getLocation();
+		Distance = Math.abs(l.x-x) + Math.abs(l.y-y);
+		if(Distance>a.getCastRange())
+			throw new InvalidTargetException();
+		ArrayList targets = new ArrayList<>();
+		targets.add(target);
+		a.execute(targets);
+		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana()-a.getManaCost());
+		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-a.getRequiredActionPoints());
+	}
+	
 	
 }
