@@ -426,6 +426,7 @@ public class Game {
 			}
 			break;
 		}
+		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-2);
 		if(l != null){
 			Damageable target = null;
 			if(board[l.x][l.y] instanceof Cover){
@@ -436,6 +437,26 @@ public class Game {
 			}
 			else{
 				target = (Champion) board[l.x][l.y];
+				boolean dodge = false;
+				boolean shield = false;
+				Effect block = null;
+				for(int i = 0; i < ((Champion)target).getAppliedEffects().size(); i++){
+					if(((Champion)target).getAppliedEffects().get(i) instanceof Dodge)
+						dodge = true;
+					else if(((Champion)target).getAppliedEffects().get(i) instanceof Shield){
+						shield = true;
+						if(block == null)
+							block = ((Champion)target).getAppliedEffects().get(i);
+					}
+				}
+				if(dodge)
+					if(Math.random() < 0.5){
+						return;
+					}
+				if(shield){
+					block.remove(((Champion)target));
+					return;
+				}
 				if(this.getCurrentChampion() instanceof Hero){
 					if(target instanceof Hero)
 						target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
@@ -461,7 +482,6 @@ public class Game {
 				((Champion)target).setCondition(Condition.KNOCKEDOUT);
 			}
 		}
-		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-2);
 	}
 	public void useLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException, CloneNotSupportedException{
 		boolean firstLeader = false;
