@@ -531,11 +531,16 @@ public class Game {
 			this.getCurrentChampion().useLeaderAbility(targets);
 	}
 	
-	public void castAbility(Ability a, Direction d) throws AbilityUseException{
+	public void castAbility(Ability a, Direction d) throws AbilityUseException, NotEnoughResourcesException{
 	
 		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
 			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Silence)
 				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
+		
+		if(this.getCurrentChampion().getMana() < a.getManaCost())
+			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
+		if(this.getCurrentChampion().getCurrentActionPoints() < a.getRequiredActionPoints())
+			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
 		
 		ArrayList<Damageable> targets = new ArrayList<>();
 		
@@ -574,14 +579,11 @@ public class Game {
 				break;
 		}
 		Player current = null;
-		Player opponent = null;
 		if(firstPlayer.getTeam().contains(this.getCurrentChampion())){
 			current = firstPlayer;
-			opponent = secondPlayer;
 		}
 		else{
 			current = secondPlayer;
-			opponent = firstPlayer;
 		}
 		
 		ArrayList<Damageable> allies = new ArrayList<>();
@@ -597,14 +599,22 @@ public class Game {
 					enemies.add(targets.get(i));
 			}
 		}
-		if(a instanceof CrowdControlAbility){
-			
-			if(((CrowdControlAbility)a).getEffect().getType() == EffectType.DEBUFF);
-				
+		if (targets.size() != 0) {
+			if (a instanceof CrowdControlAbility)
+				if (((CrowdControlAbility) a).getEffect().getType() == EffectType.DEBUFF)
+					a.execute(enemies);
+				else
+					a.execute(allies);
+
+			if (a instanceof DamagingAbility) {
+				a.execute(enemies);
+				a.execute(covers);
+			} else if (a instanceof HealingAbility)
+				a.execute(allies);
 		}
-			
 		
-		
+		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana() - a.getManaCost());
+		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()- a.getRequiredActionPoints());	
 	}
 	
 	
