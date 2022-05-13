@@ -659,4 +659,30 @@ public class Game {
 	}
 	
 	
+	public void endTurn(){
+		turnOrder.remove();
+		for(int i=0; !turnOrder.isEmpty(); i++)
+			if(this.getCurrentChampion().getCondition() == Condition.INACTIVE)
+				turnOrder.remove();
+			else
+				break;
+		if(turnOrder.isEmpty())
+			prepareChampionTurns();
+		
+		//this.getCurrentChampion()
+	}
+	
+	private void prepareChampionTurns(){
+		
+		for (int i = 0; i < firstPlayer.getTeam().size() && i < secondPlayer.getTeam().size(); i++) {
+			if(((Champion)(firstPlayer.getTeam().get(i))).getCondition() != Condition.KNOCKEDOUT)
+				turnOrder.insert(firstPlayer.getTeam().get(i));
+			if(((Champion)(secondPlayer.getTeam().get(i))).getCondition() != Condition.KNOCKEDOUT)
+				turnOrder.insert(secondPlayer.getTeam().get(i));
+		}
+		
+		
+	}
+	
+	
 }
