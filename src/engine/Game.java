@@ -278,7 +278,7 @@ public class Game {
 		if(this.getCurrentChampion().getCurrentActionPoints() < 1)
 			throw new NotEnoughResourcesException("Not enough action points.");
 		switch(d){
-		case UP: 
+		case RIGHT: 
 			if(this.getCurrentChampion().getLocation().y < BOARDHEIGHT){
 				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+1] == null)
 					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y+1));
@@ -289,7 +289,7 @@ public class Game {
 				throw new UnallowedMovementException("This is an invlaid movement");
 			break;
 		
-		case DOWN: 
+		case LEFT: 
 			if(this.getCurrentChampion().getLocation().y >= 0){
 				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-1] == null)
 					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y-1));
@@ -300,7 +300,7 @@ public class Game {
 				throw new UnallowedMovementException("This is an invlaid movement");
 			break;
 		
-		case LEFT: 
+		case DOWN: 
 			if(this.getCurrentChampion().getLocation().x >= 0){
 				if(board[this.getCurrentChampion().getLocation().x-1][this.getCurrentChampion().getLocation().y] == null)
 					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x-1, this.getCurrentChampion().getLocation().y));
@@ -311,7 +311,7 @@ public class Game {
 				throw new UnallowedMovementException("This is an invlaid movement");
 			break;
 		
-		case RIGHT: 
+		case UP: 
 			if(this.getCurrentChampion().getLocation().x < BOARDWIDTH){
 				if(board[this.getCurrentChampion().getLocation().x+1][this.getCurrentChampion().getLocation().y] == null)
 					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x+1, this.getCurrentChampion().getLocation().y));
@@ -342,10 +342,10 @@ public class Game {
 			first = true;
 		Point l = null;
 		switch(d){
-		case UP:
-			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().y+i < BOARDHEIGHT; i++){
-				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i] != null){
-					if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i] instanceof Cover){
+		case RIGHT:
+			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().y+i < BOARDWIDTH; i++){
+				if(board[this.getCurrentChampion().getLocation().y+i][this.getCurrentChampion().getLocation().x] != null){
+					if(board[this.getCurrentChampion().getLocation().y+i][this.getCurrentChampion().getLocation().x] instanceof Cover){
 						l = new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y+i);
 						break;
 					}
@@ -362,10 +362,10 @@ public class Game {
 				}
 			}
 			break;
-		case DOWN:
+		case LEFT:
 			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().y-i >= 0; i++){
-				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i] != null){
-					if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i] instanceof Cover){
+				if(board[this.getCurrentChampion().getLocation().y-i][this.getCurrentChampion().getLocation().x] != null){
+					if(board[this.getCurrentChampion().getLocation().y-i][this.getCurrentChampion().getLocation().x] instanceof Cover){
 						l = new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y-i);
 						break;
 					}
@@ -382,10 +382,10 @@ public class Game {
 				}
 			}
 			break;
-		case LEFT:
+		case DOWN:
 			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().x-i >= 0; i++){
-				if(board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y] != null){
-					if(board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y] instanceof Cover){
+				if(board[this.getCurrentChampion().getLocation().y][this.getCurrentChampion().getLocation().x-i] != null){
+					if(board[this.getCurrentChampion().getLocation().y][this.getCurrentChampion().getLocation().x-i] instanceof Cover){
 						l = new Point(this.getCurrentChampion().getLocation().x-i, this.getCurrentChampion().getLocation().y);
 						break;
 					}
@@ -402,10 +402,10 @@ public class Game {
 				}
 			}
 			break;
-		case RIGHT:
-			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().x+i < BOARDWIDTH; i++){
-				if(board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y] != null){
-					if(board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y] instanceof Cover){
+		case UP:
+			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().x+i < BOARDHEIGHT; i++){
+				if(board[this.getCurrentChampion().getLocation().y][this.getCurrentChampion().getLocation().x+i] != null){
+					if(board[this.getCurrentChampion().getLocation().y][this.getCurrentChampion().getLocation().x+i] instanceof Cover){
 						l = new Point(this.getCurrentChampion().getLocation().x+i, this.getCurrentChampion().getLocation().y);
 						break;
 					}
@@ -426,14 +426,14 @@ public class Game {
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-2);
 		if(l != null){
 			Damageable target = null;
-			if(board[l.x][l.y] instanceof Cover){
-				target = (Cover) board[l.x][l.y];
+			if(board[l.y][l.x] instanceof Cover){
+				target = (Cover) board[l.y][l.x];
 				target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
 				if(target.getCurrentHP() == 0)
-					board[l.x][l.y] = null;
+					board[l.y][l.x] = null;
 			}
 			else{
-				target = (Champion) board[l.x][l.y];
+				target = (Champion) board[l.y][l.x];
 				boolean dodge = false;
 				boolean shield = false;
 				Effect block = null;
@@ -547,7 +547,7 @@ public class Game {
 		
 		switch(d){
 		
-		case UP:
+		case RIGHT:
 			for(int i = 1; i <= a.getCastRange() && this.getCurrentChampion().getLocation().y+i < BOARDHEIGHT; i++){
 				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i] != null){
 					targets.add((Damageable) board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i]);
@@ -555,7 +555,7 @@ public class Game {
 				}
 			break;
 		
-			case DOWN:
+			case LEFT:
 				for(int i = 1; i <= a.getCastRange() && this.getCurrentChampion().getLocation().y-i >= 0; i++){
 					if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i] != null){
 						targets.add((Damageable) board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i]);
@@ -563,7 +563,7 @@ public class Game {
 				}
 				break;
 				
-			case LEFT:
+			case DOWN:
 				for(int i = 1; i <=  a.getCastRange() && this.getCurrentChampion().getLocation().x-i >= 0; i++){
 					if(board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y] != null){
 						targets.add((Damageable) board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y]);
@@ -571,7 +571,7 @@ public class Game {
 				}
 				break;
 				
-			case RIGHT:
+			case UP:
 				for(int i = 1; i <=  a.getCastRange() && this.getCurrentChampion().getLocation().x+i < BOARDWIDTH; i++){
 					if(board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y] != null){
 						targets.add((Damageable) board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y]);
@@ -661,7 +661,7 @@ public class Game {
 		Distance = Math.abs(l.x-x) + Math.abs(l.y-y);
 		if(Distance>a.getCastRange())
 			throw new AbilityUseException("Target out of range.");
-		ArrayList targets = new ArrayList<>();
+		ArrayList <Damageable>targets = new ArrayList<>();
 		targets.add(target);
 		a.execute(targets);
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana()-a.getManaCost());

@@ -12,11 +12,17 @@ public class Root extends Effect {
 	public void apply(Champion c){
 		if(c.getCondition() != Condition.INACTIVE)
 			c.setCondition(Condition.ROOTED);
-			c.getAppliedEffects().add(new Root(this.getDuration()));
+		c.getAppliedEffects().add(new Root(this.getDuration()));
 	}
 	public void remove(Champion c){
 		if(c.getCondition() != Condition.INACTIVE)
-			c.setCondition(Condition.ACTIVE);
-			c.getAppliedEffects().remove(this);
+			for(Effect e : c.getAppliedEffects())
+				if(e instanceof Root){
+					c.setCondition(Condition.ROOTED);
+					break;
+					}
+				else
+					c.setCondition(Condition.ACTIVE);
+		c.getAppliedEffects().remove(this);
 	}
 }
