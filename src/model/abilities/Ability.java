@@ -60,6 +60,6 @@ public abstract class Ability {
 		return requiredActionPoints;
 	}
 
-	public abstract void execute(ArrayList<Damageable> targets);
+	public abstract void execute(ArrayList<Damageable> targets) throws CloneNotSupportedException;
 
 }

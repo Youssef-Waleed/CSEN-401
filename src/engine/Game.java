@@ -528,7 +528,7 @@ public class Game {
 			this.getCurrentChampion().useLeaderAbility(targets);
 	}
 	
-	public void castAbility(Ability a, Direction d) throws AbilityUseException, NotEnoughResourcesException{
+	public void castAbility(Ability a, Direction d) throws AbilityUseException, NotEnoughResourcesException, CloneNotSupportedException{
 		if(a.getCastArea() != AreaOfEffect.DIRECTIONAL)
 			return;
 		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
@@ -692,7 +692,7 @@ public class Game {
 		
 		
 	}
-	public void castAbility(Ability a) throws AbilityUseException, NotEnoughResourcesException{
+	public void castAbility(Ability a) throws AbilityUseException, NotEnoughResourcesException, CloneNotSupportedException{
 		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
 			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Silence)
 				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
@@ -738,22 +738,22 @@ public class Game {
 				canRight = true;
 			if(left < BOARDWIDTH && left >= 0)
 				canLeft = true;
-			if(canUp && board[x][up] != null)
-				targets.add((Damageable) board[x][up]);
-			if(canDown && board[x][down] != null)
-				targets.add((Damageable) board[x][down]);
-			if(canLeft && board[left][y] != null)
-				targets.add((Damageable) board[left][y]);
-			if(canRight && board[right][y] != null)
-				targets.add((Damageable) board[right][y]);
-			if(canUp && canRight && board[right][up] != null)
-				targets.add((Damageable) board[right][up]);
-			if(canUp && canLeft && board[left][up] != null)
-				targets.add((Damageable) board[left][up]);
-			if(canDown && canLeft && board[left][down] != null)
-				targets.add((Damageable) board[left][down]);
-			if(canDown && canRight && board[right][down] != null)
-				targets.add((Damageable) board[right][down]);
+			if(canUp && board[up][x] != null)			//I changed the x with y in IFs and gave relatively less failures
+				targets.add((Damageable) board[up][x]);
+			if(canDown && board[down][x] != null)
+				targets.add((Damageable) board[down][x]);
+			if(canLeft && board[y][left] != null)
+				targets.add((Damageable) board[y][left]);
+			if(canRight && board[y][right] != null)
+				targets.add((Damageable) board[y][right]);
+			if(canUp && canRight && board[up][right] != null)
+				targets.add((Damageable) board[up][right]);
+			if(canUp && canLeft && board[up][left] != null)
+				targets.add((Damageable) board[up][left]);
+			if(canDown && canLeft && board[down][left] != null)
+				targets.add((Damageable) board[down][left]);
+			if(canDown && canRight && board[down][right] != null)
+				targets.add((Damageable) board[down][right]);
 			break;
 		default: return;
 		}
