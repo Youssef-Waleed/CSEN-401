@@ -529,7 +529,8 @@ public class Game {
 	}
 	
 	public void castAbility(Ability a, Direction d) throws AbilityUseException, NotEnoughResourcesException{
-	
+		if(a.getCastArea() != AreaOfEffect.DIRECTIONAL)
+			return;
 		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
 			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Silence)
 				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
@@ -619,6 +620,11 @@ public class Game {
 	}
 	
 	public void castAbility(Ability a, int x, int y) throws Exception{
+		if(a.getCastArea() != AreaOfEffect.SINGLETARGET)
+			return;
+		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
+			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Silence)
+				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
 		if(board[x][y]==null)
 			throw new InvalidTargetException();
 		if(this.getCurrentChampion().getMana()<a.getManaCost()||this.getCurrentChampion().getCurrentActionPoints()<a.getRequiredActionPoints())
@@ -685,6 +691,109 @@ public class Game {
 		}
 		
 		
+	}
+	public void castAbility(Ability a) throws AbilityUseException, NotEnoughResourcesException{
+		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
+			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Silence)
+				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
+		
+		if(this.getCurrentChampion().getMana() < a.getManaCost())
+			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
+		if(this.getCurrentChampion().getCurrentActionPoints() < a.getRequiredActionPoints())
+			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
+		if(a.getCurrentCooldown() != 0){
+			throw new NotEnoughResourcesException("This ability is on cooldown.");
+		}
+		ArrayList<Damageable> targets = new ArrayList<>();
+		switch(a.getCastArea()){
+		case SELFTARGET: 
+			targets.add(this.getCurrentChampion());
+			break;
+		case TEAMTARGET:
+			for(Champion c: firstPlayer.getTeam()){
+				if(this.getCurrentChampion().manhattaninator(c) <= a.getCastRange())
+					targets.add(c);
+			}
+			for(Champion c: secondPlayer.getTeam()){
+				if(this.getCurrentChampion().manhattaninator(c) <= a.getCastRange())
+					targets.add(c);
+			}
+			break;
+		case SURROUND:
+			int y = this.getCurrentChampion().getLocation().x;
+			int x = this.getCurrentChampion().getLocation().y;
+			boolean canUp = false;
+			boolean canDown = false;
+			boolean canLeft = false;
+			boolean canRight = false;
+			int up = y++;
+			int down = y--;
+			int left = x--;
+			int right = x++;
+			if(up < BOARDHEIGHT && up >= 0)
+				canUp = true;
+			if(down < BOARDHEIGHT && down >= 0)
+				canDown = true;
+			if(right < BOARDWIDTH && right >= 0)
+				canRight = true;
+			if(left < BOARDWIDTH && left >= 0)
+				canLeft = true;
+			if(canUp && board[x][up] != null)
+				targets.add((Damageable) board[x][up]);
+			if(canDown && board[x][down] != null)
+				targets.add((Damageable) board[x][down]);
+			if(canLeft && board[left][y] != null)
+				targets.add((Damageable) board[left][y]);
+			if(canRight && board[right][y] != null)
+				targets.add((Damageable) board[right][y]);
+			if(canUp && canRight && board[right][up] != null)
+				targets.add((Damageable) board[right][up]);
+			if(canUp && canLeft && board[left][up] != null)
+				targets.add((Damageable) board[left][up]);
+			if(canDown && canLeft && board[left][down] != null)
+				targets.add((Damageable) board[left][down]);
+			if(canDown && canRight && board[right][down] != null)
+				targets.add((Damageable) board[right][down]);
+			break;
+		default: return;
+		}
+		Player current = null;
+		if(firstPlayer.getTeam().contains(this.getCurrentChampion())){
+			current = firstPlayer;
+		}
+		else{
+			current = secondPlayer;
+		}
+		
+		ArrayList<Damageable> allies = new ArrayList<>();
+		ArrayList<Damageable> enemies = new ArrayList<>();
+		ArrayList<Damageable> covers = new ArrayList<>();
+		for(int i= 0; i<targets.size(); i++){
+			if(targets.get(i) instanceof Cover)
+				covers.add(targets.get(i));	
+			else{
+				if(current.getTeam().contains(targets.get(i)))
+					allies.add(targets.get(i));
+				else
+					enemies.add(targets.get(i));
+			}
+		}
+		if (targets.size() != 0) {
+			if (a instanceof CrowdControlAbility)
+				if (((CrowdControlAbility) a).getEffect().getType() == EffectType.DEBUFF)
+					a.execute(enemies);
+				else
+					a.execute(allies);
+
+			if (a instanceof DamagingAbility) {
+				a.execute(enemies);
+			} else if (a instanceof HealingAbility)
+				a.execute(allies);
+		}
+		
+		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana() - a.getManaCost());
+		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()- a.getRequiredActionPoints());
+		a.setCurrentCooldown(a.getBaseCooldown());
 	}
 	
 	

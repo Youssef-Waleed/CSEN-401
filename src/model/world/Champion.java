@@ -44,7 +44,7 @@ public abstract class Champion implements Damageable, Comparable{
 			Embrace E = new Embrace(2);
 			for(int i=0;i<targets.size();i++)
 			{
-				for(int j=0;j<targets.size();j++)
+				for(int j=0;j<targets.get(i).getAppliedEffects().size();j++)
 				    if(targets.get(i).appliedEffects.get(j).getType().equals("DEBUFF")) 
 				    	targets.get(i).appliedEffects.remove(targets.get(i));
 				
@@ -186,6 +186,11 @@ public abstract class Champion implements Damageable, Comparable{
 				appliedEffects.get(i).remove(this);
 		}
 		
+	}
+	public int manhattaninator(Damageable d){
+		int x = Math.abs(this.getLocation().x - d.getLocation().x);
+		int y = Math.abs(this.getLocation().y - d.getLocation().y);
+		return x+y;
 	}
 	
 	
