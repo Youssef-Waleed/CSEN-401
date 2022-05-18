@@ -14,10 +14,10 @@ public void move(Direction d) throws UnallowedMovementException, NotEnoughResour
 					this.getCurrentChampion().setLocation(new Point(l.x, l.y+1));
 					}
 				else
-					throw new UnallowedMovementException("This is an invlaid movement");
+					throw new UnallowedMovementException("This is an invalid movement");
 				}
 			else
-				throw new UnallowedMovementException("This is an invlaid movement");
+				throw new UnallowedMovementException("This is an invalid movement");
 			break;
 		
 		case LEFT: 
@@ -28,10 +28,10 @@ public void move(Direction d) throws UnallowedMovementException, NotEnoughResour
 					this.getCurrentChampion().setLocation(new Point(l.x, l.y-1));
 					}
 				else
-					throw new UnallowedMovementException("This is an invlaid movement");
+					throw new UnallowedMovementException("This is an invalid movement");
 				}
 			else
-				throw new UnallowedMovementException("This is an invlaid movement");
+				throw new UnallowedMovementException("This is an invalid movement");
 			break;
 		
 		case DOWN: 
@@ -42,10 +42,10 @@ public void move(Direction d) throws UnallowedMovementException, NotEnoughResour
 					this.getCurrentChampion().setLocation(new Point(l.x-1, l.y));
 					}
 				else
-					throw new UnallowedMovementException("This is an invlaid movement");
+					throw new UnallowedMovementException("This is an invalid movement");
 				}
 			else
-				throw new UnallowedMovementException("This is an invlaid movement");
+				throw new UnallowedMovementException("This is an invalid movement");
 			break;
 		
 		case UP: 
@@ -57,10 +57,10 @@ public void move(Direction d) throws UnallowedMovementException, NotEnoughResour
 						this.getCurrentChampion().setLocation(new Point(l.x+1, l.y));
 						}
 				else
-					throw new UnallowedMovementException("This is an invlaid movement");
+					throw new UnallowedMovementException("This is an invalid movement");
 				}
 			else
-				throw new UnallowedMovementException("This is an invlaid movement");
+				throw new UnallowedMovementException("This is an invalid movement");
 			break;
 			}
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-1);
@@ -164,3 +164,21 @@ public void move(Direction d) throws UnallowedMovementException, NotEnoughResour
 			
 			}
 		}
+	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -38,32 +38,7 @@ public abstract class Champion implements Damageable, Comparable{
 		this.currentActionPoints=maxActionPointsPerTurn;
 	}
 	
-	public void useLeaderAbility(ArrayList<Champion> targets) throws CloneNotSupportedException
-	{
-		if(this instanceof Hero){
-			Embrace E = new Embrace(2);
-			for(int i=0;i<targets.size();i++)
-			{
-				for(int j=0;j<targets.get(i).getAppliedEffects().size();j++)
-				    if(targets.get(i).appliedEffects.get(j).getType().equals("DEBUFF")) 
-				    	targets.get(i).appliedEffects.remove(targets.get(i));
-				
-				((Embrace)E.clone()).apply(targets.get(i));
-			}
-			}
-		else if(this instanceof Villain)
-			for(int i=0;i<targets.size();i++)
-			{
-				if((targets.get(i).currentHP/targets.get(i).maxHP)<0.3)
-					targets.get(i).setCondition(Condition.valueOf("KNOCKEDOUT"));
-			}
-		else{
-			Stun s = new Stun(2);
-			for(int i=0;i<targets.size();i++){
-				((Stun)s.clone()).apply(targets.get(i));
-			}
-		}
-	}
+	public abstract void useLeaderAbility(ArrayList<Champion> targets) throws CloneNotSupportedException;
 	
 	public int compareTo(Object other)
 	{

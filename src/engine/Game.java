@@ -277,52 +277,67 @@ public class Game {
 		
 		if(this.getCurrentChampion().getCurrentActionPoints() < 1)
 			throw new NotEnoughResourcesException("Not enough action points.");
+		Point l = this.getCurrentChampion().getLocation();
 		switch(d){
+		
 		case RIGHT: 
-			if(this.getCurrentChampion().getLocation().y < BOARDHEIGHT){
-				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+1] == null)
-					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y+1));
+			if(this.getCurrentChampion().getLocation().y < BOARDWIDTH-1){
+				if(board[l.x][l.y+1] == null){
+					board[l.x][l.y+1] = this.getCurrentChampion();
+					board[l.x][l.y] = null;
+					this.getCurrentChampion().setLocation(new Point(l.x, l.y+1));
+					}
 				else
-					throw new UnallowedMovementException("This is an invlaid movement");
+					throw new UnallowedMovementException("This is an invalid movement");
 				}
 			else
-				throw new UnallowedMovementException("This is an invlaid movement");
+				throw new UnallowedMovementException("This is an invalid movement");
 			break;
 		
 		case LEFT: 
-			if(this.getCurrentChampion().getLocation().y >= 0){
-				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-1] == null)
-					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y-1));
+			if(this.getCurrentChampion().getLocation().y > 0){
+				if(board[l.x][l.y-1] == null){
+					board[l.x][l.y-1] = this.getCurrentChampion();
+					board[l.x][l.y] = null;
+					this.getCurrentChampion().setLocation(new Point(l.x, l.y-1));
+					}
 				else
-					throw new UnallowedMovementException("This is an invlaid movement");
+					throw new UnallowedMovementException("This is an invalid movement");
 				}
 			else
-				throw new UnallowedMovementException("This is an invlaid movement");
+				throw new UnallowedMovementException("This is an invalid movement");
 			break;
 		
 		case DOWN: 
-			if(this.getCurrentChampion().getLocation().x >= 0){
-				if(board[this.getCurrentChampion().getLocation().x-1][this.getCurrentChampion().getLocation().y] == null)
-					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x-1, this.getCurrentChampion().getLocation().y));
+			if(l.x > 0){
+				if(board[l.x-1][l.y] == null){
+					board[l.x-1][l.y] = this.getCurrentChampion();
+					board[l.x][l.y] = null;
+					this.getCurrentChampion().setLocation(new Point(l.x-1, l.y));
+					}
 				else
-					throw new UnallowedMovementException("This is an invlaid movement");
+					throw new UnallowedMovementException("This is an invalid movement");
 				}
 			else
-				throw new UnallowedMovementException("This is an invlaid movement");
+				throw new UnallowedMovementException("This is an invalid movement");
 			break;
 		
 		case UP: 
-			if(this.getCurrentChampion().getLocation().x < BOARDWIDTH){
-				if(board[this.getCurrentChampion().getLocation().x+1][this.getCurrentChampion().getLocation().y] == null)
-					this.getCurrentChampion().setLocation(new Point(this.getCurrentChampion().getLocation().x+1, this.getCurrentChampion().getLocation().y));
-				else
-					throw new UnallowedMovementException("This is an invlaid movement");
-				}
+			if(l.x < BOARDHEIGHT-1){
+					if(board[l.x+1][l.y] == null){
+						board[l.x+1][l.y] = this.getCurrentChampion();
+						board[l.x][l.y] = null;
+						this.getCurrentChampion().setLocation(new Point(l.x+1, l.y));
+						}
+					else
+						throw new UnallowedMovementException("This is an invalid movement");
+			}
 			else
-				throw new UnallowedMovementException("This is an invlaid movement");
+				throw new UnallowedMovementException("This is an invalid movement");
+				
 			break;
 			}
-		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-1);
+	this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-1);
 	}
 	
 	public void attack(Direction d) throws ChampionDisarmedException, NotEnoughResourcesException{
@@ -384,8 +399,8 @@ public class Game {
 			break;
 		case DOWN:
 			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().x-i >= 0; i++){
-				if(board[this.getCurrentChampion().getLocation().y][this.getCurrentChampion().getLocation().x-i] != null){
-					if(board[this.getCurrentChampion().getLocation().y][this.getCurrentChampion().getLocation().x-i] instanceof Cover){
+				if(board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y] != null){
+					if(board[this.getCurrentChampion().getLocation().x-i][this.getCurrentChampion().getLocation().y] instanceof Cover){
 						l = new Point(this.getCurrentChampion().getLocation().x-i, this.getCurrentChampion().getLocation().y);
 						break;
 					}
@@ -404,8 +419,8 @@ public class Game {
 			break;
 		case UP:
 			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().x+i < BOARDHEIGHT; i++){
-				if(board[this.getCurrentChampion().getLocation().y][this.getCurrentChampion().getLocation().x+i] != null){
-					if(board[this.getCurrentChampion().getLocation().y][this.getCurrentChampion().getLocation().x+i] instanceof Cover){
+				if(board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y] != null){
+					if(board[this.getCurrentChampion().getLocation().x+i][this.getCurrentChampion().getLocation().y] instanceof Cover){
 						l = new Point(this.getCurrentChampion().getLocation().x+i, this.getCurrentChampion().getLocation().y);
 						break;
 					}
@@ -431,6 +446,7 @@ public class Game {
 				target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
 				if(target.getCurrentHP() == 0)
 					board[l.x][l.y] = null;
+				
 			}
 			else{
 				target = (Champion) board[l.x][l.y];
@@ -477,6 +493,7 @@ public class Game {
 				board[l.x][l.y] = null;
 				((Champion)target).setLocation(null);
 				((Champion)target).setCondition(Condition.KNOCKEDOUT);
+				
 			}
 		}
 	}
@@ -516,12 +533,11 @@ public class Game {
 				}
 			}
 			else{
-				for(int i = 0; i < 3; i++){
-					if(current.getTeam().get(i) != current.getLeader() && current.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
-						targets.add(current.getTeam().get(i));
-					if(opponent.getTeam().get(i) != opponent.getLeader() && opponent.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
-						targets.add(current.getTeam().get(i));
-				}
+				for(int i = 0; i < firstPlayer.getTeam().size(); i++)
+						targets.add(firstPlayer.getTeam().get(i));
+				
+				for(int i = 0; i < secondPlayer.getTeam().size(); i++)
+						targets.add(secondPlayer.getTeam().get(i));
 			}
 		}
 		if(targets != null){
@@ -543,7 +559,7 @@ public class Game {
 		if(this.getCurrentChampion().getMana() < a.getManaCost())
 			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
 		if(this.getCurrentChampion().getCurrentActionPoints() < a.getRequiredActionPoints())
-			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
+			throw new NotEnoughResourcesException("Not enough Action Points for casting this Ability.");
 		if(a.getCurrentCooldown() != 0){
 			throw new NotEnoughResourcesException("This ability is on cooldown.");
 		}
@@ -617,6 +633,18 @@ public class Game {
 				a.execute(covers);
 			} else if (a instanceof HealingAbility)
 				a.execute(allies);
+			for(int i= 0; i<targets.size(); i++){
+				if(targets.get(i).getCurrentHP()==0)
+				{
+					board[targets.get(i).getLocation().x][targets.get(i).getLocation().y] = null;
+				    if(targets.get(i) instanceof Champion)
+				    {
+				    	((Champion)targets.get(i)).setLocation(null);
+				    	((Champion)targets.get(i)).setCondition(Condition.KNOCKEDOUT);
+				    }
+				}
+			
+			}
 		}
 		
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana() - a.getManaCost());
@@ -632,8 +660,10 @@ public class Game {
 				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
 		if(board[x][y]==null)
 			throw new InvalidTargetException();
-		if(this.getCurrentChampion().getMana()<a.getManaCost()||this.getCurrentChampion().getCurrentActionPoints()<a.getRequiredActionPoints())
-			throw new NotEnoughResourcesException();
+		if((this.getCurrentChampion().getMana()<a.getManaCost()) )
+			throw new NotEnoughResourcesException("There is no enough Mana for casting the ability");
+		if (this.getCurrentChampion().getCurrentActionPoints()<a.getRequiredActionPoints())
+			throw new NotEnoughResourcesException("There is no enough Action Points for casting the ability");
 		if(a.getCurrentCooldown() != 0){
 			throw new AbilityUseException("This ability is on cooldown.");
 		}
@@ -672,6 +702,12 @@ public class Game {
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana()-a.getManaCost());
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-a.getRequiredActionPoints());
 		a.setCurrentCooldown(a.getBaseCooldown());
+		if(target.getCurrentHP() == 0){
+			board[l.x][l.y] = null;
+			((Champion)target).setLocation(null);
+			((Champion)target).setCondition(Condition.KNOCKEDOUT);
+			
+		}
 	}
 	
 	
@@ -725,16 +761,16 @@ public class Game {
 			}
 			break;
 		case SURROUND:
-			int y = this.getCurrentChampion().getLocation().x;
-			int x = this.getCurrentChampion().getLocation().y;
+			int x = this.getCurrentChampion().getLocation().x;
+			int y = this.getCurrentChampion().getLocation().y;
 			boolean canUp = false;
 			boolean canDown = false;
 			boolean canLeft = false;
 			boolean canRight = false;
-			int up = ++y;
-			int down = --y;			//changed those to ++x instead of x++
-			int left = --x;
-			int right = ++x;
+			int right = y+1;
+			int left = y-1;			//changed those instead of x++
+			int down = x-1;
+			int up = x+1;
 			if(up < BOARDHEIGHT && up >= 0)
 				canUp = true;
 			if(down < BOARDHEIGHT && down >= 0)
@@ -743,14 +779,14 @@ public class Game {
 				canRight = true;
 			if(left < BOARDWIDTH && left >= 0)
 				canLeft = true;
-			if(canUp && board[up][x] != null)			//I changed the x with y in IFs and gave relatively less failures
-				targets.add((Damageable) board[up][x]);
-			if(canDown && board[down][x] != null)
-				targets.add((Damageable) board[down][x]);
-			if(canLeft && board[y][left] != null)
-				targets.add((Damageable) board[y][left]);
-			if(canRight && board[y][right] != null)
-				targets.add((Damageable) board[y][right]);
+			if(canUp && board[up][y] != null)			//I changed the x with y in IFs and gave relatively less failures
+				targets.add((Damageable) board[up][y]);
+			if(canDown && board[down][y] != null)
+				targets.add((Damageable) board[down][y]);
+			if(canLeft && board[x][left] != null)
+				targets.add((Damageable) board[x][left]);
+			if(canRight && board[x][right] != null)
+				targets.add((Damageable) board[x][right]);
 			if(canUp && canRight && board[up][right] != null)
 				targets.add((Damageable) board[up][right]);
 			if(canUp && canLeft && board[up][left] != null)
