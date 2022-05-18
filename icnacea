@@ -1,0 +1,68 @@
+public void move(Direction d) throws UnallowedMovementException, NotEnoughResourcesException{
+		if(this.getCurrentChampion().getCondition() == Condition.ROOTED)
+			throw new UnallowedMovementException("The champion is rooted.");
+		
+		if(this.getCurrentChampion().getCurrentActionPoints() < 1)
+			throw new NotEnoughResourcesException("Not enough action points.");
+		Point l = this.getCurrentChampion().getLocation();
+		switch(d){
+		case RIGHT: 
+			if(this.getCurrentChampion().getLocation().y < BOARDWIDTH-1){
+				if(board[l.x][l.y+1] == null){
+					board[l.x][l.y+1] = this.getCurrentChampion();
+					board[l.x][l.y] = null;
+					this.getCurrentChampion().setLocation(new Point(l.x, l.y+1));
+					}
+				else
+					throw new UnallowedMovementException("This is an invlaid movement");
+				}
+			else
+				throw new UnallowedMovementException("This is an invlaid movement");
+			break;
+		
+		case LEFT: 
+			if(this.getCurrentChampion().getLocation().y > 0){
+				if(board[l.x][l.y-1] == null){
+					board[l.x][l.y-1] = this.getCurrentChampion();
+					board[l.x][l.y] = null;
+					this.getCurrentChampion().setLocation(new Point(l.x, l.y-1));
+					}
+				else
+					throw new UnallowedMovementException("This is an invlaid movement");
+				}
+			else
+				throw new UnallowedMovementException("This is an invlaid movement");
+			break;
+		
+		case DOWN: 
+			if(l.x > 0){
+				if(board[l.x-1][l.y] == null){
+					board[l.x-1][l.y] = this.getCurrentChampion();
+					board[l.x][l.y] = null;
+					this.getCurrentChampion().setLocation(new Point(l.x-1, l.y));
+					}
+				else
+					throw new UnallowedMovementException("This is an invlaid movement");
+				}
+			else
+				throw new UnallowedMovementException("This is an invlaid movement");
+			break;
+		
+		case UP: 
+			if(l.x < BOARDWIDTH-1){
+				if(l.x >= 0){
+					if(board[l.x+1][l.y] == null){
+						board[l.x+1][l.y] = this.getCurrentChampion();
+						board[l.x][l.y] = null;
+						this.getCurrentChampion().setLocation(new Point(l.x+1, l.y));
+						}
+				else
+					throw new UnallowedMovementException("This is an invlaid movement");
+				}
+			else
+				throw new UnallowedMovementException("This is an invlaid movement");
+			break;
+			}
+		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-1);
+		}
+	}
