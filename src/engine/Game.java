@@ -344,8 +344,8 @@ public class Game {
 		switch(d){
 		case RIGHT:
 			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().y+i < BOARDWIDTH; i++){
-				if(board[this.getCurrentChampion().getLocation().y+i][this.getCurrentChampion().getLocation().x] != null){
-					if(board[this.getCurrentChampion().getLocation().y+i][this.getCurrentChampion().getLocation().x] instanceof Cover){
+				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i] != null){
+					if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y+i] instanceof Cover){
 						l = new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y+i);
 						break;
 					}
@@ -364,8 +364,8 @@ public class Game {
 			break;
 		case LEFT:
 			for(int i = 1; i <= this.getCurrentChampion().getAttackRange() && this.getCurrentChampion().getLocation().y-i >= 0; i++){
-				if(board[this.getCurrentChampion().getLocation().y-i][this.getCurrentChampion().getLocation().x] != null){
-					if(board[this.getCurrentChampion().getLocation().y-i][this.getCurrentChampion().getLocation().x] instanceof Cover){
+				if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i] != null){
+					if(board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y-i] instanceof Cover){
 						l = new Point(this.getCurrentChampion().getLocation().x, this.getCurrentChampion().getLocation().y-i);
 						break;
 					}
@@ -426,14 +426,14 @@ public class Game {
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-2);
 		if(l != null){
 			Damageable target = null;
-			if(board[l.y][l.x] instanceof Cover){
-				target = (Cover) board[l.y][l.x];
+			if(board[l.x][l.y] instanceof Cover){
+				target = (Cover) board[l.x][l.y];
 				target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
 				if(target.getCurrentHP() == 0)
-					board[l.y][l.x] = null;
+					board[l.x][l.y] = null;
 			}
 			else{
-				target = (Champion) board[l.y][l.x];
+				target = (Champion) board[l.x][l.y];
 				boolean dodge = false;
 				boolean shield = false;
 				Effect block = null;
@@ -458,19 +458,19 @@ public class Game {
 					if(target instanceof Hero)
 						target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
 					else
-						target.setCurrentHP((int) (target.getCurrentHP() - (this.getCurrentChampion().getAttackDamage()*1.5)));
+						target.setCurrentHP( (target.getCurrentHP() - (int)(this.getCurrentChampion().getAttackDamage()*1.5)));
 				}
 				else if(this.getCurrentChampion() instanceof Villain){
 					if(target instanceof Villain)
 						target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
 					else
-						target.setCurrentHP((int) (target.getCurrentHP() - (this.getCurrentChampion().getAttackDamage()*1.5)));
+						target.setCurrentHP( (target.getCurrentHP() - (int)(this.getCurrentChampion().getAttackDamage()*1.5)));
 				}
 				else{
 					if(target instanceof AntiHero)
 						target.setCurrentHP((target.getCurrentHP() - this.getCurrentChampion().getAttackDamage()));
 					else
-						target.setCurrentHP((int) (target.getCurrentHP() - (this.getCurrentChampion().getAttackDamage()*1.5)));
+						target.setCurrentHP( (target.getCurrentHP() - (int)(this.getCurrentChampion().getAttackDamage()*1.5)));
 				}
 			}
 			if(target.getCurrentHP() == 0){
@@ -524,8 +524,13 @@ public class Game {
 				}
 			}
 		}
-		if(targets != null)
+		if(targets != null){
 			this.getCurrentChampion().useLeaderAbility(targets);
+			if(firstLeader)							//added this if conditional
+				firstLeaderAbilityUsed= true;
+			else
+				secondLeaderAbilityUsed = true;
+			}
 	}
 	
 	public void castAbility(Ability a, Direction d) throws AbilityUseException, NotEnoughResourcesException, CloneNotSupportedException{
@@ -619,7 +624,7 @@ public class Game {
 		a.setCurrentCooldown(a.getBaseCooldown());
 	}
 	
-	public void castAbility(Ability a, int x, int y) throws Exception{
+	public void castAbility(Ability a, int x, int y) throws AbilityUseException, InvalidTargetException, NotEnoughResourcesException, CloneNotSupportedException{
 		if(a.getCastArea() != AreaOfEffect.SINGLETARGET)
 			return;
 		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
@@ -630,7 +635,7 @@ public class Game {
 		if(this.getCurrentChampion().getMana()<a.getManaCost()||this.getCurrentChampion().getCurrentActionPoints()<a.getRequiredActionPoints())
 			throw new NotEnoughResourcesException();
 		if(a.getCurrentCooldown() != 0){
-			throw new NotEnoughResourcesException("This ability is on cooldown.");
+			throw new AbilityUseException("This ability is on cooldown.");
 		}
 		Damageable target = (Damageable)board[x][y];
 		boolean first = false;
@@ -726,10 +731,10 @@ public class Game {
 			boolean canDown = false;
 			boolean canLeft = false;
 			boolean canRight = false;
-			int up = y++;
-			int down = y--;
-			int left = x--;
-			int right = x++;
+			int up = ++y;
+			int down = --y;			//changed those to ++x instead of x++
+			int left = --x;
+			int right = ++x;
 			if(up < BOARDHEIGHT && up >= 0)
 				canUp = true;
 			if(down < BOARDHEIGHT && down >= 0)
