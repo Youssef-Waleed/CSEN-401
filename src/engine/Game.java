@@ -853,7 +853,7 @@ public class Game {
 		ArrayList<Damageable> targets = new ArrayList<>();
 		switch(a.getCastArea()){
 		case SELFTARGET: 
-			targets.add(this.getCurrentChampion()); System.out.println(targets+"   targetsss");
+			targets.add(this.getCurrentChampion());
 			break;
 		case TEAMTARGET:
 			for(Champion c: firstPlayer.getTeam()){
@@ -919,8 +919,7 @@ public class Game {
 				covers.add(targets.get(i));	
 			else{
 				if(current.getTeam().contains(targets.get(i))){
-					allies.add(targets.get(i));
-					System.out.println(allies+"  alliessss");}
+					allies.add(targets.get(i));}
 				else
 					enemies.add(targets.get(i));
 			}
