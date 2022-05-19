@@ -247,9 +247,25 @@ public class Game {
 	public static int getBoardheight() {
 		return BOARDHEIGHT;
 	}
+
+	
+	
+//===========================================================================================================================
+			
+			
+		
 	public Champion getCurrentChampion(){
+		while(((Champion) turnOrder.peekMin()).getCondition() == Condition.KNOCKEDOUT )
+			turnOrder.remove();			//I added this condition
 		return (Champion) turnOrder.peekMin();
 	}
+
+	
+	
+//===========================================================================================================================
+			
+			
+		
 	public Player checkGameOver(){
 		boolean cond1 = true;
 		for(int i = 0; i < firstPlayer.getTeam().size(); i++){
@@ -271,6 +287,13 @@ public class Game {
 			return firstPlayer;
 		return null;
 	}
+
+	
+	
+//===========================================================================================================================
+			
+			
+		
 	public void move(Direction d) throws UnallowedMovementException, NotEnoughResourcesException{
 		if(this.getCurrentChampion().getCondition() == Condition.ROOTED)
 			throw new UnallowedMovementException("The champion is rooted.");
@@ -339,10 +362,18 @@ public class Game {
 			}
 	this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-1);
 	}
+
 	
+	
+//===========================================================================================================================
+//											ATTACKKKK
+			
+		
 	public void attack(Direction d) throws ChampionDisarmedException, NotEnoughResourcesException{
 		boolean cond = false;
 		boolean first = false;
+		if(this.getCurrentChampion().getCurrentActionPoints() < 2)
+			throw new NotEnoughResourcesException("Not enough action points.");
 		for(int i = 0; i < this.getCurrentChampion().getAppliedEffects().size(); i++){
 			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Disarm){
 				cond = true;
@@ -351,8 +382,6 @@ public class Game {
 		}
 		if(cond)
 			throw new ChampionDisarmedException("The champion is disarmed.");
-		if(this.getCurrentChampion().getCurrentActionPoints() < 2)
-			throw new NotEnoughResourcesException("Not enough action points.");
 		if(firstPlayer.getTeam().contains(this.getCurrentChampion()))
 			first = true;
 		Point l = null;
@@ -489,15 +518,37 @@ public class Game {
 						target.setCurrentHP( (target.getCurrentHP() - (int)(this.getCurrentChampion().getAttackDamage()*1.5)));
 				}
 			}
-			/*if(target.getCurrentHP() == 0){
+			if(target.getCurrentHP() == 0 && target instanceof Champion){		//THE ERROR OF DEAD COVER>>> CAST ERROR TO CHAMPION AAA33
 				board[l.x][l.y] = null;
 				((Champion)target).setLocation(null);
 				((Champion)target).setCondition(Condition.KNOCKEDOUT);
+				if(first)
+					secondPlayer.getTeam().remove(target);					//added this
+				else
+					firstPlayer.getTeam().remove(target);
 				
-			}*/
+				ArrayList<Champion> t= new ArrayList<>();
+				
+				while(!turnOrder.isEmpty()){					//DEAD target
+					if(!( ((Champion)turnOrder.peekMin()).equals(target)) )
+						t.add((Champion)turnOrder.remove());
+					else
+						( (Champion)(turnOrder.remove()) ).updateTimers();
+				}
+				for(int i =0 ; i<t.size(); i++)
+					turnOrder.insert(t.get(i));
+				
+			}
 		}
-		this.checkDeath();
 	}
+
+	
+	
+//===========================================================================================================================
+//											LEADERRRR		
+	
+			
+		
 	public void useLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException, CloneNotSupportedException{
 		boolean firstLeader = false;
 		if(this.getCurrentChampion() != firstPlayer.getLeader() && this.getCurrentChampion() != secondPlayer.getLeader() )
@@ -523,21 +574,23 @@ public class Game {
 		else{
 			if(this.getCurrentChampion() instanceof Hero){
 				for(int i = 0; i < 3; i++){
-					if(current.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
+					if(current.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT )
 						targets.add(current.getTeam().get(i));
 				}
 			}
 			else if(this.getCurrentChampion() instanceof Villain){
 				for(int i = 0; i < 3; i++){
-					if(opponent.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
+					if(opponent.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT && !(opponent.getTeam().get(i).equals(opponent.getLeader())))
 						targets.add(opponent.getTeam().get(i));
 				}
 			}
 			else{
 				for(int i = 0; i < firstPlayer.getTeam().size(); i++)
+					if( !(opponent.getTeam().get(i).equals(opponent.getLeader())))
 						targets.add(firstPlayer.getTeam().get(i));
 				
 				for(int i = 0; i < secondPlayer.getTeam().size(); i++)
+					if( !(opponent.getTeam().get(i).equals(opponent.getLeader())))
 						targets.add(secondPlayer.getTeam().get(i));
 			}
 		}
@@ -548,23 +601,29 @@ public class Game {
 			else
 				secondLeaderAbilityUsed = true;
 			}
-		this.checkDeath();
 	}
+	
+	
+//===========================================================================================================================
+//												ABILITYYYYY			
+			
+		
 	
 	public void castAbility(Ability a, Direction d) throws AbilityUseException, NotEnoughResourcesException, CloneNotSupportedException{
 		if(a.getCastArea() != AreaOfEffect.DIRECTIONAL)
 			return;
-		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
-			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Silence)
-				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
-		
+		if(a.getCurrentCooldown() != 0){
+			throw new AbilityUseException("This ability is on cooldown.");
+		}
 		if(this.getCurrentChampion().getMana() < a.getManaCost())
 			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
 		if(this.getCurrentChampion().getCurrentActionPoints() < a.getRequiredActionPoints())
 			throw new NotEnoughResourcesException("Not enough Action Points for casting this Ability.");
-		if(a.getCurrentCooldown() != 0){
-			throw new NotEnoughResourcesException("This ability is on cooldown.");
-		}
+		
+		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
+			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Silence)
+				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
+		
 		
 		ArrayList<Damageable> targets = new ArrayList<>();
 		
@@ -635,41 +694,52 @@ public class Game {
 				a.execute(covers);
 			} else if (a instanceof HealingAbility)
 				a.execute(allies);
-			for(int i= 0; i<targets.size(); i++){
-				if(targets.get(i).getCurrentHP()==0)
-				{
-					board[targets.get(i).getLocation().x][targets.get(i).getLocation().y] = null;
-				    if(targets.get(i) instanceof Champion)
-				    {
-				    	((Champion)targets.get(i)).setLocation(null);
-				    	((Champion)targets.get(i)).setCondition(Condition.KNOCKEDOUT);
-				    }
-				}
+
+			this.getCurrentChampion().setMana(this.getCurrentChampion().getMana() - a.getManaCost());
+			this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()- a.getRequiredActionPoints());
+			a.setCurrentCooldown(a.getBaseCooldown());
 			
+			for (int i = 0; i < targets.size(); i++) {
+				if (targets.get(i).getCurrentHP() == 0) {
+					board[targets.get(i).getLocation().x][targets.get(i).getLocation().y] = null;
+					if (targets.get(i) instanceof Champion) {
+						((Champion) targets.get(i)).setLocation(null);
+						((Champion) targets.get(i)).setCondition(Condition.KNOCKEDOUT);
+						current.getTeam().remove((Champion) targets.get(i));
+					}
+				}
 			}
 		}
-		
-		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana() - a.getManaCost());
-		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()- a.getRequiredActionPoints());
-		a.setCurrentCooldown(a.getBaseCooldown());
-		this.checkDeath();
 	}
+	
+	
+	
+//===========================================================================================================================
+//										ABILITYYYYY
+		
 	
 	public void castAbility(Ability a, int x, int y) throws AbilityUseException, InvalidTargetException, NotEnoughResourcesException, CloneNotSupportedException{
 		if(a.getCastArea() != AreaOfEffect.SINGLETARGET)
 			return;
+		if (a.getCurrentCooldown() != 0) {
+			throw new AbilityUseException("This ability is on cooldown.");
+		}
 		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
 			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Silence)
 				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
-		if(board[x][y]==null)
-			throw new InvalidTargetException();
-		if((this.getCurrentChampion().getMana()<a.getManaCost()) )
+		
+		if ((this.getCurrentChampion().getMana() < a.getManaCost()))
 			throw new NotEnoughResourcesException("There is no enough Mana for casting the ability");
-		if (this.getCurrentChampion().getCurrentActionPoints()<a.getRequiredActionPoints())
+		if (this.getCurrentChampion().getCurrentActionPoints() < a
+				.getRequiredActionPoints())
 			throw new NotEnoughResourcesException("There is no enough Action Points for casting the ability");
-		if(a.getCurrentCooldown() != 0){
-			throw new AbilityUseException("This ability is on cooldown.");
-		}
+		if (board[x][y] == null)
+			throw new InvalidTargetException();
+		
+		if (board[x][y] instanceof Cover)
+			throw new InvalidTargetException();
+		
+		
 		Damageable target = (Damageable)board[x][y];
 		boolean first = false;
 		if(firstPlayer.getTeam().contains(this.getCurrentChampion()))
@@ -705,46 +775,49 @@ public class Game {
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana()-a.getManaCost());
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-a.getRequiredActionPoints());
 		a.setCurrentCooldown(a.getBaseCooldown());
-		/*if(target.getCurrentHP() == 0){
+		if(target.getCurrentHP() == 0){
 			board[l.x][l.y] = null;
 			((Champion)target).setLocation(null);
 			((Champion)target).setCondition(Condition.KNOCKEDOUT);
-		}*/
-		this.checkDeath();
+			if(first)
+				firstPlayer.getTeam().remove(target);			//added this
+			else
+				secondPlayer.getTeam().remove(target);
+		}
 	}
 	
-	public void checkDeath()
-	{
-		int size = turnOrder.size();
-		PriorityQueue temp = new PriorityQueue(size);
-		while(!turnOrder.isEmpty())
-		{
-			if(this.getCurrentChampion().getCurrentHP() == 0 )
-			{
-				board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y] = null;
-				this.getCurrentChampion().setLocation(null);
-				this.getCurrentChampion().setCondition(Condition.KNOCKEDOUT);
-				turnOrder.remove();
-			}
-			else
-			{
-				temp.insert(turnOrder.remove());
-			}
-		}
-		while(!temp.isEmpty())
-			turnOrder.insert(temp.remove());
-	}
+	
+	
+//===========================================================================================================================
+			
+	
 	
 	public void endTurn(){
-		do{
+		turnOrder.remove();
+		if(turnOrder.isEmpty())
+			prepareChampionTurns();
+		while(this.getCurrentChampion().getCondition() == Condition.INACTIVE || this.getCurrentChampion().getCondition() == Condition.KNOCKEDOUT){
+			if(this.getCurrentChampion().getCondition() == Condition.KNOCKEDOUT){
+				turnOrder.remove();
+				if(turnOrder.isEmpty())
+					prepareChampionTurns();
+			}
+			else{
 			this.getCurrentChampion().updateTimers();
 			turnOrder.remove();
 			if(turnOrder.isEmpty())
 				prepareChampionTurns();
-		}while(this.getCurrentChampion().getCondition() == Condition.INACTIVE);
+			}
+		}
 		this.getCurrentChampion().updateTimers();
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getMaxActionPointsPerTurn());
 	}
+	
+	
+	
+//===========================================================================================================================
+		
+		
 	
 	private void prepareChampionTurns(){
 		
@@ -754,21 +827,28 @@ public class Game {
 			if(((Champion)(secondPlayer.getTeam().get(i))).getCondition() != Condition.KNOCKEDOUT)
 				turnOrder.insert(secondPlayer.getTeam().get(i));
 		}
-		
-		
 	}
+	
+	
+	
+//===========================================================================================================================
+//										ABILITYYYYYYY/
+	
+	
 	public void castAbility(Ability a) throws AbilityUseException, NotEnoughResourcesException, CloneNotSupportedException{
+		if(a.getCurrentCooldown() != 0){
+			throw new AbilityUseException("This ability is on cooldown.");
+		}
+		if(this.getCurrentChampion().getCurrentActionPoints() < a.getRequiredActionPoints())
+			throw new NotEnoughResourcesException("Not enough Action Points for casting this Ability.");
+		if(this.getCurrentChampion().getMana() < a.getManaCost())
+			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
+		
 		for(int i=0; i<this.getCurrentChampion().getAppliedEffects().size(); i++)
 			if(this.getCurrentChampion().getAppliedEffects().get(i) instanceof Silence)
 				throw new AbilityUseException("Champion is silenced. You can't use the Ability.");
 		
-		if(this.getCurrentChampion().getMana() < a.getManaCost())
-			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
-		if(this.getCurrentChampion().getCurrentActionPoints() < a.getRequiredActionPoints())
-			throw new NotEnoughResourcesException("Not enough mana for casting this Ability.");
-		if(a.getCurrentCooldown() != 0){
-			throw new NotEnoughResourcesException("This ability is on cooldown.");
-		}
+		
 		ArrayList<Damageable> targets = new ArrayList<>();
 		switch(a.getCastArea()){
 		case SELFTARGET: 
@@ -852,6 +932,7 @@ public class Game {
 
 			if (a instanceof DamagingAbility) {
 				a.execute(enemies);
+				a.execute(covers); 						//added this
 			} else if (a instanceof HealingAbility)
 				a.execute(allies);
 		}
@@ -859,7 +940,21 @@ public class Game {
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana() - a.getManaCost());
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()- a.getRequiredActionPoints());
 		a.setCurrentCooldown(a.getBaseCooldown());
-		this.checkDeath();
+		
+		
+		for(int i= 0; i<targets.size(); i++){			//added the loop
+			if(targets.get(i).getCurrentHP()==0)
+			{
+				board[targets.get(i).getLocation().x][targets.get(i).getLocation().y] = null;
+			    if(targets.get(i) instanceof Champion)
+			    {
+			    	((Champion)targets.get(i)).setLocation(null);
+			    	((Champion)targets.get(i)).setCondition(Condition.KNOCKEDOUT);
+			    	current.getTeam().remove((Champion)targets.get(i));
+			    }
+			    
+			}
+		}
 	}
 	
 	
