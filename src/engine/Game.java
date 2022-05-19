@@ -489,13 +489,14 @@ public class Game {
 						target.setCurrentHP( (target.getCurrentHP() - (int)(this.getCurrentChampion().getAttackDamage()*1.5)));
 				}
 			}
-			if(target.getCurrentHP() == 0){
+			/*if(target.getCurrentHP() == 0){
 				board[l.x][l.y] = null;
 				((Champion)target).setLocation(null);
 				((Champion)target).setCondition(Condition.KNOCKEDOUT);
 				
-			}
+			}*/
 		}
+		this.checkDeath();
 	}
 	public void useLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException, CloneNotSupportedException{
 		boolean firstLeader = false;
@@ -547,6 +548,7 @@ public class Game {
 			else
 				secondLeaderAbilityUsed = true;
 			}
+		this.checkDeath();
 	}
 	
 	public void castAbility(Ability a, Direction d) throws AbilityUseException, NotEnoughResourcesException, CloneNotSupportedException{
@@ -650,6 +652,7 @@ public class Game {
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana() - a.getManaCost());
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()- a.getRequiredActionPoints());
 		a.setCurrentCooldown(a.getBaseCooldown());
+		this.checkDeath();
 	}
 	
 	public void castAbility(Ability a, int x, int y) throws AbilityUseException, InvalidTargetException, NotEnoughResourcesException, CloneNotSupportedException{
@@ -702,14 +705,35 @@ public class Game {
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana()-a.getManaCost());
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-a.getRequiredActionPoints());
 		a.setCurrentCooldown(a.getBaseCooldown());
-		if(target.getCurrentHP() == 0){
+		/*if(target.getCurrentHP() == 0){
 			board[l.x][l.y] = null;
 			((Champion)target).setLocation(null);
 			((Champion)target).setCondition(Condition.KNOCKEDOUT);
-			
-		}
+		}*/
+		this.checkDeath();
 	}
 	
+	public void checkDeath()
+	{
+		int size = turnOrder.size();
+		PriorityQueue temp = new PriorityQueue(size);
+		while(!turnOrder.isEmpty())
+		{
+			if(this.getCurrentChampion().getCurrentHP() == 0 )
+			{
+				board[this.getCurrentChampion().getLocation().x][this.getCurrentChampion().getLocation().y] = null;
+				this.getCurrentChampion().setLocation(null);
+				this.getCurrentChampion().setCondition(Condition.KNOCKEDOUT);
+				turnOrder.remove();
+			}
+			else
+			{
+				temp.insert(turnOrder.remove());
+			}
+		}
+		while(!temp.isEmpty())
+			turnOrder.insert(temp.remove());
+	}
 	
 	public void endTurn(){
 		do{
@@ -835,6 +859,7 @@ public class Game {
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana() - a.getManaCost());
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()- a.getRequiredActionPoints());
 		a.setCurrentCooldown(a.getBaseCooldown());
+		this.checkDeath();
 	}
 	
 	
