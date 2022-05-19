@@ -10,9 +10,8 @@ public class Stun extends Effect {
 	}
 	public void apply(Champion c){
 		c.setCondition(Condition.INACTIVE);
-		c.getAppliedEffects().add(new Stun(this.getDuration()));
 	}
-	public void remove(Champion c){
+	public void remove(Champion c){				//idk should I change this?
 		boolean cond = false;
 		for(int i = 0; i < c.getAppliedEffects().size(); i++){
 			if(c.getAppliedEffects().get(i) instanceof Root){

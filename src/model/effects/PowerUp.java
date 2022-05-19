@@ -13,8 +13,6 @@ public class PowerUp extends Effect {
 		
 	}
 	public void apply(Champion c){
-		c.getAppliedEffects().add(new PowerUp(this.getDuration()));
-		
 		ArrayList<Ability> arr= c.getAbilities();
 		for(int i=0; i<arr.size();i++)
 			if(arr.get(i) instanceof DamagingAbility)
@@ -22,7 +20,7 @@ public class PowerUp extends Effect {
 			else if(arr.get(i) instanceof HealingAbility)
 				((HealingAbility)(arr.get(i))).setHealAmount((int)(1.2*((HealingAbility)(arr.get(i))).getHealAmount()));
 	}
-	public void remove(Champion c){
+	public void remove(Champion c){				//idk should I change this?
 		c.getAppliedEffects().remove(this);
 		
 		ArrayList<Ability> arr= c.getAbilities();

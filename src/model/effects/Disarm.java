@@ -15,10 +15,9 @@ public class Disarm extends Effect {
 		
 	}
 	public void apply(Champion c){
-		c.getAppliedEffects().add(new Disarm(this.getDuration()));
 		c.getAbilities().add( new DamagingAbility("Punch",0, 1,1,AreaOfEffect.SINGLETARGET, 1,50));
 	}
-	public void remove(Champion c){
+	public void remove(Champion c){				//idk should I change this?
 		c.getAppliedEffects().remove(this);
 		ArrayList<Ability> arr= c.getAbilities();
 		for(int i=0; i<arr.size();i++)

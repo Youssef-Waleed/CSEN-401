@@ -10,9 +10,8 @@ public class Shield extends Effect {
 	}
 	public void apply(Champion c){
 		c.setSpeed(c.getSpeed()+ (int)(c.getSpeed()*0.02) );
-		c.getAppliedEffects().add(new Shield(this.getDuration()));
 	}
-	public void remove(Champion c){
+	public void remove(Champion c){				//idk should I change this?
 		c.setSpeed((int)(c.getSpeed()/1.02) );
 		c.getAppliedEffects().remove(this);
 	}

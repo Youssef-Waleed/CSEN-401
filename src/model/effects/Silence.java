@@ -11,9 +11,8 @@ public class Silence extends Effect {
 	public void apply(Champion c){
 		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn()+2);
 		c.setCurrentActionPoints(c.getCurrentActionPoints()+2);
-		c.getAppliedEffects().add(new Silence(this.getDuration()));
 	}
-	public void remove(Champion c){
+	public void remove(Champion c){				//idk should I change this?
 		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn()-2);
 		c.setCurrentActionPoints(c.getCurrentActionPoints()-2);
 		c.getAppliedEffects().remove(this);

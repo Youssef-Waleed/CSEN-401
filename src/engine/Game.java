@@ -251,6 +251,7 @@ public class Game {
 	
 	
 //===========================================================================================================================
+//												CURRENTTTTTTTT	
 			
 			
 		
@@ -291,7 +292,7 @@ public class Game {
 	
 	
 //===========================================================================================================================
-			
+//											MOVEEEE ITTT
 			
 		
 	public void move(Direction d) throws UnallowedMovementException, NotEnoughResourcesException{
@@ -364,6 +365,31 @@ public class Game {
 	}
 
 	
+	
+//===========================================================================================================================
+//											KILLLLL
+	public void kill(Damageable damageable, boolean firstplayer, Point l){
+		board[l.x][l.y] = null;
+		if (damageable instanceof Champion) {
+			((Champion) damageable).setLocation(null);
+			((Champion) damageable).setCondition(Condition.KNOCKEDOUT);
+			if (firstplayer)
+				secondPlayer.getTeam().remove(damageable);
+			else
+				firstPlayer.getTeam().remove(damageable);
+
+			ArrayList<Champion> t = new ArrayList<>();
+
+			while (!turnOrder.isEmpty()) { 					// DEAD target in order queue
+				if (!(((Champion) turnOrder.peekMin()).equals(damageable)))
+					t.add((Champion) turnOrder.remove());
+				else
+					((Champion) (turnOrder.remove())).updateTimers();
+			}
+			for (int i = 0; i < t.size(); i++)
+				turnOrder.insert(t.get(i));
+		}
+	}
 	
 //===========================================================================================================================
 //											ATTACKKKK
@@ -518,25 +544,10 @@ public class Game {
 						target.setCurrentHP( (target.getCurrentHP() - (int)(this.getCurrentChampion().getAttackDamage()*1.5)));
 				}
 			}
-			if(target.getCurrentHP() == 0 && target instanceof Champion){		//THE ERROR OF DEAD COVER>>> CAST ERROR TO CHAMPION AAA33
-				board[l.x][l.y] = null;
-				((Champion)target).setLocation(null);
-				((Champion)target).setCondition(Condition.KNOCKEDOUT);
-				if(first)
-					secondPlayer.getTeam().remove(target);					//added this
-				else
-					firstPlayer.getTeam().remove(target);
+			if(target.getCurrentHP() == 0 && target instanceof Champion)	//THE ERROR OF DEAD COVER>>> CAST ERROR TO CHAMPION AAA33
+			{		
 				
-				ArrayList<Champion> t= new ArrayList<>();
-				
-				while(!turnOrder.isEmpty()){					//DEAD target
-					if(!( ((Champion)turnOrder.peekMin()).equals(target)) )
-						t.add((Champion)turnOrder.remove());
-					else
-						( (Champion)(turnOrder.remove()) ).updateTimers();
-				}
-				for(int i =0 ; i<t.size(); i++)
-					turnOrder.insert(t.get(i));
+				kill((Champion)target, first, l);
 				
 			}
 		}
@@ -701,12 +712,8 @@ public class Game {
 			
 			for (int i = 0; i < targets.size(); i++) {
 				if (targets.get(i).getCurrentHP() == 0) {
-					board[targets.get(i).getLocation().x][targets.get(i).getLocation().y] = null;
-					if (targets.get(i) instanceof Champion) {
-						((Champion) targets.get(i)).setLocation(null);
-						((Champion) targets.get(i)).setCondition(Condition.KNOCKEDOUT);
-						current.getTeam().remove((Champion) targets.get(i));
-					}
+					Point l =new Point(targets.get(i).getLocation().x,targets.get(i).getLocation().y);
+					kill(targets.get(i), current == firstPlayer ,l);
 				}
 			}
 		}
@@ -715,7 +722,7 @@ public class Game {
 	
 	
 //===========================================================================================================================
-//										ABILITYYYYY
+//										ABILITYYYYY		BARDOO
 		
 	
 	public void castAbility(Ability a, int x, int y) throws AbilityUseException, InvalidTargetException, NotEnoughResourcesException, CloneNotSupportedException{
@@ -776,13 +783,7 @@ public class Game {
 		this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints()-a.getRequiredActionPoints());
 		a.setCurrentCooldown(a.getBaseCooldown());
 		if(target.getCurrentHP() == 0){
-			board[l.x][l.y] = null;
-			((Champion)target).setLocation(null);
-			((Champion)target).setCondition(Condition.KNOCKEDOUT);
-			if(first)
-				firstPlayer.getTeam().remove(target);			//added this
-			else
-				secondPlayer.getTeam().remove(target);
+			kill(target, first, new Point(x,y));
 		}
 	}
 	
@@ -832,7 +833,7 @@ public class Game {
 	
 	
 //===========================================================================================================================
-//										ABILITYYYYYYY/
+//										ABILITYYYYYYY	BARDOO
 	
 	
 	public void castAbility(Ability a) throws AbilityUseException, NotEnoughResourcesException, CloneNotSupportedException{
@@ -852,7 +853,7 @@ public class Game {
 		ArrayList<Damageable> targets = new ArrayList<>();
 		switch(a.getCastArea()){
 		case SELFTARGET: 
-			targets.add(this.getCurrentChampion());
+			targets.add(this.getCurrentChampion()); System.out.println(targets+"   targetsss");
 			break;
 		case TEAMTARGET:
 			for(Champion c: firstPlayer.getTeam()){
@@ -917,8 +918,9 @@ public class Game {
 			if(targets.get(i) instanceof Cover)
 				covers.add(targets.get(i));	
 			else{
-				if(current.getTeam().contains(targets.get(i)))
+				if(current.getTeam().contains(targets.get(i))){
 					allies.add(targets.get(i));
+					System.out.println(allies+"  alliessss");}
 				else
 					enemies.add(targets.get(i));
 			}
@@ -927,14 +929,21 @@ public class Game {
 			if (a instanceof CrowdControlAbility)
 				if (((CrowdControlAbility) a).getEffect().getType() == EffectType.DEBUFF)
 					a.execute(enemies);
-				else
-					a.execute(allies);
+				else{
 
+					if(a.getCastArea()== AreaOfEffect.SELFTARGET)	
+						allies.add(targets.get(0));					//HasbeyaAllah w ne3m el wakeel fe om java w eclipse
+					a.execute(allies);
+				}
 			if (a instanceof DamagingAbility) {
 				a.execute(enemies);
 				a.execute(covers); 						//added this
-			} else if (a instanceof HealingAbility)
+			} 
+			if (a instanceof HealingAbility){
+				if(a.getCastArea()== AreaOfEffect.SELFTARGET)	
+					allies.add(targets.get(0));					//HasbeyaAllah w ne3m el wakeel fe om java w eclipse TANYYYYYYYYYYYYYYYYYYYY w Talettttttttttttttttt
 				a.execute(allies);
+			}
 		}
 		
 		this.getCurrentChampion().setMana(this.getCurrentChampion().getMana() - a.getManaCost());
@@ -945,13 +954,10 @@ public class Game {
 		for(int i= 0; i<targets.size(); i++){			//added the loop
 			if(targets.get(i).getCurrentHP()==0)
 			{
-				board[targets.get(i).getLocation().x][targets.get(i).getLocation().y] = null;
-			    if(targets.get(i) instanceof Champion)
-			    {
-			    	((Champion)targets.get(i)).setLocation(null);
-			    	((Champion)targets.get(i)).setCondition(Condition.KNOCKEDOUT);
-			    	current.getTeam().remove((Champion)targets.get(i));
-			    }
+				//board[targets.get(i).getLocation().x][targets.get(i).getLocation().y] = null;
+				
+			    	Point l= new Point(targets.get(i).getLocation().x,targets.get(i).getLocation().y);
+			    	kill(targets.get(i), current==firstPlayer, l);
 			    
 			}
 		}

@@ -12,9 +12,8 @@ public class Root extends Effect {
 	public void apply(Champion c){
 		if(c.getCondition() != Condition.INACTIVE)
 			c.setCondition(Condition.ROOTED);
-		c.getAppliedEffects().add(new Root(this.getDuration()));
 	}
-	public void remove(Champion c){
+	public void remove(Champion c){				//idk should I change this?
 		if(c.getCondition() != Condition.INACTIVE)
 			for(Effect e : c.getAppliedEffects())
 				if(e instanceof Root){

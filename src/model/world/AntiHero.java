@@ -17,6 +17,7 @@ public class AntiHero extends Champion {
 		Stun s = new Stun(2);
 		for(int i=0;i<targets.size();i++){
 			((Stun)s.clone()).apply(targets.get(i));
+			((Champion)(targets.get(i))).getAppliedEffects().add(s);		//added effect to array
 		}
 	}
 

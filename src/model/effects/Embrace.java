@@ -16,9 +16,8 @@ public class Embrace extends Effect {
 		c.setMana((int)(c.getMana()*1.2));
 		c.setSpeed((int)(c.getSpeed()*1.2) );
 		c.setAttackDamage((int)(c.getAttackDamage()*1.2) );
-		c.getAppliedEffects().add(new Embrace(this.getDuration()));
 		}
-	public void remove(Champion c){
+	public void remove(Champion c){				//idk should I change this?
 		c.setSpeed( (int)(c.getSpeed()/1.2) );
 		c.setAttackDamage((int)(c.getAttackDamage()/1.2) );
 		c.getAppliedEffects().remove(this);

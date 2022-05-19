@@ -13,9 +13,8 @@ public class Shock extends Effect {
 		c.setAttackDamage((int)(c.getAttackDamage()*0.9));
 		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn()-1);
 		c.setCurrentActionPoints(c.getCurrentActionPoints()-1);
-		c.getAppliedEffects().add(new Shock(this.getDuration()));
 	}
-	public void remove(Champion c){
+	public void remove(Champion c){				//idk should I change this?
 		c.setSpeed((int)(c.getSpeed()/0.9) );
 		c.setAttackDamage((int)(c.getAttackDamage()/0.9));
 		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn()+1);
