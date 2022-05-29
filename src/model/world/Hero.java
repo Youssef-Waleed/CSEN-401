@@ -2,9 +2,9 @@ package model.world;
 
 import java.util.ArrayList;
 
-import model.effects.*;
-
-
+import model.effects.Effect;
+import model.effects.EffectType;
+import model.effects.Embrace;
 
 public class Hero extends Champion {
 
@@ -13,21 +13,26 @@ public class Hero extends Champion {
 
 	}
 
-	public void useLeaderAbility(ArrayList<Champion> targets) throws CloneNotSupportedException
-	{Embrace E = new Embrace(2);
-	for(int i=0;i<targets.size();i++)
-	{
-		int size=targets.get(i).getAppliedEffects().size();
-		for(int j=0;j<size&& targets.get(i).getAppliedEffects().size()>1 ;j++)									//changed size to a static variable...we can't traverse a changing array list
-		    if(targets.get(i).getAppliedEffects().get(j).getType()== EffectType.DEBUFF){
-		    	targets.get(i).getAppliedEffects().get(j--).remove(targets.get(i));
-		    	}
-		if(!(targets.get(i).getAppliedEffects().isEmpty()) && targets.get(i).getAppliedEffects().get(0).getType()== EffectType.DEBUFF){
-	    	targets.get(i).getAppliedEffects().get(0).remove(targets.get(i));
-	    	}
-		((Embrace)E.clone()).apply(targets.get(i));
-		((Champion)(targets.get(i))).getAppliedEffects().add(E);		//added effect to array
+	@Override
+	public void useLeaderAbility(ArrayList<Champion> targets) {
+		for (Champion c : targets) {
+			int i = 0;
+			while (i < c.getAppliedEffects().size()) {
+				Effect e = c.getAppliedEffects().get(i);
+				if (e.getType() == EffectType.DEBUFF) {
+					e.remove(c);
+					c.getAppliedEffects().remove(e);
+
+				} else
+					i++;
+			}
+				Embrace em = new Embrace(2);
+				
+				em.apply(c);
+				c.getAppliedEffects().add(em);
+				
+			}
+		}
+
 	}
-	}
-	
-}
+

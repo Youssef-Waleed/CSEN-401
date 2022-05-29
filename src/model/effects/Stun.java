@@ -8,22 +8,35 @@ public class Stun extends Effect {
 	public Stun(int duration) {
 		super("Stun", duration, EffectType.DEBUFF);
 	}
-	public void apply(Champion c){
+
+	@Override
+	public void apply(Champion c) {
 		c.setCondition(Condition.INACTIVE);
+		
 	}
-	public void remove(Champion c){				//idk should I change this?
-		boolean cond = false;
-		for(int i = 0; i < c.getAppliedEffects().size(); i++){
-			if(c.getAppliedEffects().get(i) instanceof Root){
-				cond = true;
+
+	@Override
+	public void remove(Champion c) {
+		boolean isStunned=false;
+		boolean isRooted=false;
+		for(Effect e: c.getAppliedEffects())
+		{
+			if(e instanceof Stun)
+			{
+				isStunned=true;
 				break;
 			}
+		
+			else if(e instanceof Root)
+				isRooted=true;
 		}
-		if(cond)
+		if(isStunned)
+			c.setCondition(Condition.INACTIVE);
+		else if(isRooted)
 			c.setCondition(Condition.ROOTED);
 		else
-			c.setCondition(Condition.ACTIVE);
-			c.getAppliedEffects().remove(this);
+		c.setCondition(Condition.ACTIVE);
+		
 	}
 
 

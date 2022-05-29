@@ -1,10 +1,6 @@
 package model.effects;
 
-import java.util.ArrayList;
-
-import model.abilities.*;
-import model.world.*;
-
+import model.world.Champion;
 
 public abstract class Effect implements Cloneable{
 	private String name;
@@ -16,7 +12,10 @@ public abstract class Effect implements Cloneable{
 		this.type = type;
 		this.duration = duration;
 	}
-
+public Object clone() throws CloneNotSupportedException
+{
+	return super.clone();
+}
 	public String getName() {
 		return name;
 	}
@@ -31,17 +30,9 @@ public abstract class Effect implements Cloneable{
 	public EffectType getType() {
 		return type;
 	}
+public abstract void apply(Champion c);
 
-	@Override
-    public Object clone()
-        throws CloneNotSupportedException
-    {
-        return super.clone();
-    }
+public abstract void remove(Champion c);
 	
-	public abstract void apply(Champion c);
 
-//public DamagingAbility(String name, int cost, int baseCoolDown, int castRadius, AreaOfEffect area,int required,int damageAmount)
-	public abstract void remove(Champion c);
-	
 }

@@ -8,14 +8,22 @@ public class Silence extends Effect {
 		super("Silence", duration, EffectType.DEBUFF);
 		
 	}
-	public void apply(Champion c){
-		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn()+2);
+
+	@Override
+	public void apply(Champion c) {
 		c.setCurrentActionPoints(c.getCurrentActionPoints()+2);
+		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn()+2);
+
+		
+		
 	}
-	public void remove(Champion c){				//idk should I change this?
-		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn()-2);
+
+	@Override
+	public void remove(Champion c) {
 		c.setCurrentActionPoints(c.getCurrentActionPoints()-2);
-		c.getAppliedEffects().remove(this);
+		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn()-2);
+		
+		
 	}
 
 }

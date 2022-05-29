@@ -2,7 +2,7 @@ package model.abilities;
 
 import java.util.ArrayList;
 
-import model.world.*;
+import model.world.Damageable;
 
 public abstract class Ability {
 	private String name;
@@ -13,8 +13,7 @@ public abstract class Ability {
 	private AreaOfEffect castArea;
 	private int requiredActionPoints;
 
-	public Ability(String name, int cost, int baseCoolDown, int castRange,
-			AreaOfEffect area, int required) {
+	public Ability(String name, int cost, int baseCoolDown, int castRange, AreaOfEffect area, int required) {
 		this.name = name;
 		this.manaCost = cost;
 		this.baseCooldown = baseCoolDown;
@@ -27,6 +26,7 @@ public abstract class Ability {
 	public int getCurrentCooldown() {
 		return currentCooldown;
 	}
+	public abstract void execute(ArrayList<Damageable> targets) throws CloneNotSupportedException;
 
 	public void setCurrentCooldown(int currentCoolDown) {
 		if (currentCoolDown < 0)
@@ -59,7 +59,5 @@ public abstract class Ability {
 	public int getRequiredActionPoints() {
 		return requiredActionPoints;
 	}
-
-	public abstract void execute(ArrayList<Damageable> targets) throws CloneNotSupportedException;
 
 }

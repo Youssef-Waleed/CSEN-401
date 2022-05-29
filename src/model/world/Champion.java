@@ -3,11 +3,13 @@ package model.world;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import model.world.*;
-import model.abilities.Ability;
-import model.effects.*;
 
-public abstract class Champion implements Damageable, Comparable{
+
+import model.abilities.Ability;
+import model.effects.Effect;
+
+@SuppressWarnings("rawtypes")
+public abstract class Champion implements Damageable,Comparable {
 	private String name;
 	private int maxHP;
 	private int currentHP;
@@ -37,17 +39,6 @@ public abstract class Champion implements Damageable, Comparable{
 		this.appliedEffects = new ArrayList<Effect>();
 		this.currentActionPoints=maxActionPointsPerTurn;
 	}
-	
-	public abstract void useLeaderAbility(ArrayList<Champion> targets) throws CloneNotSupportedException;
-	
-	public int compareTo(Object other)
-	{
-		Champion Other = (Champion)other;
-		if(speed - Other.speed == 0)
-			return name.compareTo(Other.name);
-		else
-			return Other.speed - speed;
-	}
 
 	public int getMaxHP() {
 		return maxHP;
@@ -59,8 +50,9 @@ public abstract class Champion implements Damageable, Comparable{
 
 	public void setCurrentHP(int hp) {
 
-		if (hp < 0) {
+		if (hp <= 0) {
 			currentHP = 0;
+			condition=Condition.KNOCKEDOUT;
 			
 		} 
 		else if (hp > maxHP)
@@ -151,23 +143,18 @@ public abstract class Champion implements Damageable, Comparable{
 	public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
 		this.maxActionPointsPerTurn = maxActionPointsPerTurn;
 	}
-	public void updateTimers(){
-		for(int i = 0; i < abilities.size(); i++)
-			if(abilities.get(i).getCurrentCooldown() != 0)
-				abilities.get(i).setCurrentCooldown(abilities.get(i).getCurrentCooldown()-1);
-		for(int i = 0; i < appliedEffects.size(); i++){
-			appliedEffects.get(i).setDuration(appliedEffects.get(i).getDuration()-1);
-			if(appliedEffects.get(i).getDuration() == 0)
-				appliedEffects.get(i).remove(this);
-		}
-		
+
+	public int compareTo(Object o)
+	{
+		Champion c = (Champion)o;
+		if(speed==c.speed)
+			return name.compareTo(c.name);
+		return -1 * (speed-c.speed);
 	}
 	public int manhattaninator(Damageable d){
 		int x = Math.abs(this.getLocation().x - d.getLocation().x);
 		int y = Math.abs(this.getLocation().y - d.getLocation().y);
 		return x+y;
 	}
-	
-	
-
+public abstract void useLeaderAbility(ArrayList<Champion> targets);
 }

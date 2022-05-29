@@ -3,7 +3,8 @@ package model.abilities;
 import java.util.ArrayList;
 
 import model.effects.Effect;
-import model.world.*;
+import model.world.Champion;
+import model.world.Damageable;
 
 public class CrowdControlAbility extends Ability {
 	private Effect effect;
@@ -19,14 +20,15 @@ public class CrowdControlAbility extends Ability {
 		return effect;
 	}
 
+	@Override
 	public void execute(ArrayList<Damageable> targets) throws CloneNotSupportedException {
-		for(int i = 0; i < targets.size(); i++){
-			if(targets.get(i) instanceof Champion){
-				Effect e=(Effect)effect.clone();
-				e.apply((Champion) targets.get(i));
-				((Champion)(targets.get(i))).getAppliedEffects().add(e);		//added effect to array
-			}
+		for(Damageable d: targets)
+		{
+			Champion c =(Champion) d;
+			c.getAppliedEffects().add((Effect) effect.clone());
+			effect.apply(c);
 		}
+		
 	}
 
 }

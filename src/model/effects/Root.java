@@ -9,19 +9,26 @@ public class Root extends Effect {
 		super("Root", duration, EffectType.DEBUFF);
 		
 	}
-	public void apply(Champion c){
+
+	@Override
+	public void apply(Champion c) {
 		if(c.getCondition() != Condition.INACTIVE)
 			c.setCondition(Condition.ROOTED);
+		
 	}
-	public void remove(Champion c){				//idk should I change this?
-		if(c.getCondition() != Condition.INACTIVE)
-			for(Effect e : c.getAppliedEffects())
-				if(e instanceof Root){
-					c.setCondition(Condition.ROOTED);
-					break;
-					}
-				else
-					c.setCondition(Condition.ACTIVE);
-		c.getAppliedEffects().remove(this);
+
+	@Override
+	public void remove(Champion c) {
+		boolean found= false;
+		for(Effect e:c.getAppliedEffects() )
+		{
+			if(e instanceof Root)
+				found=true;
+		}
+		
+		if(c.getCondition() != Condition.INACTIVE && !found)
+			c.setCondition(Condition.ACTIVE);
+		
 	}
+
 }

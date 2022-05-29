@@ -2,7 +2,7 @@ package model.world;
 
 import java.util.ArrayList;
 
-import model.effects.*;
+import model.effects.Stun;
 
 public class AntiHero extends Champion {
 
@@ -10,16 +10,14 @@ public class AntiHero extends Champion {
 		super(name, maxHP, maxMana, actions, speed, attackRange, attackDamage);
 
 	}
-	
-	public void useLeaderAbility(ArrayList<Champion> targets) throws CloneNotSupportedException
-	{
-		
-		Stun s = new Stun(2);
-		for(int i=0;i<targets.size();i++){
-			((Stun)s.clone()).apply(targets.get(i));
-			((Champion)(targets.get(i))).getAppliedEffects().add(s);		//added effect to array
+
+	@Override
+	public void useLeaderAbility(ArrayList<Champion> targets) {
+		for (Champion c: targets)
+		{
+			Stun s = new Stun(2);
+			c.getAppliedEffects().add(s);
+			s.apply(c);
 		}
 	}
-
-	
 }

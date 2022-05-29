@@ -7045,10 +7045,9 @@ public class M2PrivateTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackAntiHeroRight() throws Exception {
-		ArrayList<Object> created=createGameAndTeams();
-		Object createdGame = created.get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) created.get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) created.get(2);
+		Object createdGame = createGameAndTeams().get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
 
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
@@ -7185,10 +7184,9 @@ public class M2PrivateTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackVillainDown() throws Exception {
-		ArrayList<Object> created=createGameAndTeams();
-		Object createdGame = created.get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) created.get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) created.get(2);
+		Object createdGame = createGameAndTeams().get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
 
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
@@ -7324,10 +7322,9 @@ public class M2PrivateTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackHeroDown() throws Exception {
-		ArrayList<Object> created= createGameAndTeams();
-		Object createdGame = created.get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) created.get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) created.get(2);
+		Object createdGame = createGameAndTeams().get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
 
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
@@ -7462,10 +7459,9 @@ public class M2PrivateTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackVillainDown() throws Exception {
-		ArrayList<Object> created= createGameAndTeams();
-		Object createdGame = created.get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) created.get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) created.get(2);
+		Object createdGame = createGameAndTeams().get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
 
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
@@ -7600,10 +7596,9 @@ public class M2PrivateTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackAntiHeroDown() throws Exception {
-		ArrayList<Object> created= createGameAndTeams();
-		Object createdGame = created.get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) created.get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) created.get(2);
+		Object createdGame = createGameAndTeams().get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
 
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
@@ -7739,10 +7734,9 @@ public class M2PrivateTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackHeroDown() throws Exception {
-		ArrayList<Object> created= createGameAndTeams();
-		Object createdGame = created.get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) created.get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) created.get(2);
+		Object createdGame = createGameAndTeams().get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
 
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
@@ -7879,10 +7873,9 @@ public class M2PrivateTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackVillainDown() throws Exception {
-		ArrayList<Object> created= createGameAndTeams();
-		Object createdGame = created.get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) created.get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) created.get(2);
+		Object createdGame = createGameAndTeams().get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
 
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
@@ -8017,10 +8010,9 @@ public class M2PrivateTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackAntiHeroDown() throws Exception {
-		ArrayList<Object> created= createGameAndTeams();
-		Object createdGame = created.get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) created.get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) created.get(2);
+		Object createdGame = createGameAndTeams().get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
 
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
@@ -8154,10 +8146,9 @@ public class M2PrivateTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000) 
 	public void invalidAttackNotEnoughActionPoints2() throws Exception{
-		ArrayList<Object> created= createGameAndTeams();
 		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) created.get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) created.get(2);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
 
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
@@ -8272,10 +8263,9 @@ public class M2PrivateTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackCoverLeft() throws Exception {
-		ArrayList<Object> created= createGameAndTeams();
 		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) created.get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) created.get(2);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
 
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
