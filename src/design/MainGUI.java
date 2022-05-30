@@ -1,4 +1,21 @@
 package design;
+import model.abilities.Ability;
+import model.abilities.AreaOfEffect;
+import model.abilities.CrowdControlAbility;
+import model.abilities.DamagingAbility;
+import model.abilities.HealingAbility;
+import model.effects.Disarm;
+import model.effects.Dodge;
+import model.effects.Effect;
+import model.effects.Embrace;
+import model.effects.PowerUp;
+import model.effects.Root;
+import model.effects.Shield;
+import model.effects.Shock;
+import model.effects.Silence;
+import model.effects.SpeedUp;
+import model.effects.Stun;
+import model.world.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -7,9 +24,14 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,10 +42,10 @@ import engine.Game;
 @SuppressWarnings("serial")
 
 public class MainGUI extends JFrame implements ActionListener, MouseInputListener {
-	private Game game;
+	private JLayeredPane skelly;
 	private JFrame gameframe;
 	private ImageIcon icon;
-	private JPanel info,main, container, current, actions;
+	private JPanel info,main, container, current, actions,game;
 	private JButton up,down,right,left,attack,castability,useleaderab
 				/*,b11,b12,b13,b14,b15,
 					b21,b22,b23,b24,b25,
@@ -31,9 +53,42 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 					b41,b42,b43,b44,b45,
 					b51,b52,b53,b54,b55*/;
 	private JButton[][] button;
+	private static ArrayList<Champion> availableChampions;
+	private static ArrayList<Ability> availableAbilities;
+	private JList list1 = new JList(); 
+	private JList list2 = new JList();
+	public static void main(String[] args) {
+		MainGUI bla = new MainGUI();
+
+	}
 	
 	public MainGUI(){
+		availableChampions = new ArrayList<Champion>();
+		availableAbilities = new ArrayList<Ability>();
+		try {
+			loadAbilities("Abilities.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		try {
+			loadChampions("Champions.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	//-----------------------------------------game panel---------------------------------------------------------	
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = (int)screenSize.getWidth();
+		int height = (int)screenSize.getHeight();
+		skelly = new JLayeredPane();
+		skelly.setBounds(0, 0, width, height);
+		game = new JPanel();
+		game.setBounds(0, 0, width, height);
+		game.setLayout(new BorderLayout());
 		icon = new ImageIcon("Marvel_Logo.png");
 		ImageIcon upicon = new ImageIcon("up-arrow.png");
 		ImageIcon downicon = new ImageIcon("down-arrow.png");
@@ -45,13 +100,12 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 		
 		gameframe = new JFrame();
 		gameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameframe.setSize(1500, 1050);
-		gameframe.setLocation(100,0);
+		gameframe.setSize(width, height);
+		gameframe.setLocation(1920/2-width/2,0);
 		gameframe.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		gameframe.setTitle("Marvel: Ultimate War");
-		//gameframe.setLayout(new GridLayout(5, 5));
+		gameframe.setLayout(null);
 		gameframe.setIconImage(icon.getImage());
-		
 		main = new JPanel();			//the new Panels
 		main.setLayout(new GridLayout(5,5));
 		info = new JPanel();
@@ -71,29 +125,31 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 		actions.setPreferredSize(new Dimension(500, 350));
 		actions.setLayout(null);
 		
-		gameframe.add(current, BorderLayout.SOUTH);
-		gameframe.add(main, BorderLayout.CENTER);
-		gameframe.add(container, BorderLayout.EAST);
+		game.add(current, BorderLayout.SOUTH);
+		game.add(main, BorderLayout.CENTER);
+		game.add(container, BorderLayout.EAST);
 		container.add(actions, BorderLayout.SOUTH);
 		container.add(info, BorderLayout.CENTER);
+		skelly.add(game,690);
+		//gameframe.add(game,BorderLayout.CENTER);
+	//------------------------------------------------BUTTONS----------------------------------------------------------	
 		
-		
-		up= new JButton("UP", new ImageIcon(upicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
+		up= new JButton( new ImageIcon(upicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		up.setHorizontalTextPosition(JButton.CENTER);
 		up.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 		up.setBounds(270,30,75,75);
 		
-		right= new JButton("RIGHT", new ImageIcon(righticon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
+		right= new JButton( new ImageIcon(righticon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		right.setHorizontalTextPosition(JButton.CENTER);
 		right.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 		right.setBounds(360,125,75,75);
 		
-		left= new JButton("LEFT", new ImageIcon(lefticon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
+		left= new JButton( new ImageIcon(lefticon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		left.setHorizontalTextPosition(JButton.CENTER);
 		left.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 		left.setBounds(180,125,75,75);
 		
-		down= new JButton("DOWN", new ImageIcon(downicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
+		down= new JButton( new ImageIcon(downicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		down.setHorizontalTextPosition(JButton.CENTER);
 		down.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 		down.setBounds(270,220,75, 75);
@@ -164,6 +220,31 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 			for(int j =0; j<5; j++)
 				main.add(button[i][j]);
 		
+		//---------------------------------------------Character select------------------------
+		JPanel select = new JPanel();
+		select.setBounds(0, 0, width, height);
+		select.setLayout(null);
+		String[] names = new String[20];
+		for(int i = 0;i<availableChampions.size();i++)
+			names[i]=availableChampions.get(i).getName(); 
+		list1 = new JList(names); //data has type Object[]
+		list1.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		list1.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		list1.setVisibleRowCount(-1);
+		JScrollPane listScroller = new JScrollPane(list1);
+		listScroller.setPreferredSize(new Dimension(250, 80));
+		listScroller.setBounds(10,10, 250, 80);
+		list2 = new JList(names); //data has type Object[]
+		list2.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		list2.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		list2.setVisibleRowCount(-1);
+		JScrollPane listScroller2 = new JScrollPane(list2);
+		listScroller2.setPreferredSize(new Dimension(250, 80));
+		listScroller2.setBounds(270,10, 250, 80);
+		select.add(listScroller2);
+		select.add(listScroller);
+		skelly.add(select,70);
+
 		
 
 		gameframe.setVisible(true);
@@ -182,18 +263,15 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 	
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		System.out.println("HAHAHAHA");
+	public void actionPerformed(ActionEvent e) {
+		//System.out.println("HAHAHAHA");
+		
 
 	}
 	
 	
 	
 	
-	public static void main(String[] args) {
-		//MainGUI bla = new MainGUI();
-
-	}
 
 	
 	
@@ -301,5 +379,127 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 	public void mouseMoved(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public static void loadAbilities(String filePath) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(filePath));
+		String line = br.readLine();
+		while (line != null) {
+			String[] content = line.split(",");
+			Ability a = null;
+			AreaOfEffect ar = null;
+			switch (content[5]) {
+			case "SINGLETARGET":
+				ar = AreaOfEffect.SINGLETARGET;
+				break;
+			case "TEAMTARGET":
+				ar = AreaOfEffect.TEAMTARGET;
+				break;
+			case "SURROUND":
+				ar = AreaOfEffect.SURROUND;
+				break;
+			case "DIRECTIONAL":
+				ar = AreaOfEffect.DIRECTIONAL;
+				break;
+			case "SELFTARGET":
+				ar = AreaOfEffect.SELFTARGET;
+				break;
+
+			}
+			Effect e = null;
+			if (content[0].equals("CC")) {
+				switch (content[7]) {
+				case "Disarm":
+					e = new Disarm(Integer.parseInt(content[8]));
+					break;
+				case "Dodge":
+					e = new Dodge(Integer.parseInt(content[8]));
+					break;
+				case "Embrace":
+					e = new Embrace(Integer.parseInt(content[8]));
+					break;
+				case "PowerUp":
+					e = new PowerUp(Integer.parseInt(content[8]));
+					break;
+				case "Root":
+					e = new Root(Integer.parseInt(content[8]));
+					break;
+				case "Shield":
+					e = new Shield(Integer.parseInt(content[8]));
+					break;
+				case "Shock":
+					e = new Shock(Integer.parseInt(content[8]));
+					break;
+				case "Silence":
+					e = new Silence(Integer.parseInt(content[8]));
+					break;
+				case "SpeedUp":
+					e = new SpeedUp(Integer.parseInt(content[8]));
+					break;
+				case "Stun":
+					e = new Stun(Integer.parseInt(content[8]));
+					break;
+				}
+			}
+			switch (content[0]) {
+			case "CC":
+				a = new CrowdControlAbility(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[4]),
+						Integer.parseInt(content[3]), ar, Integer.parseInt(content[6]), e);
+				break;
+			case "DMG":
+				a = new DamagingAbility(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[4]),
+						Integer.parseInt(content[3]), ar, Integer.parseInt(content[6]), Integer.parseInt(content[7]));
+				break;
+			case "HEL":
+				a = new HealingAbility(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[4]),
+						Integer.parseInt(content[3]), ar, Integer.parseInt(content[6]), Integer.parseInt(content[7]));
+				break;
+			}
+			availableAbilities.add(a);
+			line = br.readLine();
+		}
+		br.close();
+	}
+
+	public static void loadChampions(String filePath) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(filePath));
+		String line = br.readLine();
+		while (line != null) {
+			String[] content = line.split(",");
+			Champion c = null;
+			switch (content[0]) {
+			case "A":
+				c = new AntiHero(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[3]),
+						Integer.parseInt(content[4]), Integer.parseInt(content[5]), Integer.parseInt(content[6]),
+						Integer.parseInt(content[7]));
+				break;
+
+			case "H":
+				c = new Hero(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[3]),
+						Integer.parseInt(content[4]), Integer.parseInt(content[5]), Integer.parseInt(content[6]),
+						Integer.parseInt(content[7]));
+				break;
+			case "V":
+				c = new Villain(content[1], Integer.parseInt(content[2]), Integer.parseInt(content[3]),
+						Integer.parseInt(content[4]), Integer.parseInt(content[5]), Integer.parseInt(content[6]),
+						Integer.parseInt(content[7]));
+				break;
+			}
+
+			c.getAbilities().add(findAbilityByName(content[8]));
+			c.getAbilities().add(findAbilityByName(content[9]));
+			c.getAbilities().add(findAbilityByName(content[10]));
+			availableChampions.add(c);
+			line = br.readLine();
+		}
+		br.close();
+	}
+	
+	private static Ability findAbilityByName(String name) {
+		for (Ability a : availableAbilities) {
+			if (a.getName().equals(name))
+				return a;
+		}
+		return null;
 	}
 }
