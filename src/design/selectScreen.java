@@ -54,14 +54,15 @@ import model.world.Villain;
 
  public class selectScreen implements ActionListener, MouseInputListener, ListSelectionListener  {
 	private JTextArea stats1,stats2;
+	private String t1,t2 = "";
+	private JTextArea team1,team2 = new JTextArea("");
 	private ImageIcon icon;
 	private JTextField name1,name2;
 	private JFrame selectframe;
 	private JPanel select;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
-	private JList list1 = new JList(); 
-	private JList list2 = new JList();
+	private JList list1,list2;
 	private JButton startGame, add1, add2;
 	private JLabel warning;
 	private ArrayList<Champion> temp1,temp2;
@@ -121,12 +122,12 @@ import model.world.Villain;
 		listScroller2.setBounds(520,120-50, 500, 300);
 		list2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		stats1 = new JTextArea();
-		stats1.setBounds(520+510, 0, 450, 720-300);
+		stats1.setBounds(520+510, 10, 400, 720-460);
 		stats1.setText("Select Leader");
 		stats1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		select.add(stats1);
 		stats2 = new JTextArea();
-		stats2.setBounds(520+510+400, 0, 450, 720-300);
+		stats2.setBounds(520+510+400, 10, 400, 720-460);
 		stats2.setText("Select Leader");
 		stats2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		select.add(stats2);
@@ -141,14 +142,22 @@ import model.world.Villain;
 		startGame.addActionListener(this);
 		startGame.setBounds(width-210, 720-110, 200, 100);
 		add1 = new JButton("lock-in champion");
-		add1.setBounds(260, 520, 100, 50);
+		add1.setBounds(260, 530, 100, 50);
 		add1.addActionListener(this);
 		add2 = new JButton("lock-in champion");
-		add2.setBounds(770, 520, 100, 50);
+		add2.setBounds(770, 530, 100, 50);
 		add2.addActionListener(this);
 		warning = new JLabel();
-		warning.setBounds(width-310, 720-220, 300, 100);
+		warning.setBounds(width-760, 720-220, 700, 100);
 		warning.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		warning.setText("ay 7aga");
+		t1="";
+		t2="";
+		team1 = new JTextArea("");
+		team2 = new JTextArea("");
+		team1.setBounds(10, 370, 500, 150);
+		team2.setBounds(520, 370, 500, 150);
+		
 //		
 		//warning.setForeground(Color.green);
 		select.add(startGame);
@@ -157,6 +166,8 @@ import model.world.Villain;
 		select.add(add1);
 		select.add(add2);
 		select.add(warning);
+		select.add(team1);
+		select.add(team2);
 		selectframe.add(select);
 	}
 	
@@ -185,21 +196,43 @@ import model.world.Villain;
 		}
 		
 		if(e.getSource()==add1){
-			Champion c = availableChampions.get(list1.getSelectedIndex());	
-			if(temp1.contains(c))
-			{
-				temp1.add(c);
-			}
+			Champion c = null;
+			if(list1.getSelectedIndex()>=0)
+			    c = availableChampions.get(list1.getSelectedIndex());
+			else
+				warning.setText("maybe select smth first?");
+			if(!temp1.contains(c))
+				if(temp1.size()<3)
+				{
+				    temp1.add(c);
+				    System.out.println(c.getName());
+				    warning.setText("");
+				    t1 = t1 + c.getName()+'\n';
+				    team1.setText(t1);
+				}
+				else
+					warning.setText("only 3 per team plz. coroona b2a w keda ");
 			else
 				warning.setText("You already have that champion");
 		}
 		
 		if(e.getSource()==add2){
-			Champion c = availableChampions.get(list2.getSelectedIndex());
+			Champion c = null;
+			if(list2.getSelectedIndex()>=0)
+			    c = availableChampions.get(list2.getSelectedIndex());
+			else
+				warning.setText("maybe select smth first?");
 			if(!temp2.contains(c))
-			{
-				temp2.add(c);
-			}
+				if(temp2.size()<3)
+				{
+				    temp2.add(c);
+				    System.out.println(c.getName());
+				    warning.setText("");
+				    t2 = t2 + c.getName()+'\n';
+				    team2.setText(t2);
+				}
+				else
+					warning.setText("only 3 per team plz. coroona b2a w keda ");
 			else
 				warning.setText("You already have that champion");
 		}
@@ -212,13 +245,25 @@ import model.world.Villain;
 		if(e.getValueIsAdjusting()==false){
 			if(list1.getSelectedIndex()!=-1){
 				Champion c = availableChampions.get(list1.getSelectedIndex());
-				//System.out.println(list1.getSelectedIndex());
-				stats1.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
+				String type ="";
+				if(c instanceof Hero)
+					type = "Hero";
+				else if(c instanceof Villain)
+					type = "Villain";
+				else
+					type = "Antihero";
+				stats1.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn()+'\n'+"Type: "+type);
 			}
 			if(list2.getSelectedIndex()!=-1){
 				Champion c = availableChampions.get(list2.getSelectedIndex());
-				//System.out.println(list1.getSelectedIndex());
-				stats2.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
+				String type ="";
+				if(c instanceof Hero)
+					type = "Hero";
+				else if(c instanceof Villain)
+					type = "Villain";
+				else
+					type = "Antihero";
+				stats2.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn()+'\n'+"Type: "+type);
 			}
 		}
 		
