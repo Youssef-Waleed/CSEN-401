@@ -35,18 +35,20 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputListener;
 
 import engine.Game;
 
 @SuppressWarnings("serial")
 
-public class MainGUI extends JFrame implements ActionListener, MouseInputListener {
-	private JLayeredPane skelly;
+public class MainGUI extends JFrame implements ActionListener, MouseInputListener, ListSelectionListener {
 	private JFrame gameframe;
 	private ImageIcon icon;
-	private JPanel info,main, container, current, actions,game;
-	private JButton up,down,right,left,attack,castability,useleaderab
+	private JTextArea stats1,stats2;
+	private JPanel info,main, container, current, actions,game,select;
+	private JButton up,down,right,left,attack,castability,useleaderab,startGame 
 				/*,b11,b12,b13,b14,b15,
 					b21,b22,b23,b24,b25,
 					b31,b32,b33,b34,b35,
@@ -84,8 +86,6 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)screenSize.getWidth();
 		int height = (int)screenSize.getHeight();
-		skelly = new JLayeredPane();
-		skelly.setBounds(0, 0, width, height);
 		game = new JPanel();
 		game.setBounds(0, 0, width, height);
 		game.setLayout(new BorderLayout());
@@ -130,8 +130,8 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 		game.add(container, BorderLayout.EAST);
 		container.add(actions, BorderLayout.SOUTH);
 		container.add(info, BorderLayout.CENTER);
-		skelly.add(game,690);
-		//gameframe.add(game,BorderLayout.CENTER);
+		gameframe.add(game);
+		game.setVisible(false);
 	//------------------------------------------------BUTTONS----------------------------------------------------------	
 		
 		up= new JButton( new ImageIcon(upicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
@@ -228,26 +228,46 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 		for(int i = 0;i<availableChampions.size();i++)
 			names[i]=availableChampions.get(i).getName(); 
 		list1 = new JList(names); //data has type Object[]
-		list1.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		list1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list1.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		list1.setVisibleRowCount(-1);
+		list1.addListSelectionListener(this);
 		JScrollPane listScroller = new JScrollPane(list1);
-		listScroller.setPreferredSize(new Dimension(250, 80));
-		listScroller.setBounds(10,10, 250, 80);
+		listScroller.setPreferredSize(new Dimension(500, 300));
+		listScroller.setBounds(10,10, 500, 300);
+		list1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		list2 = new JList(names); //data has type Object[]
-		list2.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list2.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		list2.setVisibleRowCount(-1);
+		list2.addListSelectionListener(this);
 		JScrollPane listScroller2 = new JScrollPane(list2);
-		listScroller2.setPreferredSize(new Dimension(250, 80));
-		listScroller2.setBounds(270,10, 250, 80);
+		listScroller2.setPreferredSize(new Dimension(500, 300));
+		listScroller2.setBounds(520,10, 500, 300);
+		list2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		stats1 = new JTextArea();
+		stats1.setBounds(520+510, 0, 400, 720-300);
+		stats1.setText("Select Leader");
+		stats1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		select.add(stats1);
+		stats2 = new JTextArea();
+		stats2.setBounds(520+510+400, 0, 400, 720-300);
+		stats2.setText("Select Leader");
+		stats2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		select.add(stats2);
+		
 		select.add(listScroller2);
 		select.add(listScroller);
-		skelly.add(select,70);
+		startGame = new JButton("Start Game");
+		startGame.setActionCommand("Start game");
+		startGame.addActionListener(this);
+		startGame.setBounds(500, 500, 200, 100);
+		select.add(startGame);
 
 		
 
 		gameframe.setVisible(true);
+		gameframe.add(select);
 		//gameframe.validate(); 3ayzeen net check law di sa7
 		//game=new Game( firstPlayer,  secondPlayer);	
 	}
@@ -265,12 +285,34 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//System.out.println("HAHAHAHA");
-		
+		if(e.getSource()==(startGame))
+		{
+			//select.setVisible(false);
+			game.setVisible(true);
+			//System.out.println("el condition mish el moshkela ");
+		}
+			
 
 	}
 	
 	
-	
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		if(e.getValueIsAdjusting()==false){
+			if(list1.getSelectedIndex()!=-1){
+				Champion c = availableChampions.get(list1.getSelectedIndex());
+				//System.out.println(list1.getSelectedIndex());
+				stats1.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
+			}
+			if(list2.getSelectedIndex()!=-1){
+				Champion c = availableChampions.get(list2.getSelectedIndex());
+				//System.out.println(list1.getSelectedIndex());
+				stats2.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
+			}
+		}
+		
+		
+	}	
 	
 
 	
@@ -502,4 +544,5 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 		}
 		return null;
 	}
+
 }
