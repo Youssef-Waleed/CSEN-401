@@ -2,8 +2,10 @@ package design;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -13,7 +15,7 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 
 @SuppressWarnings("serial")
-public class StartPage extends JFrame implements ActionListener,
+public class StartPage implements ActionListener,
 		MouseInputListener {
 	private JFrame startwindow;
 	private JButton startbt;
@@ -23,6 +25,9 @@ public class StartPage extends JFrame implements ActionListener,
 	
 	
 	public StartPage(){
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = (int)screenSize.getWidth();
+		int height = (int)screenSize.getHeight();
 		audio = new Media();
 		startwindow = new JFrame();
 		startbt = new JButton("START");
@@ -34,9 +39,9 @@ public class StartPage extends JFrame implements ActionListener,
 		ImageIcon icon = new ImageIcon("Marvel_Logo.png");
 		ImageIcon bkground= new ImageIcon("Marvelstart.png");
 		startwindow = new JFrame();
+		startwindow.setSize(width+1, height);
+		startwindow.setLocation(1920/2-width/2,0);
 		//startwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		startwindow.setSize(1500, 1050);
-		startwindow.setLocation(100,0);
 		startwindow.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		startwindow.setTitle("Marvel: Ultimate War");
 		startwindow.setIconImage(icon.getImage());
@@ -89,7 +94,7 @@ public class StartPage extends JFrame implements ActionListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		MainGUI m = new MainGUI();
+		selectScreen m = new selectScreen();
 		audio.pause();
 		startwindow.dispatchEvent(new WindowEvent(startwindow, WindowEvent.WINDOW_CLOSING));
 

@@ -43,7 +43,7 @@ import engine.Game;
 
 @SuppressWarnings("serial")
 
-public class MainGUI extends JFrame implements ActionListener, MouseInputListener, ListSelectionListener {
+public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
 	private JFrame gameframe;
 	private ImageIcon icon;
 	private JTextArea stats1,stats2;
@@ -60,26 +60,26 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 	private JList list1 = new JList(); 
 	private JList list2 = new JList();
 	public static void main(String[] args) {
-		MainGUI bla = new MainGUI();
+		//MainGUI bla = new MainGUI();
 
 	}
 	
-	public MainGUI(){
-		availableChampions = new ArrayList<Champion>();
-		availableAbilities = new ArrayList<Ability>();
-		try {
-			loadAbilities("Abilities.csv");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			loadChampions("Champions.csv");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public MainGUI(Game newGame){
+//		availableChampions = new ArrayList<Champion>();
+//		availableAbilities = new ArrayList<Ability>();
+//		try {
+//			loadAbilities("Abilities.csv");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		try {
+//			loadChampions("Champions.csv");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		
 	//-----------------------------------------game panel---------------------------------------------------------	
@@ -100,7 +100,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 		
 		gameframe = new JFrame();
 		gameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameframe.setSize(width, height);
+		gameframe.setSize(width+1, height);
 		gameframe.setLocation(1920/2-width/2,0);
 		gameframe.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		gameframe.setTitle("Marvel: Ultimate War");
@@ -131,7 +131,7 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 		container.add(actions, BorderLayout.SOUTH);
 		container.add(info, BorderLayout.CENTER);
 		gameframe.add(game);
-		game.setVisible(false);
+		gameframe.setVisible(true);
 	//------------------------------------------------BUTTONS----------------------------------------------------------	
 		
 		up= new JButton( new ImageIcon(upicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
@@ -221,56 +221,57 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 				main.add(button[i][j]);
 		
 		//---------------------------------------------Character select------------------------
-		JPanel select = new JPanel();
-		select.setBounds(0, 0, width, height);
-		select.setLayout(null);
-		String[] names = new String[20];
-		for(int i = 0;i<availableChampions.size();i++)
-			names[i]=availableChampions.get(i).getName(); 
-		list1 = new JList(names); //data has type Object[]
-		list1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list1.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		list1.setVisibleRowCount(-1);
-		list1.addListSelectionListener(this);
-		JScrollPane listScroller = new JScrollPane(list1);
-		listScroller.setPreferredSize(new Dimension(500, 300));
-		listScroller.setBounds(10,10, 500, 300);
-		list1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		list2 = new JList(names); //data has type Object[]
-		list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list2.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		list2.setVisibleRowCount(-1);
-		list2.addListSelectionListener(this);
-		JScrollPane listScroller2 = new JScrollPane(list2);
-		listScroller2.setPreferredSize(new Dimension(500, 300));
-		listScroller2.setBounds(520,10, 500, 300);
-		list2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		stats1 = new JTextArea();
-		stats1.setBounds(520+510, 0, 400, 720-300);
-		stats1.setText("Select Leader");
-		stats1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		select.add(stats1);
-		stats2 = new JTextArea();
-		stats2.setBounds(520+510+400, 0, 400, 720-300);
-		stats2.setText("Select Leader");
-		stats2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		select.add(stats2);
-		
-		select.add(listScroller2);
-		select.add(listScroller);
-		startGame = new JButton("Start Game");
-		startGame.setActionCommand("Start game");
-		startGame.addActionListener(this);
-		startGame.setBounds(500, 500, 200, 100);
-		select.add(startGame);
-
-		
-
-		gameframe.setVisible(true);
-		gameframe.add(select);
-		//gameframe.validate(); 3ayzeen net check law di sa7
-		//game=new Game( firstPlayer,  secondPlayer);	
-	}
+//		select = new JPanel();
+//		select.setBounds(0, 0, width, height);
+//		select.setLayout(null);
+//		String[] names = new String[20];
+//		for(int i = 0;i<availableChampions.size();i++)
+//			names[i]=availableChampions.get(i).getName(); 
+//		list1 = new JList(names); //data has type Object[]
+//		list1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//		list1.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+//		list1.setVisibleRowCount(-1);
+//		list1.addListSelectionListener(this);
+//		JScrollPane listScroller = new JScrollPane(list1);
+//		listScroller.setPreferredSize(new Dimension(500, 300));
+//		listScroller.setBounds(10,10, 500, 300);
+//		list1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+//		list2 = new JList(names); //data has type Object[]
+//		list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//		list2.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+//		list2.setVisibleRowCount(-1);
+//		list2.addListSelectionListener(this);
+//		JScrollPane listScroller2 = new JScrollPane(list2);
+//		listScroller2.setPreferredSize(new Dimension(500, 300));
+//		listScroller2.setBounds(520,10, 500, 300);
+//		list2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+//		stats1 = new JTextArea();
+//		stats1.setBounds(520+510, 0, 400, 720-300);
+//		stats1.setText("Select Leader");
+//		stats1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+//		select.add(stats1);
+//		stats2 = new JTextArea();
+//		stats2.setBounds(520+510+400, 0, 400, 720-300);
+//		stats2.setText("Select Leader");
+//		stats2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+//		select.add(stats2);
+//		
+//		select.add(listScroller2);
+//		select.add(listScroller);
+//		startGame = new JButton("Start Game");
+//		startGame.setActionCommand("Start game");
+//		startGame.addActionListener(this);
+//		startGame.setBounds(500, 500, 200, 100);
+//		select.add(startGame);
+//
+//		
+//
+//		gameframe.setVisible(true);
+//		gameframe.add(select);
+//		//gameframe.validate(); 3ayzeen net check law di sa7
+//		//game=new Game( firstPlayer,  secondPlayer);	
+//	
+		}
 
 
 	
@@ -285,12 +286,12 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//System.out.println("HAHAHAHA");
-		if(e.getSource()==(startGame))
-		{
-			//select.setVisible(false);
-			game.setVisible(true);
-			//System.out.println("el condition mish el moshkela ");
-		}
+//		if(e.getSource()==(startGame))
+//		{
+//			//select.setVisible(false);
+//			game.setVisible(true);
+//			//System.out.println("el condition mish el moshkela ");
+//		}
 			
 
 	}
@@ -298,18 +299,18 @@ public class MainGUI extends JFrame implements ActionListener, MouseInputListene
 	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		if(e.getValueIsAdjusting()==false){
-			if(list1.getSelectedIndex()!=-1){
-				Champion c = availableChampions.get(list1.getSelectedIndex());
-				//System.out.println(list1.getSelectedIndex());
-				stats1.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
-			}
-			if(list2.getSelectedIndex()!=-1){
-				Champion c = availableChampions.get(list2.getSelectedIndex());
-				//System.out.println(list1.getSelectedIndex());
-				stats2.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
-			}
-		}
+//		if(e.getValueIsAdjusting()==false){
+//			if(list1.getSelectedIndex()!=-1){
+//				Champion c = availableChampions.get(list1.getSelectedIndex());
+//				//System.out.println(list1.getSelectedIndex());
+//				stats1.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
+//			}
+//			if(list2.getSelectedIndex()!=-1){
+//				Champion c = availableChampions.get(list2.getSelectedIndex());
+//				//System.out.println(list1.getSelectedIndex());
+//				stats2.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
+//			}
+//		}
 		
 		
 	}	
