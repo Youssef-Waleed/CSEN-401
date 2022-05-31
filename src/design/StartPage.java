@@ -94,7 +94,7 @@ public class StartPage implements ActionListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		selectScreen m = new selectScreen();
+		//selectScreen m = new selectScreen();
 		audio.pause();
 		startwindow.dispatchEvent(new WindowEvent(startwindow, WindowEvent.WINDOW_CLOSING));
 

@@ -45,7 +45,7 @@ import engine.Game;
 
 public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
 	private JFrame gameframe;
-	private ImageIcon icon;
+	private ImageIcon icon, tmpico;
 	private JTextArea stats1,stats2;
 	private JPanel info,main, container, current, actions,game,select;
 	private JButton up,down,right,left,attack,castability,useleaderab,startGame 
@@ -60,11 +60,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private JList list1 = new JList(); 
 	private JList list2 = new JList();
 	public static void main(String[] args) {
-		//MainGUI bla = new MainGUI();
+		MainGUI bla = new MainGUI();
 
 	}
 	
-	public MainGUI(Game newGame){
+	public MainGUI(/*Game newGame*/){
 //		availableChampions = new ArrayList<Champion>();
 //		availableAbilities = new ArrayList<Ability>();
 //		try {
@@ -131,45 +131,58 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		container.add(actions, BorderLayout.SOUTH);
 		container.add(info, BorderLayout.CENTER);
 		gameframe.add(game);
-		gameframe.setVisible(true);
 	//------------------------------------------------BUTTONS----------------------------------------------------------	
 		
 		up= new JButton( new ImageIcon(upicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		up.setHorizontalTextPosition(JButton.CENTER);
 		up.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 		up.setBounds(270,30,75,75);
+		up.setActionCommand("UP");
+		up.addMouseListener(this);
 		
 		right= new JButton( new ImageIcon(righticon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		right.setHorizontalTextPosition(JButton.CENTER);
-		right.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+		right.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
 		right.setBounds(360,125,75,75);
+		right.setActionCommand("RIGHT");
+		right.addMouseListener(this);
 		
 		left= new JButton( new ImageIcon(lefticon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		left.setHorizontalTextPosition(JButton.CENTER);
 		left.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 		left.setBounds(180,125,75,75);
+		left.setActionCommand("LEFT");
+		left.addMouseListener(this);
 		
 		down= new JButton( new ImageIcon(downicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		down.setHorizontalTextPosition(JButton.CENTER);
-		down.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+		down.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
 		down.setBounds(270,220,75, 75);
+		down.setActionCommand("DOWN");
+		down.addMouseListener(this);
 		
-		attack= new JButton("ATTACK",new ImageIcon(attackicon.getImage().getScaledInstance(65,65,Image.SCALE_SMOOTH)));
+		attack= new JButton(new ImageIcon(attackicon.getImage().getScaledInstance(65,65,Image.SCALE_SMOOTH)));
 		attack.setHorizontalTextPosition(JButton.CENTER);
-		attack.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+		attack.setFont(new Font("Comic Sans MS", Font.BOLD, 10));
 		attack.setBounds(270,125,75,75);
+		attack.setActionCommand("ATTACK");
+		attack.addMouseListener(this);
 		
 		castability= new JButton("CAST ABILITY", new ImageIcon(casticon.getImage().getScaledInstance(120,80,Image.SCALE_SMOOTH)));
 		castability.setVerticalTextPosition(JButton.BOTTOM);
 		castability.setHorizontalTextPosition(JButton.CENTER);
 		castability.setFont(new Font("Comic Sans MS", Font.BOLD, 10));
 		castability.setBounds(20,205,150,100);
+		castability.setActionCommand("CAST ABILITY");
+		castability.addMouseListener(this);
 		
 		useleaderab= new JButton("USE LEADER ABILITY", new ImageIcon(leadicon.getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 		useleaderab.setVerticalTextPosition(JButton.BOTTOM);
 		useleaderab.setHorizontalTextPosition(JButton.CENTER);
 		useleaderab.setFont(new Font("Comic Sans MS", Font.BOLD, 10));
 		useleaderab.setBounds(450,205,150,100);
+		useleaderab.setActionCommand("USE LEADER ABILITY");
+		useleaderab.addMouseListener(this);
 		
 		actions.add(up);
 		actions.add(down);
@@ -266,7 +279,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //
 //		
 //
-//		gameframe.setVisible(true);
+		gameframe.setVisible(true);
 //		gameframe.add(select);
 //		//gameframe.validate(); 3ayzeen net check law di sa7
 //		//game=new Game( firstPlayer,  secondPlayer);	
@@ -323,7 +336,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -339,8 +352,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseEntered(MouseEvent e) {
+		tmpico = new ImageIcon(((ImageIcon) ((JButton)e.getSource()).getIcon()).getImage());
+		((JButton)e.getSource()).setIcon(null);
+		((JButton)e.getSource()).setText(((JButton)e.getSource()).getActionCommand());
 		
 	}
 
@@ -355,8 +370,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseExited(MouseEvent e) {
+		
+			((JButton)e.getSource()).setIcon(tmpico);;
+		if(e.getSource() != this.castability && e.getSource() != this.useleaderab )
+			((JButton)e.getSource()).setText("");
 		
 	}
 
@@ -371,7 +389,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
+	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -403,7 +421,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 	@Override
-	public void mouseDragged(MouseEvent arg0) {
+	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -419,7 +437,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 	@Override
-	public void mouseMoved(MouseEvent arg0) {
+	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
