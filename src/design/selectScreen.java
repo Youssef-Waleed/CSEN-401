@@ -54,16 +54,17 @@ import model.world.Villain;
 
  public class selectScreen implements ActionListener, MouseInputListener, ListSelectionListener  {
 	private JTextArea stats1,stats2;
+	private int count = 0;
 	private String t1,t2 = "";
-	private JTextArea team1,team2 = new JTextArea("");
+	private JTextArea team1,team2,ability1stats,ability2stats = new JTextArea("");
 	private ImageIcon icon;
 	private JTextField name1,name2;
 	private JFrame selectframe;
 	private JPanel select;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
-	private JList list1,list2;
-	private JButton startGame, add1, add2;
+	private JList champlist1,champlist2;
+	private JButton startGame, add1, add2,ab1,ab2,ab3,ab4,ab5,ab6;
 	private JLabel warning;
 	private ArrayList<Champion> temp1,temp2;
 	private String[] names1, names2;
@@ -91,7 +92,6 @@ import model.world.Villain;
 		icon = new ImageIcon("Marvel_Logo.png");
 		selectframe = new JFrame();
 		selectframe.setLayout(new BorderLayout());
-		selectframe.setVisible(true);
 		selectframe.setSize(width+1, height);
 	    selectframe.setLocation(1920/2-width/2,0);
 	    selectframe.setIconImage(icon.getImage());
@@ -103,24 +103,24 @@ import model.world.Villain;
 			names[i]=availableChampions.get(i).getName();
 		names1 = names;
 		names2 = names;
-		list1 = new JList(names); //data has type Object[]
-		list1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list1.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		list1.setVisibleRowCount(-1);
-		list1.addListSelectionListener(this);
-		JScrollPane listScroller = new JScrollPane(list1);
+		champlist1 = new JList(names); //data has type Object[]
+		champlist1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		champlist1.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		champlist1.setVisibleRowCount(-1);
+		champlist1.addListSelectionListener(this);
+		JScrollPane listScroller = new JScrollPane(champlist1);
 		//listScroller.setPreferredSize(new Dimension(500, 300));
 		listScroller.setBounds(10,120-50, 500, 300);
-		list1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		list2 = new JList(names); //data has type Object[]
-		list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list2.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		list2.setVisibleRowCount(-1);
-		list2.addListSelectionListener(this);
-		JScrollPane listScroller2 = new JScrollPane(list2);
+		champlist1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		champlist2 = new JList(names); //data has type Object[]
+		champlist2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		champlist2.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		champlist2.setVisibleRowCount(-1);
+		champlist2.addListSelectionListener(this);
+		JScrollPane listScroller2 = new JScrollPane(champlist2);
 		//listScroller2.setPreferredSize(new Dimension(500, 300));
 		listScroller2.setBounds(520,120-50, 500, 300);
-		list2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		champlist2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		stats1 = new JTextArea();
 		stats1.setBounds(520+510, 10, 400, 720-460);
 		stats1.setText("Select Leader");
@@ -140,26 +140,64 @@ import model.world.Villain;
 		startGame = new JButton("Start Game");
 		//startGame.setActionCommand("Start game");
 		startGame.addActionListener(this);
-		startGame.setBounds(width-210, 720-110, 200, 100);
+		startGame.setBounds(205, 690, 200, 100);
 		add1 = new JButton("lock-in champion");
-		add1.setBounds(260, 530, 100, 50);
+		add1.setBounds(205-50, 530, 200, 50);
 		add1.addActionListener(this);
 		add2 = new JButton("lock-in champion");
-		add2.setBounds(770, 530, 100, 50);
+		add2.setBounds(715-50, 530, 200, 50);
 		add2.addActionListener(this);
 		warning = new JLabel();
-		warning.setBounds(width-760, 720-220, 700, 100);
+		warning.setBounds(0, 590, 900, 100);
 		warning.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		warning.setText("ay 7aga");
+		warning.setText("");
 		t1="";
 		t2="";
 		team1 = new JTextArea("");
 		team2 = new JTextArea("");
 		team1.setBounds(10, 370, 500, 150);
 		team2.setBounds(520, 370, 500, 150);
+		ab1 = new JButton("Ablity 1");
+		ab2 = new JButton("Ablity 2");
+		ab3 = new JButton("Ablity 3");
+		ab4 = new JButton("Ablity 1");
+		ab5 = new JButton("Ablity 2");
+		ab6 = new JButton("Ablity 3");
+		ab1.setBounds(520+560, 280, 110, 20);
+		ab2.setBounds(630+560+5, 280, 110, 20);
+		ab3.setBounds(740+560+10, 280, 110, 20);
+		ab4.setBounds(850+560+25, 280, 110, 20);
+		ab5.setBounds(960+560+30, 280, 110, 20);
+		ab6.setBounds(1070+560+35, 280, 110, 20);
+		ability1stats = new JTextArea();
+		ability2stats = new JTextArea();
+		ability1stats.setBounds(520+510, 310, 420, 720-460);
+		ability2stats.setBounds(520+540+400, 310, 420, 720-460);
+		ability1stats.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		ability2stats.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		ab1.addActionListener(this);
+		ab2.addActionListener(this);
+		ab3.addActionListener(this);
+		ab4.addActionListener(this);
+		ab5.addActionListener(this);
+		ab6.addActionListener(this);
+		ab1.addMouseListener(this);
+		ab2.addMouseListener(this);
+		ab3.addMouseListener(this);
+		ab4.addMouseListener(this);
+		ab5.addMouseListener(this);
+		ab6.addMouseListener(this);
+		
+		
 		
 //		
 		//warning.setForeground(Color.green);
+		select.add(ab1);
+		select.add(ab2);
+		select.add(ab3);
+		select.add(ab4);
+		select.add(ab5);
+		select.add(ab6);
 		select.add(startGame);
   	    select.add(name1);
 		select.add(name2);
@@ -168,7 +206,10 @@ import model.world.Villain;
 		select.add(warning);
 		select.add(team1);
 		select.add(team2);
+		select.add(ability1stats);
+		select.add(ability2stats);
 		selectframe.add(select);
+		selectframe.setVisible(true);
 	}
 	
 	public static void main(String[]args){
@@ -181,24 +222,38 @@ import model.world.Villain;
 		if(e.getSource()==(startGame))
 		{
 			boolean alldone = false;
-			if(name1.getText()!=null && name2.getText()!=null){
+			if(!name1.getText().equals("") && !name2.getText().equals("")){
 				Player p1 = new Player("name1.getText()");
 				Player p2 = new Player("name2.getText()");
-				if(alldone)
-					System.out.println("tell me why");
-					MainGUI m = new MainGUI(new Game(p1,p2));
-					//audio.pause();
+				if(temp1.size()<3||temp2.size()<3)
+					warning.setText("Select 3 Champions for each team");
+				else{
+					for(int i=0;i<3;i++)
+					    p1.getTeam().add(temp1.get(i));
+					for(int i=0;i<3;i++)
+					    p2.getTeam().add(temp2.get(i));
+					//MainGUI newgame = new MainGUI(p1,p2);
 					selectframe.dispatchEvent(new WindowEvent(selectframe, WindowEvent.WINDOW_CLOSING));
+					}
 			}
 			else
+				switch(count){
+				case 0:
 				warning.setText("Please Type a name for each player ya roo7 mother");
+				count++;
+				break;
+				case 1:
+				warning.setText("    enta fakerni haseebak?");
+				count--;
+				break;
+				}
 				
 		}
 		
 		if(e.getSource()==add1){
 			Champion c = null;
-			if(list1.getSelectedIndex()>=0)
-			    c = availableChampions.get(list1.getSelectedIndex());
+			if(champlist1.getSelectedIndex()>=0)
+			    c = availableChampions.get(champlist1.getSelectedIndex());
 			else
 				warning.setText("maybe select smth first?");
 			if(!temp1.contains(c))
@@ -218,8 +273,8 @@ import model.world.Villain;
 		
 		if(e.getSource()==add2){
 			Champion c = null;
-			if(list2.getSelectedIndex()>=0)
-			    c = availableChampions.get(list2.getSelectedIndex());
+			if(champlist2.getSelectedIndex()>=0)
+			    c = availableChampions.get(champlist2.getSelectedIndex());
 			else
 				warning.setText("maybe select smth first?");
 			if(!temp2.contains(c))
@@ -236,6 +291,104 @@ import model.world.Villain;
 			else
 				warning.setText("You already have that champion");
 		}
+		if(e.getSource()==ab1&& champlist1.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(0);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+			ability1stats.setText(temp);
+		}
+		if(e.getSource()==ab2&& champlist1.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(1);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+			ability1stats.setText(temp);
+		}
+		if(e.getSource()==ab3&& champlist1.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(2);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+			ability1stats.setText(temp);
+		}
+		if(e.getSource()==ab4&& champlist2.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist2.getSelectedIndex()).getAbilities().get(0);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+			ability2stats.setText(temp);
+		}
+		if(e.getSource()==ab5&& champlist2.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist2.getSelectedIndex()).getAbilities().get(1);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+			ability2stats.setText(temp);
+		}
+		if(e.getSource()==ab6&& champlist2.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist2.getSelectedIndex()).getAbilities().get(2);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+			ability2stats.setText(temp);
+		}
+			
+		
 			
 
 	}
@@ -243,8 +396,8 @@ import model.world.Villain;
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if(e.getValueIsAdjusting()==false){
-			if(list1.getSelectedIndex()!=-1){
-				Champion c = availableChampions.get(list1.getSelectedIndex());
+			if(champlist1.getSelectedIndex()!=-1){
+				Champion c = availableChampions.get(champlist1.getSelectedIndex());
 				String type ="";
 				if(c instanceof Hero)
 					type = "Hero";
@@ -252,10 +405,15 @@ import model.world.Villain;
 					type = "Villain";
 				else
 					type = "Antihero";
-				stats1.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn()+'\n'+"Type: "+type);
+				stats1.setText("Name: "+c.getName()+'\n'
+						+"HP: "+c.getMaxHP()+'\n'
+						+"Mana: "+c.getMana()+'\n'
+						+"Speed: "+c.getSpeed()+'\n'
+						+"Action Points "+c.getMaxActionPointsPerTurn()+'\n'
+						+"Type: "+type);		
 			}
-			if(list2.getSelectedIndex()!=-1){
-				Champion c = availableChampions.get(list2.getSelectedIndex());
+			if(champlist2.getSelectedIndex()!=-1){
+				Champion c = availableChampions.get(champlist2.getSelectedIndex());
 				String type ="";
 				if(c instanceof Hero)
 					type = "Hero";
@@ -263,10 +421,148 @@ import model.world.Villain;
 					type = "Villain";
 				else
 					type = "Antihero";
-				stats2.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn()+'\n'+"Type: "+type);
+				stats2.setText("Name: "+c.getName()+'\n'
+						+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'
+						+"Speed: "+c.getSpeed()+'\n'
+						+"Action Points "+c.getMaxActionPointsPerTurn()+'\n'
+						+"Type: "+type);
 			}
 		}
 		
+		
+	}
+	
+	
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		if(e.getSource()==ab1&& champlist1.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(0);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp = "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp = "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp = "Healing Amount: "+((HealingAbility)a).getHealAmount();
+		}
+		if(e.getSource()==ab2&& champlist1.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(1);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp = "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp = "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp = "Healing Amount: "+((HealingAbility)a).getHealAmount();
+		}
+		if(e.getSource()==ab3&& champlist1.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(2);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp = "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp = "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp = "Healing Amount: "+((HealingAbility)a).getHealAmount();
+		}
+		if(e.getSource()==ab4&& champlist2.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist2.getSelectedIndex()).getAbilities().get(0);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp = "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp = "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp = "Healing Amount: "+((HealingAbility)a).getHealAmount();
+		}
+		if(e.getSource()==ab5&& champlist2.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist2.getSelectedIndex()).getAbilities().get(1);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp = "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp = "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp = "Healing Amount: "+((HealingAbility)a).getHealAmount();
+		}
+		if(e.getSource()==ab6&& champlist2.getSelectedIndex()!=-1){
+			Ability a = availableChampions.get(champlist2.getSelectedIndex()).getAbilities().get(2);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+
+					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp = "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp = "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp = "Healing Amount: "+((HealingAbility)a).getHealAmount();
+		}
+			
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 	
@@ -390,48 +686,6 @@ import model.world.Villain;
 				return a;
 		}
 		return null;
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
