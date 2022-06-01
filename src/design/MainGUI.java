@@ -43,12 +43,14 @@ import javax.swing.event.MouseInputListener;
 import engine.Game;
 import engine.Player;
 import engine.PriorityQueue;
+import exceptions.NotEnoughResourcesException;
+import exceptions.UnallowedMovementException;
 
 @SuppressWarnings("serial")
 
 public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
 	private JFrame gameframe;
-	private Game newgame;
+	private Game G;
 	private ImageIcon icon, tmpico;
 	private JLabel champ1, champ2, champ3, champ4, champ5, champ6;
 	private JTextArea stats1,stats2, turnorderT;
@@ -87,7 +89,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		newgame=newGame;
+		G=newGame;
 		
 	//-----------------------------------------game panel---------------------------------------------------------	
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -184,8 +186,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		champ6.setBounds(40+200, 60+130+150, 120,120);
 		
 				//sub-labels
-				JLabel pONE = new JLabel(newgame.getFirstPlayer().getName(), SwingConstants.CENTER);
-				JLabel pTWO = new JLabel(newgame.getSecondPlayer().getName(), SwingConstants.CENTER);
+				JLabel pONE = new JLabel(G.getFirstPlayer().getName(), SwingConstants.CENTER);
+				JLabel pTWO = new JLabel(G.getSecondPlayer().getName(), SwingConstants.CENTER);
 				pONE.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 				pTWO.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 				pONE.setBounds(10, 10, 180, 50);
@@ -200,20 +202,20 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		charc.add(pONE);
 		charc.add(pTWO);
 		for(int i =0;i<3;i++){
-			if(newgame.getFirstPlayer().getTeam().get(i) != newgame.getFirstPlayer().getLeader())
+			if(G.getFirstPlayer().getTeam().get(i) != G.getFirstPlayer().getLeader())
 				if(champ1.getIcon()==null)
-					champ1.setIcon(new ImageIcon(((ImageIcon)newgame.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
+					champ1.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
 				else
-					champ3.setIcon(new ImageIcon(((ImageIcon)newgame.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
+					champ3.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
 			else
-				champ2.setIcon(new ImageIcon(((ImageIcon)newgame.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(140,140,Image.SCALE_SMOOTH)));
-			if(newgame.getSecondPlayer().getTeam().get(i) != newgame.getSecondPlayer().getLeader())
+				champ2.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(140,140,Image.SCALE_SMOOTH)));
+			if(G.getSecondPlayer().getTeam().get(i) != G.getSecondPlayer().getLeader())
 				if(champ4.getIcon()==null)
-					champ4.setIcon(new ImageIcon(((ImageIcon)newgame.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
+					champ4.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
 				else
-					champ6.setIcon(new ImageIcon(((ImageIcon)newgame.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
+					champ6.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
 			else
-				champ5.setIcon(new ImageIcon(((ImageIcon)newgame.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(140,140,Image.SCALE_SMOOTH)));
+				champ5.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(140,140,Image.SCALE_SMOOTH)));
 			
 		}
 		
@@ -307,13 +309,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		
 		Gridbuttons = new JButton[5][5];
-		for(int i =0; i<5; i++)
+		for(int i =4; i>=0; i--)
 			for(int j =0; j<5; j++){
 				Gridbuttons[i][j]= new JButton();
 				Gridbuttons[i][j].setFont(new Font("Comic Sans MS", Font.BOLD, 16));
 				Gridbuttons[i][j].setFocusable(false);
 				Gridbuttons[i][j].addActionListener(this);
-				Object[][] board = newgame.getBoard();
+				Object[][] board = G.getBoard();
 				if(board[i][j] instanceof Champion)
 					Gridbuttons[i][j].setIcon(	new ImageIcon(((((Champion)board[i][j])).getIcon().getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH))));				//((Champion)board[i][j]).getIcon());
 				else if(board[i][j] instanceof Cover)
@@ -386,13 +388,78 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("HAHAHAHA");
-//		if(e.getSource()==(startGame))
-//		{
-//			//select.setVisible(false);
-//			game.setVisible(true);
-//			//System.out.println("el condition mish el moshkela ");
-//		}
+		if(e.getSource()==up)
+		{
+			boolean no = false;
+			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
+			try {
+				G.move(Direction.UP);
+			} catch (NotEnoughResourcesException e1) {
+				no = true;
+				e1.printStackTrace();
+			} catch (UnallowedMovementException e1) {
+				no = true;
+				e1.printStackTrace();
+			}
+			if(!no){
+			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
+			    Gridbuttons[G.getCurrentChampion().getLocation().x-1][G.getCurrentChampion().getLocation().y].setIcon(null);
+			}
+		}
+		if(e.getSource()==down)
+		{
+			boolean no = false;
+			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
+			try {
+				G.move(Direction.DOWN);
+			} catch (NotEnoughResourcesException e1) {
+				no = true;
+				e1.printStackTrace();
+			} catch (UnallowedMovementException e1) {
+				no = true;
+				e1.printStackTrace();
+			}
+			if(!no){
+			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
+			    Gridbuttons[G.getCurrentChampion().getLocation().x+1][G.getCurrentChampion().getLocation().y].setIcon(null);
+			}
+		}
+		if(e.getSource()==right)
+		{
+			boolean no = false;
+			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
+			try {
+				G.move(Direction.RIGHT);
+			} catch (NotEnoughResourcesException e1) {
+				no = true;
+				e1.printStackTrace();
+			} catch (UnallowedMovementException e1) {
+				no = true;
+				e1.printStackTrace();
+			}
+			if(!no){
+			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
+			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y-1].setIcon(null);
+			}
+		}
+		if(e.getSource()==left)
+		{
+			boolean no = false;
+			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
+			try {
+				G.move(Direction.LEFT);
+			} catch (NotEnoughResourcesException e1) {
+				no = true;
+				e1.printStackTrace();
+			} catch (UnallowedMovementException e1) {
+				no = true;
+				e1.printStackTrace();
+			}
+			if(!no){
+			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
+			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y+1].setIcon(null);
+			}
+		}
 			
 
 	}
@@ -653,7 +720,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	}
 	
 	public void turnOrderSetText(){
-		PriorityQueue turnz= newgame.getTurnOrder().clone();
+		PriorityQueue turnz= G.getTurnOrder().clone();
 		while(!turnz.isEmpty())
 			turnorderT.setText(turnorderT.getText()+'\n' +((Champion)turnz.remove()).getName());
 	}
