@@ -11,10 +11,14 @@ import javax.swing.JPanel;
     public class Media {
     	private File file;
     	private Clip clip;
+    	private String path;
     	
+    	public Media(String path){
+    		this.path=path;
+    	}
         public void play() {
             try {
-            	file = new File("AvengersMarvelTheme.wav");
+            	file = new File(path);
                 clip = AudioSystem.getClip();
                 clip.open(AudioSystem.getAudioInputStream(file));
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -52,7 +56,7 @@ import javax.swing.JPanel;
 //        f.setResizable(false);
 //        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		  Media audio = new Media();
-//        play();
+//          audio.play();
 
             }
         }

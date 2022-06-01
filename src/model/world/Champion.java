@@ -5,15 +5,11 @@ import java.util.ArrayList;
 
 
 
-
-import javax.swing.ImageIcon;
-
 import model.abilities.Ability;
 import model.effects.Effect;
 
 @SuppressWarnings("rawtypes")
 public abstract class Champion implements Damageable,Comparable {
-	private ImageIcon icon;
 	private String name;
 	private int maxHP;
 	private int currentHP;
@@ -42,15 +38,6 @@ public abstract class Champion implements Damageable,Comparable {
 		this.abilities = new ArrayList<Ability>();
 		this.appliedEffects = new ArrayList<Effect>();
 		this.currentActionPoints=maxActionPointsPerTurn;
-		this.icon = new ImageIcon("name"+".png");
-	}
-
-	public ImageIcon getIcon() {
-		return icon;
-	}
-
-	public void setIcon(ImageIcon icon) {
-		this.icon = icon;
 	}
 
 	public int getMaxHP() {

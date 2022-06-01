@@ -28,7 +28,7 @@ public class StartPage implements ActionListener,
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)screenSize.getWidth();
 		int height = (int)screenSize.getHeight();
-		audio = new Media();
+		audio = new Media("AvengersMarvelTheme.wav");
 		startwindow = new JFrame();
 		startbt = new JButton("START");
 		marvel = new JLabel();
@@ -36,12 +36,12 @@ public class StartPage implements ActionListener,
 		startbt.addActionListener(this);
 		startbt.addMouseListener(this);
 		
-		ImageIcon icon = new ImageIcon("Marvel_Logo.png");
-		ImageIcon bkground= new ImageIcon("Marvelstart.png");
+		ImageIcon icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
+		ImageIcon bkground= new ImageIcon(this.getClass().getResource("/resources/icons/Marvelstart.png"));
 		startwindow = new JFrame();
 		startwindow.setSize(1500, height);
 		startwindow.setLocation(1920/2-width/2,0);
-		//startwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		startwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		startwindow.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		startwindow.setTitle("Marvel: Ultimate War");
 		startwindow.setIconImage(icon.getImage());
@@ -96,7 +96,8 @@ public class StartPage implements ActionListener,
 	public void actionPerformed(ActionEvent e) {
 		//selectScreen m = new selectScreen();
 		audio.pause();
-		startwindow.dispatchEvent(new WindowEvent(startwindow, WindowEvent.WINDOW_CLOSING));
+		//startwindow.dispatchEvent(new WindowEvent(startwindow, WindowEvent.WINDOW_CLOSING));
+		startwindow.setVisible(false);
 
 	}
 	
