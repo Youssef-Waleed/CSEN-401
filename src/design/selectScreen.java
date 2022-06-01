@@ -1,6 +1,7 @@
 package design;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -13,21 +14,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputListener;
-
-import com.sun.prism.paint.Color;
 
 import engine.Game;
 import engine.Player;
@@ -65,7 +55,6 @@ import model.world.Villain;
 	private static ArrayList<Ability> availableAbilities;
 	private JList champlist1,champlist2;
 	private JButton startGame, add1, add2,ab1,ab2,ab3,ab4,ab5,ab6;
-	private JLabel warning;
 	private ArrayList<Champion> temp1,temp2;
 	private String[] names1, names2;
 	
@@ -132,19 +121,19 @@ import model.world.Villain;
 		
 		JScrollPane listScroller2 = new JScrollPane(champlist2);
 		//listScroller2.setPreferredSize(new Dimension(500, 300));
-		listScroller2.setBounds(520,120-50, 500, 300);
+		listScroller2.setBounds(520+510+400-30,120-50, 500, 300);
 		champlist2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		
 		
 		stats1 = new JTextArea();
-		stats1.setBounds(520+510, 10, 400, 720-460);
+		stats1.setBounds(520+10, 10, 400, 720-460);
 		stats1.setText("Select Leader");
 		stats1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		select.add(stats1);
 		
 		
 		stats2 = new JTextArea();
-		stats2.setBounds(520+510+400, 10, 400, 720-460);
+		stats2.setBounds(520+510-100+50, 10, 400, 720-460);
 		stats2.setText("Select Leader");
 		stats2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		select.add(stats2);
@@ -154,9 +143,13 @@ import model.world.Villain;
 		name2 = new JTextField();
 		name1.setBounds(10, 10, 500, 50);
 		name1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		name1.setText("Player 1 Name");
+		name1.setForeground(Color.gray);
 		
-		name2.setBounds(520, 10, 500, 50);
+		name2.setBounds(520+510+400-30, 10, 500, 50);
 		name2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		name2.setText("Player 2 Name");
+		name2.setForeground(Color.gray);
 		select.add(listScroller2);
 		select.add(listScroller);
 		
@@ -164,24 +157,19 @@ import model.world.Villain;
 		startGame = new JButton("Start Game");
 		//startGame.setActionCommand("Start game");
 		startGame.addActionListener(this);
-		startGame.setBounds(205, 690, 200, 100);
+		startGame.setBounds(width/2 - 100, 690, 200, 100);
 		startGame.setFont(new Font("Comic Sans MS", Font.BOLD, 28));
 		
 		
-		add1 = new JButton("lock-in champion");
-		add1.setBounds(205-50, 530, 200, 50);
+		add1 = new JButton("Lock-In Champion");
+		add1.setBounds(205-100, 530, 250, 50);
 		add1.addActionListener(this);
 		add1.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		
-		add2 = new JButton("lock-in champion");
-		add2.setBounds(715-50, 530, 200, 50);
+		add2 = new JButton("Lock-In Champion");
+		add2.setBounds(715+800, 530, 250, 50);
 		add2.addActionListener(this);
 		add2.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-		
-		warning = new JLabel();
-		warning.setBounds(0, 590, 900, 100);
-		warning.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		warning.setText("");
 		
 		t1="";
 		t2="";
@@ -189,7 +177,7 @@ import model.world.Villain;
 		team2 = new JTextArea("");
 		team1.setBounds(10, 370, 500, 150);
 		team1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		team2.setBounds(520, 370, 500, 150);
+		team2.setBounds(520+510+400-30, 370, 500, 150);
 		team2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		ab1 = new JButton("Ablity 1");
 		ab2 = new JButton("Ablity 2");
@@ -197,16 +185,16 @@ import model.world.Villain;
 		ab4 = new JButton("Ablity 1");
 		ab5 = new JButton("Ablity 2");
 		ab6 = new JButton("Ablity 3");
-		ab1.setBounds(520+560, 280, 110, 20);
-		ab2.setBounds(630+560+5, 280, 110, 20);
-		ab3.setBounds(740+560+10, 280, 110, 20);
-		ab4.setBounds(850+560+55, 280, 110, 20);
-		ab5.setBounds(960+560+60, 280, 110, 20);
-		ab6.setBounds(1070+560+65, 280, 110, 20);
+		ab1.setBounds(520+50-20, 280, 110, 20);
+		ab2.setBounds(630+50+5-20, 280, 110, 20);
+		ab3.setBounds(740+50+10-20, 280, 110, 20);
+		ab4.setBounds(850+50+55+50+20, 280, 110, 20);
+		ab5.setBounds(960+50+60+50+20, 280, 110, 20);
+		ab6.setBounds(1070+50+65+50+20, 280, 110, 20);
 		ability1stats = new JTextArea();
 		ability2stats = new JTextArea();
-		ability1stats.setBounds(520+510, 310, 420, 720-460);
-		ability2stats.setBounds(520+540+400, 310, 420, 720-460);
+		ability1stats.setBounds(520, 310, 420, 720-460);
+		ability2stats.setBounds(520+400+50, 310, 420, 720-460);
 		ability1stats.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		ability2stats.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		ab1.addActionListener(this);
@@ -221,6 +209,8 @@ import model.world.Villain;
 		ab4.addMouseListener(this);
 		ab5.addMouseListener(this);
 		ab6.addMouseListener(this);
+		name1.addMouseListener(this);
+		name2.addMouseListener(this);
 		
 		
 		
@@ -237,7 +227,6 @@ import model.world.Villain;
 		select.add(name2);
 		select.add(add1);
 		select.add(add2);
-		select.add(warning);
 		select.add(team1);
 		select.add(team2);
 		select.add(ability1stats);
@@ -253,11 +242,11 @@ import model.world.Villain;
 		if(e.getSource()==(startGame))
 		{
 			boolean alldone = false;
-			if(!name1.getText().equals("") && !name2.getText().equals("")){
+			if(!name1.getText().equals("") && !name2.getText().equals("") && !(name1.getForeground()==Color.gray) && !(name2.getForeground()==Color.gray)){
 				Player p1 = new Player("name1.getText()");
 				Player p2 = new Player("name2.getText()");
 				if(temp1.size()<3||temp2.size()<3)
-					warning.setText("Select 3 Champions for each team");
+					JOptionPane.showMessageDialog(null, "Select 3 Champions for each team", "WARNING", JOptionPane.WARNING_MESSAGE);
 				else{
 					for(int i=0;i<3;i++){
 					    p1.getTeam().add(temp1.get(i));
@@ -277,11 +266,11 @@ import model.world.Villain;
 			else
 				switch(count){
 				case 0:
-				warning.setText("Please Type a name for each player ya roo7 mother");
+					JOptionPane.showMessageDialog(null, "Please Type a name for each player ya roo7 mother", "WARNING", JOptionPane.WARNING_MESSAGE);
 				count++;
 				break;
 				case 1:
-				warning.setText("    enta fakerni haseebak?");
+					JOptionPane.showMessageDialog(null, "enta fakerni haseebak?", "WARNING", JOptionPane.WARNING_MESSAGE);
 				count--;
 				break;
 				}
@@ -293,13 +282,12 @@ import model.world.Villain;
 			if(champlist1.getSelectedIndex()>=0)
 			    c = availableChampions.get(champlist1.getSelectedIndex());
 			else
-				warning.setText("maybe select smth first?");
+				JOptionPane.showMessageDialog(null,"maybe select smth first?", "WARNING", JOptionPane.WARNING_MESSAGE);
 			if(!temp1.contains(c))
 				if(temp1.size()<3)
 				{
 				    temp1.add(c);
 				    System.out.println(c.getName());
-				    warning.setText("");
 				    if(temp1.size() == 1)
 				    	t1 = t1 + c.getName()+ " (Leader)" +'\n';
 				    else
@@ -307,9 +295,9 @@ import model.world.Villain;
 				    team1.setText(t1);
 				}
 				else
-					warning.setText("only 3 per team plz. coroona b2a w keda ");
+					JOptionPane.showMessageDialog(null,"only 3 per team plz. coroona b2a w keda ", "WARNING", JOptionPane.WARNING_MESSAGE);
 			else
-				warning.setText("You already have that champion");
+				JOptionPane.showMessageDialog(null,"You already have that champion", "WARNING", JOptionPane.WARNING_MESSAGE);
 		}
 		
 		if(e.getSource()==add2){
@@ -317,13 +305,12 @@ import model.world.Villain;
 			if(champlist2.getSelectedIndex()>=0)
 			    c = availableChampions.get(champlist2.getSelectedIndex());
 			else
-				warning.setText("maybe select smth first?");
+				JOptionPane.showMessageDialog(null,"maybe select smth first?", "WARNING", JOptionPane.WARNING_MESSAGE);
 			if(!temp2.contains(c))
 				if(temp2.size()<3)
 				{
 				    temp2.add(c);
 				    System.out.println(c.getName());
-				    warning.setText("");
 				    if(temp2.size() == 1)
 				    	t2 = t2 + c.getName()+ " (Leader)" +'\n';
 				    else
@@ -331,9 +318,9 @@ import model.world.Villain;
 				    team2.setText(t2);
 				}
 				else
-					warning.setText("only 3 per team plz. coroona b2a w keda ");
+					JOptionPane.showMessageDialog(null,"only 3 per team plz. coroona b2a w keda ", "WARNING", JOptionPane.WARNING_MESSAGE);
 			else
-				warning.setText("You already have that champion");
+				JOptionPane.showMessageDialog(null,"You already have that champion", "WARNING", JOptionPane.WARNING_MESSAGE);
 		}
 		if(e.getSource()==ab1&& champlist1.getSelectedIndex()!=-1){
 			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(0);
@@ -486,78 +473,6 @@ import model.world.Villain;
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if(e.getSource()==(startGame))
-		{
-			boolean alldone = false;
-			if(!name1.getText().equals("") && !name2.getText().equals("")){
-				Player p1 = new Player("name1.getText()");
-				Player p2 = new Player("name2.getText()");
-				if(temp1.size()<3||temp2.size()<3)
-					warning.setText("Select 3 Champions for each team");
-				else{
-					for(int i=0;i<3;i++)
-					    p1.getTeam().add(temp1.get(i));
-					for(int i=0;i<3;i++)
-					    p2.getTeam().add(temp2.get(i));
-					//MainGUI newgame = new MainGUI(p1,p2);
-					selectframe.dispatchEvent(new WindowEvent(selectframe, WindowEvent.WINDOW_CLOSING));
-					}
-			}
-			else
-				switch(count){
-				case 0:
-				warning.setText("Please Type a name for each player ya roo7 mother");
-				count++;
-				break;
-				case 1:
-				warning.setText("    enta fakerni haseebak?");
-				count--;
-				break;
-				}
-				
-		}
-		
-		if(e.getSource()==add1){
-			Champion c = null;
-			if(champlist1.getSelectedIndex()>=0)
-			    c = availableChampions.get(champlist1.getSelectedIndex());
-			else
-				warning.setText("maybe select smth first?");
-			if(!temp1.contains(c))
-				if(temp1.size()<3)
-				{
-				    temp1.add(c);
-				    System.out.println(c.getName());
-				    warning.setText("");
-				    t1 = t1 + c.getName()+'\n';
-				    team1.setText(t1);
-				}
-				else
-					warning.setText("only 3 per team plz. coroona b2a w keda ");
-			else
-				warning.setText("You already have that champion");
-		}
-		
-		if(e.getSource()==add2){
-			Champion c = null;
-			if(champlist2.getSelectedIndex()>=0)
-			    c = availableChampions.get(champlist2.getSelectedIndex());
-			else
-				warning.setText("maybe select smth first?");
-			if(!temp2.contains(c))
-				if(temp2.size()<3)
-				{
-				    temp2.add(c);
-				    System.out.println(c.getName());
-				    warning.setText("");
-				    t2 = t2 + c.getName()+'\n';
-				    team2.setText(t2);
-				}
-				else
-					warning.setText("only 3 per team plz. coroona b2a w keda ");
-			else
-				warning.setText("You already have that champion");
-		}
 		if(e.getSource()==ab1&& champlist1.getSelectedIndex()!=-1){
 			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(0);
 			String temp = "Name: " + a.getName()+'\n'+
@@ -668,8 +583,11 @@ import model.world.Villain;
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mousePressed(MouseEvent e) {
+		if(e.getSource()==name1 || e.getSource()==name2){
+			((JTextField)e.getSource()).setText("");
+			((JTextField)e.getSource()).setForeground(Color.black);
+		}
 		
 	}
 
