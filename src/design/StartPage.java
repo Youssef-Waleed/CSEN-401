@@ -39,7 +39,7 @@ public class StartPage implements ActionListener,
 		ImageIcon icon = new ImageIcon("Marvel_Logo.png");
 		ImageIcon bkground= new ImageIcon("Marvelstart.png");
 		startwindow = new JFrame();
-		startwindow.setSize(width+1, height);
+		startwindow.setSize(1500, height);
 		startwindow.setLocation(1920/2-width/2,0);
 		//startwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		startwindow.setFont(new Font("Comic Sans MS", Font.BOLD, 20));

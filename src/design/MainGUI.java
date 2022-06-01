@@ -136,6 +136,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		up= new JButton( new ImageIcon(upicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		up.setHorizontalTextPosition(JButton.CENTER);
 		up.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+		up.setFocusable(false);
 		up.setBounds(270,30,75,75);
 		up.setActionCommand("UP");
 		up.addMouseListener(this);
@@ -143,6 +144,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		right= new JButton( new ImageIcon(righticon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		right.setHorizontalTextPosition(JButton.CENTER);
 		right.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+		right.setFocusable(false);
 		right.setBounds(360,125,75,75);
 		right.setActionCommand("RIGHT");
 		right.addMouseListener(this);
@@ -150,6 +152,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		left= new JButton( new ImageIcon(lefticon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		left.setHorizontalTextPosition(JButton.CENTER);
 		left.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+		left.setFocusable(false);
 		left.setBounds(180,125,75,75);
 		left.setActionCommand("LEFT");
 		left.addMouseListener(this);
@@ -157,6 +160,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		down= new JButton( new ImageIcon(downicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		down.setHorizontalTextPosition(JButton.CENTER);
 		down.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+		down.setFocusable(false);
 		down.setBounds(270,220,75, 75);
 		down.setActionCommand("DOWN");
 		down.addMouseListener(this);
@@ -164,6 +168,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		attack= new JButton(new ImageIcon(attackicon.getImage().getScaledInstance(65,65,Image.SCALE_SMOOTH)));
 		attack.setHorizontalTextPosition(JButton.CENTER);
 		attack.setFont(new Font("Comic Sans MS", Font.BOLD, 10));
+		attack.setFocusable(false);
 		attack.setBounds(270,125,75,75);
 		attack.setActionCommand("ATTACK");
 		attack.addMouseListener(this);
@@ -172,6 +177,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		castability.setVerticalTextPosition(JButton.BOTTOM);
 		castability.setHorizontalTextPosition(JButton.CENTER);
 		castability.setFont(new Font("Comic Sans MS", Font.BOLD, 10));
+		castability.setFocusable(false);
 		castability.setBounds(20,205,150,100);
 		castability.setActionCommand("CAST ABILITY");
 		castability.addMouseListener(this);
@@ -180,6 +186,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		useleaderab.setVerticalTextPosition(JButton.BOTTOM);
 		useleaderab.setHorizontalTextPosition(JButton.CENTER);
 		useleaderab.setFont(new Font("Comic Sans MS", Font.BOLD, 10));
+		useleaderab.setFocusable(false);
 		useleaderab.setBounds(450,205,150,100);
 		useleaderab.setActionCommand("USE LEADER ABILITY");
 		useleaderab.addMouseListener(this);
