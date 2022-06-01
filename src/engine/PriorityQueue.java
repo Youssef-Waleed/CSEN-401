@@ -1,6 +1,6 @@
 package engine;
 
-public class PriorityQueue {
+public class PriorityQueue implements Cloneable {
 
 	@SuppressWarnings("rawtypes")
 	private Comparable[] elements;
@@ -45,5 +45,16 @@ public class PriorityQueue {
 
 	public int size() {
 		return nItems;
+	}
+	public PriorityQueue clone(){
+		PriorityQueue tmp =new PriorityQueue(this.size());
+		PriorityQueue returnable =new PriorityQueue(this.size());
+		while(!this.isEmpty())
+			tmp.insert(this.remove());
+		while(!tmp.isEmpty()){
+			this.insert(tmp.peekMin());
+			returnable.insert(tmp.remove());
+		}
+		return returnable;
 	}
 }

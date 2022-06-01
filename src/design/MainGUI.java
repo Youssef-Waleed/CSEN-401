@@ -24,6 +24,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +41,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputListener;
 
 import engine.Game;
+import engine.Player;
+import engine.PriorityQueue;
 
 @SuppressWarnings("serial")
 
@@ -47,8 +50,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private JFrame gameframe;
 	private Game newgame;
 	private ImageIcon icon, tmpico;
-	private JTextArea stats1,stats2;
-	private JPanel info,main, container, current, actions,game,select;
+	private JLabel champ1, champ2, champ3, champ4, champ5, champ6;
+	private JTextArea stats1,stats2, turnorderT;
+	private JPanel info,main, container, current, actions,game,select, charc;
 	private JButton up,down,right,left,attack,castability,useleaderab,startGame 
 				/*,b11,b12,b13,b14,b15,
 					b21,b22,b23,b24,b25,
@@ -60,9 +64,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private static ArrayList<Ability> availableAbilities;
 	private JList list1 = new JList(); 
 	private JList list2 = new JList();
+	
+	
 	public static void main(String[] args) {
-		//MainGUI bla = new MainGUI();
-
+		MainGUI bla = new MainGUI(new Game( new Player("CPU el fashel awy aaa") , new Player("Mohamed El Gamed gdi") ));
+		
 	}
 	
 	public MainGUI(Game newGame){
@@ -87,9 +93,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)screenSize.getWidth();
 		int height = (int)screenSize.getHeight();
-		game = new JPanel();
-		game.setBounds(0, 0, width, height);
-		game.setLayout(new BorderLayout());
+		
 		icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
 		ImageIcon upicon = new ImageIcon(this.getClass().getResource("/resources/icons/up-arrow.png"));
 		ImageIcon downicon = new ImageIcon(this.getClass().getResource("/resources/icons/down-arrow.png"));
@@ -99,39 +103,129 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		ImageIcon casticon = new ImageIcon(this.getClass().getResource("/resources/icons/ability.png"));
 		ImageIcon leadicon = new ImageIcon(this.getClass().getResource("/resources/icons/wizard.png"));
 		
+		
 		gameframe = new JFrame();
+		gameframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		gameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameframe.setSize(width+1, height);
+		//gameframe.setSize(width+1, height);
 		gameframe.setLocation(1920/2-width/2,0);
 		gameframe.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		gameframe.setTitle("Marvel: Ultimate War");
-		gameframe.setLayout(null);
+		//gameframe.setLayout(null);
 		gameframe.setIconImage(icon.getImage());
+		
+		
+		game = new JPanel();
+		game.setBounds(0, 0, width, height);
+		game.setLayout(new BorderLayout());
+		
+		
 		main = new JPanel();			//the new Panels
 		main.setLayout(new GridLayout(5,5));
+		
 		info = new JPanel();
 		info.setBackground(new Color(0xBB381D));
 		info.setPreferredSize(new Dimension(500, 600));
-		info.setLayout(new FlowLayout(FlowLayout.LEADING, 50,10));
+		info.setLayout(new BorderLayout());
+		
 		container = new JPanel();
 		container.setBackground(new Color(0xFFFFFF));
 		container.setPreferredSize(new Dimension(600, 200));
 		container.setLayout(new BorderLayout());
+		
 		current = new JPanel();
 		current.setBackground(new Color(0x353535));
 		current.setPreferredSize(new Dimension(800, 200));
 		current.setLayout(new FlowLayout(FlowLayout.LEADING, 50,10));
+		
+		
 		actions = new JPanel();
 		actions.setBackground(new Color(0x555510));
 		actions.setPreferredSize(new Dimension(500, 350));
 		actions.setLayout(null);
 		
+		charc = new JPanel();
+		charc.setBackground(new Color(0x9D2E18));
+		charc.setPreferredSize(new Dimension(200, 600));
+		charc.setLayout(null);
+		info.add(charc,BorderLayout.CENTER);
+		
+		
 		game.add(current, BorderLayout.SOUTH);
 		game.add(main, BorderLayout.CENTER);
 		game.add(container, BorderLayout.EAST);
+		
 		container.add(actions, BorderLayout.SOUTH);
 		container.add(info, BorderLayout.CENTER);
-		gameframe.add(game);
+		gameframe.add(game, BorderLayout.CENTER);
+		
+		
+	//------------------------------------------------LABELS----------------------------------------------------------	
+		champ1 = new JLabel();
+		champ2 = new JLabel();
+		champ3 = new JLabel();
+		champ4 = new JLabel();
+		champ5 = new JLabel();
+		champ6 = new JLabel();
+		
+		champ1.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+		champ2.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+		champ3.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+		champ4.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+		champ5.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+		champ6.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+		
+		
+		champ1.setBounds(40, 60, 120,120);
+		champ2.setBounds(30, 60+130, 140,140);  //Leader 1
+		champ3.setBounds(40, 60+130+150, 120,120);
+		champ4.setBounds(40+200, 60, 120,120);
+		champ5.setBounds(30+200, 60+130, 140,140);  // Leader 2
+		champ6.setBounds(40+200, 60+130+150, 120,120);
+		
+				//sub-labels
+				JLabel pONE = new JLabel(newgame.getFirstPlayer().getName(), SwingConstants.CENTER);
+				JLabel pTWO = new JLabel(newgame.getSecondPlayer().getName(), SwingConstants.CENTER);
+				pONE.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+				pTWO.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+				pONE.setBounds(10, 10, 180, 50);
+				pTWO.setBounds(210, 10, 180, 50);
+		
+		charc.add(champ1);
+		charc.add(champ2);
+		charc.add(champ3);
+		charc.add(champ4);
+		charc.add(champ5);
+		charc.add(champ6);
+		charc.add(pONE);
+		charc.add(pTWO);
+		for(int i =0;i<3;i++){
+			if(newgame.getFirstPlayer().getTeam().get(i) != newgame.getFirstPlayer().getLeader())
+				if(champ1.getIcon()==null)
+					champ1.setIcon(new ImageIcon(((ImageIcon)newgame.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
+				else
+					champ3.setIcon(new ImageIcon(((ImageIcon)newgame.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
+			else
+				champ2.setIcon(new ImageIcon(((ImageIcon)newgame.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(140,140,Image.SCALE_SMOOTH)));
+			if(newgame.getSecondPlayer().getTeam().get(i) != newgame.getSecondPlayer().getLeader())
+				if(champ4.getIcon()==null)
+					champ4.setIcon(new ImageIcon(((ImageIcon)newgame.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
+				else
+					champ6.setIcon(new ImageIcon(((ImageIcon)newgame.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
+			else
+				champ5.setIcon(new ImageIcon(((ImageIcon)newgame.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(140,140,Image.SCALE_SMOOTH)));
+			
+		}
+		
+	//------------------------------------------------TEXTFIELDS----------------------------------------------------------	
+		turnorderT = new JTextArea("The Turn Order:" + '\n' );
+		turnorderT.setPreferredSize(new Dimension(200,400));
+		turnorderT.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+		turnorderT.setBackground(new Color(0xE7694F));
+		turnOrderSetText();
+		info.add(turnorderT, BorderLayout.EAST);
+		
+		
 	//------------------------------------------------BUTTONS----------------------------------------------------------	
 		
 		up= new JButton( new ImageIcon(upicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
@@ -556,6 +650,12 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				return a;
 		}
 		return null;
+	}
+	
+	public void turnOrderSetText(){
+		PriorityQueue turnz= newgame.getTurnOrder().clone();
+		while(!turnz.isEmpty())
+			turnorderT.setText(turnorderT.getText()+'\n' +((Champion)turnz.remove()).getName());
 	}
 
 }

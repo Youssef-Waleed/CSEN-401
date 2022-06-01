@@ -251,8 +251,8 @@ import model.world.Villain;
 		{
 			boolean alldone = false;
 			if(!name1.getText().equals("") && !name2.getText().equals("") && !(name1.getForeground()==Color.gray) && !(name2.getForeground()==Color.gray)){
-				Player p1 = new Player("name1.getText()");
-				Player p2 = new Player("name2.getText()");
+				Player p1 = new Player(name1.getText());
+				Player p2 = new Player(name2.getText());
 				if(temp1.size()<3||temp2.size()<3)
 					JOptionPane.showMessageDialog(null, "Select 3 Champions for each team", "WARNING", JOptionPane.WARNING_MESSAGE);
 				else{
