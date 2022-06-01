@@ -96,6 +96,7 @@ import model.world.Villain;
 		}
 		icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
 		selectframe = new JFrame();
+		selectframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		selectframe.setLayout(new BorderLayout());
 		selectframe.setSize(width+1, height);
 	    selectframe.setLocation(1920/2-width/2,0);
