@@ -50,7 +50,7 @@ import model.world.Villain;
 	private ImageIcon icon;
 	private JTextField name1,name2;
 	private JFrame selectframe;
-	private JPanel select;
+	private JPanel select, select2;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	private JList champlist1,champlist2;
@@ -92,8 +92,13 @@ import model.world.Villain;
 	    selectframe.setIconImage(icon.getImage());
 	    
 		select = new JPanel();
-		select.setBounds(0, 0, width, height);
+		select2 = new JPanel();
+		select.setBounds(0, 0, width/2-5, height);
 		select.setLayout(null);
+		select.setBackground(new Color(161, 0, 0));
+		select2.setBounds(width/2-5, 0, width/2-5, height);
+		select2.setLayout(null);
+		select2.setBackground(new Color(0, 0, 161));
 		
 		String[] names = new String[20];
 		for(int i = 0;i<availableChampions.size();i++)
@@ -136,7 +141,7 @@ import model.world.Villain;
 		stats2.setBounds(520+510-100+50, 10, 400, 720-460);
 		stats2.setText("Select Leader");
 		stats2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		select.add(stats2);
+		select2.add(stats2);
 		
 		
 		name1 = new JTextField();
@@ -150,7 +155,7 @@ import model.world.Villain;
 		name2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		name2.setText("Player 2 Name");
 		name2.setForeground(Color.gray);
-		select.add(listScroller2);
+		select2.add(listScroller2);
 		select.add(listScroller);
 		
 		
@@ -219,19 +224,22 @@ import model.world.Villain;
 		select.add(ab1);
 		select.add(ab2);
 		select.add(ab3);
-		select.add(ab4);
-		select.add(ab5);
-		select.add(ab6);
-		select.add(startGame);
+		select2.add(ab4);
+		select2.add(ab5);
+		select2.add(ab6);
+		selectframe.add(startGame);
+//		select.add(startGame);
+//		select2.add(startGame);
   	    select.add(name1);
-		select.add(name2);
+		select2.add(name2);
 		select.add(add1);
-		select.add(add2);
+		select2.add(add2);
 		select.add(team1);
-		select.add(team2);
+		select2.add(team2);
 		select.add(ability1stats);
-		select.add(ability2stats);
+		select2.add(ability2stats);
 		selectframe.add(select);
+		selectframe.add(select2);
 		selectframe.setVisible(true);
 	}
 	
