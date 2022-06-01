@@ -152,8 +152,10 @@ import model.world.Villain;
 		name1 = new JTextField();
 		name2 = new JTextField();
 		name1.setBounds(10, 10, 500, 50);
+		name1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		
 		name2.setBounds(520, 10, 500, 50);
+		name2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		select.add(listScroller2);
 		select.add(listScroller);
 		
@@ -185,7 +187,9 @@ import model.world.Villain;
 		team1 = new JTextArea("");
 		team2 = new JTextArea("");
 		team1.setBounds(10, 370, 500, 150);
+		team1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		team2.setBounds(520, 370, 500, 150);
+		team2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
 		ab1 = new JButton("Ablity 1");
 		ab2 = new JButton("Ablity 2");
 		ab3 = new JButton("Ablity 3");
@@ -254,10 +258,16 @@ import model.world.Villain;
 				if(temp1.size()<3||temp2.size()<3)
 					warning.setText("Select 3 Champions for each team");
 				else{
-					for(int i=0;i<3;i++)
+					for(int i=0;i<3;i++){
 					    p1.getTeam().add(temp1.get(i));
-					for(int i=0;i<3;i++)
+					    if(i == 0)
+					    	p1.setLeader(p1.getTeam().get(i));
+					}
+					for(int i=0;i<3;i++){
 					    p2.getTeam().add(temp2.get(i));
+					    if(i == 0)
+					    	p2.setLeader(p2.getTeam().get(i));
+					}
 					MainGUI newgame = new MainGUI(new Game(p1,p2));
 					//selectframe.dispatchEvent(new WindowEvent(selectframe, WindowEvent.WINDOW_CLOSING));
 					selectframe.setVisible(false);
@@ -289,7 +299,10 @@ import model.world.Villain;
 				    temp1.add(c);
 				    System.out.println(c.getName());
 				    warning.setText("");
-				    t1 = t1 + c.getName()+'\n';
+				    if(temp1.size() == 1)
+				    	t1 = t1 + c.getName()+ " (Leader)" +'\n';
+				    else
+				    	t1 = t1 + c.getName()+'\n';
 				    team1.setText(t1);
 				}
 				else
@@ -310,7 +323,10 @@ import model.world.Villain;
 				    temp2.add(c);
 				    System.out.println(c.getName());
 				    warning.setText("");
-				    t2 = t2 + c.getName()+'\n';
+				    if(temp2.size() == 1)
+				    	t2 = t2 + c.getName()+ " (Leader)" +'\n';
+				    else
+				    	t2 = t2 + c.getName()+'\n';
 				    team2.setText(t2);
 				}
 				else
