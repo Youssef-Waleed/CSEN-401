@@ -45,6 +45,7 @@ import engine.Game;
 
 public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
 	private JFrame gameframe;
+	private Game newgame;
 	private ImageIcon icon, tmpico;
 	private JTextArea stats1,stats2;
 	private JPanel info,main, container, current, actions,game,select;
@@ -54,17 +55,17 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					b31,b32,b33,b34,b35,
 					b41,b42,b43,b44,b45,
 					b51,b52,b53,b54,b55*/;
-	private JButton[][] button;
+	private JButton[][] Gridbuttons;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	private JList list1 = new JList(); 
 	private JList list2 = new JList();
 	public static void main(String[] args) {
-		MainGUI bla = new MainGUI();
+		//MainGUI bla = new MainGUI();
 
 	}
 	
-	public MainGUI(/*Game newGame*/){
+	public MainGUI(Game newGame){
 //		availableChampions = new ArrayList<Champion>();
 //		availableAbilities = new ArrayList<Ability>();
 //		try {
@@ -80,7 +81,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		
+		newgame=newGame;
 		
 	//-----------------------------------------game panel---------------------------------------------------------	
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -89,14 +90,14 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		game = new JPanel();
 		game.setBounds(0, 0, width, height);
 		game.setLayout(new BorderLayout());
-		icon = new ImageIcon("Marvel_Logo.png");
-		ImageIcon upicon = new ImageIcon("up-arrow.png");
-		ImageIcon downicon = new ImageIcon("down-arrow.png");
-		ImageIcon righticon = new ImageIcon("right-arrow.png");
-		ImageIcon lefticon = new ImageIcon("left-arrow.png");
-		ImageIcon attackicon = new ImageIcon("attack.png");
-		ImageIcon casticon = new ImageIcon("ability.png");
-		ImageIcon leadicon = new ImageIcon("wizard.png");
+		icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
+		ImageIcon upicon = new ImageIcon(this.getClass().getResource("/resources/icons/up-arrow.png"));
+		ImageIcon downicon = new ImageIcon(this.getClass().getResource("/resources/icons/down-arrow.png"));
+		ImageIcon righticon = new ImageIcon(this.getClass().getResource("/resources/icons/right-arrow.png"));
+		ImageIcon lefticon = new ImageIcon(this.getClass().getResource("/resources/icons/left-arrow.png"));
+		ImageIcon attackicon = new ImageIcon(this.getClass().getResource("/resources/icons/attack.png"));
+		ImageIcon casticon = new ImageIcon(this.getClass().getResource("/resources/icons/ability.png"));
+		ImageIcon leadicon = new ImageIcon(this.getClass().getResource("/resources/icons/wizard.png"));
 		
 		gameframe = new JFrame();
 		gameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -211,34 +212,20 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		
 		
-		button = new JButton[5][5];
+		Gridbuttons = new JButton[5][5];
 		for(int i =0; i<5; i++)
-			for(int j =0; j<5; j++)
-				button[i][j]= new JButton();			//the new Buttons						
-
-
-		for(int i =0; i<5; i++)								//button font
-			for(int j =0; j<5; j++)
-				button[i][j].setFont(new Font("Comic Sans MS", Font.BOLD, 16));
-
-//		for(int i =0; i<5; i++)
-//			for(int j =0; j<5; j++)
-//				button[i][j].setBorder(BorderFactory.);
-//		for(int i =0; i<5; i++)
-//			for(int j =0; j<5; j++)
-//				button[i][j].setBackground(new Color(0xF9F3D3));
-		
-		for(int i =0; i<5; i++)								//_______________
-			for(int j =0; j<5; j++)
-				button[i][j].setFocusable(false);
-
-		for(int i =0; i<5; i++)								//_______________
-			for(int j =0; j<5; j++)
-				button[i][j].addActionListener(this);
-		
-		for(int i =0; i<5; i++)
-			for(int j =0; j<5; j++)
-				main.add(button[i][j]);
+			for(int j =0; j<5; j++){
+				Gridbuttons[i][j]= new JButton();
+				Gridbuttons[i][j].setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+				Gridbuttons[i][j].setFocusable(false);
+				Gridbuttons[i][j].addActionListener(this);
+				Object[][] board = newgame.getBoard();
+				if(board[i][j] instanceof Champion)
+					Gridbuttons[i][j].setIcon(	new ImageIcon(((((Champion)board[i][j])).getIcon().getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH))));				//((Champion)board[i][j]).getIcon());
+				else if(board[i][j] instanceof Cover)
+					Gridbuttons[i][j].setIcon(new ImageIcon(((((Cover)board[i][j])).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));			//((Cover)board[i][j]).getIcon());
+				main.add(Gridbuttons[i][j]);
+			}
 		
 		//---------------------------------------------Character select------------------------
 //		select = new JPanel();

@@ -68,6 +68,11 @@ import model.world.Villain;
 	private JLabel warning;
 	private ArrayList<Champion> temp1,temp2;
 	private String[] names1, names2;
+	
+	public static void main(String[]args){
+		selectScreen test = new selectScreen();
+	}
+	
 	public selectScreen(){
 		temp1 = new ArrayList<Champion>();
 		temp2 = new ArrayList<Champion>();
@@ -89,7 +94,7 @@ import model.world.Villain;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		icon = new ImageIcon("Marvel_Logo.png");
+		icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
 		selectframe = new JFrame();
 		selectframe.setLayout(new BorderLayout());
 		selectframe.setSize(width+1, height);
@@ -236,9 +241,6 @@ import model.world.Villain;
 		selectframe.setVisible(true);
 	}
 	
-	public static void main(String[]args){
-		selectScreen test = new selectScreen();
-	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -256,8 +258,9 @@ import model.world.Villain;
 					    p1.getTeam().add(temp1.get(i));
 					for(int i=0;i<3;i++)
 					    p2.getTeam().add(temp2.get(i));
-					//MainGUI newgame = new MainGUI(p1,p2);
-					selectframe.dispatchEvent(new WindowEvent(selectframe, WindowEvent.WINDOW_CLOSING));
+					MainGUI newgame = new MainGUI(new Game(p1,p2));
+					//selectframe.dispatchEvent(new WindowEvent(selectframe, WindowEvent.WINDOW_CLOSING));
+					selectframe.setVisible(false);
 					}
 			}
 			else
