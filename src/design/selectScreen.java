@@ -232,7 +232,8 @@ import model.world.Villain;
 					    p1.getTeam().add(temp1.get(i));
 					for(int i=0;i<3;i++)
 					    p2.getTeam().add(temp2.get(i));
-					//MainGUI newgame = new MainGUI(p1,p2);
+					Game newgame = new Game(p1,p2);
+					MainGUI bla = new MainGUI(newgame);
 					selectframe.dispatchEvent(new WindowEvent(selectframe, WindowEvent.WINDOW_CLOSING));
 					}
 			}
@@ -260,7 +261,6 @@ import model.world.Villain;
 				if(temp1.size()<3)
 				{
 				    temp1.add(c);
-				    System.out.println(c.getName());
 				    warning.setText("");
 				    t1 = t1 + c.getName()+'\n';
 				    team1.setText(t1);
@@ -281,7 +281,6 @@ import model.world.Villain;
 				if(temp2.size()<3)
 				{
 				    temp2.add(c);
-				    System.out.println(c.getName());
 				    warning.setText("");
 				    t2 = t2 + c.getName()+'\n';
 				    team2.setText(t2);

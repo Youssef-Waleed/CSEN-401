@@ -54,17 +54,17 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					b31,b32,b33,b34,b35,
 					b41,b42,b43,b44,b45,
 					b51,b52,b53,b54,b55*/;
-	private JButton[][] button;
+	private JButton[][] Gridbuttons;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	private JList list1 = new JList(); 
 	private JList list2 = new JList();
 	public static void main(String[] args) {
-		MainGUI bla = new MainGUI();
+		//MainGUI bla = new MainGUI();
 
 	}
 	
-	public MainGUI(/*Game newGame*/){
+	public MainGUI(Game newGame){
 //		availableChampions = new ArrayList<Champion>();
 //		availableAbilities = new ArrayList<Ability>();
 //		try {
@@ -211,34 +211,20 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		
 		
-		button = new JButton[5][5];
+		Gridbuttons = new JButton[5][5];
 		for(int i =0; i<5; i++)
-			for(int j =0; j<5; j++)
-				button[i][j]= new JButton();			//the new Buttons						
-
-
-		for(int i =0; i<5; i++)								//button font
-			for(int j =0; j<5; j++)
-				button[i][j].setFont(new Font("Comic Sans MS", Font.BOLD, 16));
-
-//		for(int i =0; i<5; i++)
-//			for(int j =0; j<5; j++)
-//				button[i][j].setBorder(BorderFactory.);
-//		for(int i =0; i<5; i++)
-//			for(int j =0; j<5; j++)
-//				button[i][j].setBackground(new Color(0xF9F3D3));
-		
-		for(int i =0; i<5; i++)								//_______________
-			for(int j =0; j<5; j++)
-				button[i][j].setFocusable(false);
-
-		for(int i =0; i<5; i++)								//_______________
-			for(int j =0; j<5; j++)
-				button[i][j].addActionListener(this);
-		
-		for(int i =0; i<5; i++)
-			for(int j =0; j<5; j++)
-				main.add(button[i][j]);
+			for(int j =0; j<5; j++){
+				Gridbuttons[i][j]= new JButton();
+				Gridbuttons[i][j].setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+				Gridbuttons[i][j].setFocusable(false);
+				Gridbuttons[i][j].addActionListener(this);
+				Object[][] board = newGame.getBoard();
+				if(board[i][j] instanceof Champion)
+					Gridbuttons[i][j].setIcon(((Champion)board[i][j]).getIcon());
+				else if(board[i][j] instanceof Champion)
+					Gridbuttons[i][j].setIcon(((Cover)board[i][j]).getIcon());
+				main.add(Gridbuttons[i][j]);
+			}
 		
 		//---------------------------------------------Character select------------------------
 //		select = new JPanel();
