@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,16 +48,17 @@ import model.world.Villain;
 	private int count = 0;
 	private String t1,t2 = "";
 	private JTextArea team1,team2,ability1stats,ability2stats = new JTextArea("");
-	private ImageIcon icon;
+	private ImageIcon icon, selbkground;
 	private JTextField name1,name2;
 	private JFrame selectframe;
-	private JPanel select, select2;
+	private JPanel select;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	private JList champlist1,champlist2;
 	private JButton startGame, add1, add2,ab1,ab2,ab3,ab4,ab5,ab6;
 	private ArrayList<Champion> temp1,temp2;
 	private String[] names1, names2;
+	private JLabel strips;
 	
 	public static void main(String[]args){
 		selectScreen test = new selectScreen();
@@ -66,8 +68,10 @@ import model.world.Villain;
 		temp1 = new ArrayList<Champion>();
 		temp2 = new ArrayList<Champion>();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = (int)screenSize.getWidth();
-		int height = (int)screenSize.getHeight();
+		int width = (int) screenSize.getWidth();
+		int height = (int) screenSize.getHeight();
+		strips = new JLabel();
+		strips.setBounds(0,0,width,height);
 		availableChampions = new ArrayList<Champion>();
 		availableAbilities = new ArrayList<Ability>();
 		try {
@@ -84,21 +88,21 @@ import model.world.Villain;
 			e.printStackTrace();
 		}
 		icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
+		selbkground = new ImageIcon(this.getClass().getResource("/resources/icons/SelectBackground.jpg"));
 		selectframe = new JFrame();
+		selectframe.setTitle("Character Select");
 		selectframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		selectframe.setLayout(new BorderLayout());
 		selectframe.setSize(width+1, height);
-	    selectframe.setLocation(1920/2-width/2,0);
+	    selectframe.setLocationRelativeTo(null);
 	    selectframe.setIconImage(icon.getImage());
+	    strips.setIcon(new ImageIcon(selbkground.getImage().getScaledInstance(width, height,Image.SCALE_SMOOTH)));
 	    
 		select = new JPanel();
-		select2 = new JPanel();
-		select.setBounds(0, 0, width/2-5, height);
+		select.setBounds(0, 0, width, height);
 		select.setLayout(null);
-		select.setBackground(new Color(161, 0, 0));
-		select2.setBounds(width/2-5, 0, width/2-5, height);
-		select2.setLayout(null);
-		select2.setBackground(new Color(0, 0, 161));
+		
+
 		
 		String[] names = new String[20];
 		for(int i = 0;i<availableChampions.size();i++)
@@ -112,96 +116,123 @@ import model.world.Villain;
 		champlist1.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		champlist1.setVisibleRowCount(-1);
 		champlist1.addListSelectionListener(this);
+		champlist1.setBackground(new Color(255, 79, 75));
 		
 		JScrollPane listScroller = new JScrollPane(champlist1);
 		//listScroller.setPreferredSize(new Dimension(500, 300));
-		listScroller.setBounds(10,120-50, 500, 300);
-		champlist1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		listScroller.setBounds((int)(((10)*width)/1920),(int)(((120-50)*height)/1080), (int)(((500)*width)/1920), (int)(((300)*height)/1080));
+		champlist1.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
 		champlist2 = new JList(names); //data has type Object[]
 		champlist2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		champlist2.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		champlist2.setVisibleRowCount(-1);
 		champlist2.addListSelectionListener(this);
+		champlist2.setBackground(new Color(82, 89, 169));
 		
 		
 		JScrollPane listScroller2 = new JScrollPane(champlist2);
 		//listScroller2.setPreferredSize(new Dimension(500, 300));
-		listScroller2.setBounds(520+510+400-30,120-50, 500, 300);
-		champlist2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		listScroller2.setBounds((int)(((520+510+400-30)*width)/1920),(int)(((120-50)*height)/1080),(int)(((500)*width)/1920), (int)(((300)*height)/1080));
+		champlist2.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
 		
 		
 		stats1 = new JTextArea();
-		stats1.setBounds(520+10, 10, 400, 720-460);
+		stats1.setBounds((int)(((520+10)*width)/1920), (int)(((10)*height)/1080), (int)(((400)*width)/1920), (int)(((720-460)*height)/1080));
 		stats1.setText("Select Leader");
-		stats1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		stats1.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		stats1.setBackground(new Color(255, 79, 75));
 		select.add(stats1);
 		
 		
 		stats2 = new JTextArea();
-		stats2.setBounds(520+510-100+50, 10, 400, 720-460);
+		stats2.setBounds((int)(((520+510-100+50)*width)/1920),(int)(((10)*height)/1080), (int)(((400)*width)/1920), (int)(((720-460)*height)/1080));
 		stats2.setText("Select Leader");
-		stats2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		select2.add(stats2);
+		stats2.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		stats2.setBackground(new Color(82, 89, 169));
+		select.add(stats2);
 		
 		
 		name1 = new JTextField();
 		name2 = new JTextField();
-		name1.setBounds(10, 10, 500, 50);
-		name1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		name1.setBounds((int)(((10)*width)/1920), (int)(((10)*height)/1080), (int)(((500)*width)/1920), (int)(((50)*height)/1080));
+		name1.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		name1.setBackground(new Color(220, 0, 0));
 		name1.setText("Player 1 Name");
 		name1.setForeground(Color.gray);
 		
-		name2.setBounds(520+510+400-30, 10, 500, 50);
-		name2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		name2.setBounds((int)(((520+510+400-30)*width)/1920), (int)(((10)*height)/1080), (int)(((500)*width)/1920), (int)(((50)*height)/1080));
+		name2.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		name2.setBackground(new Color(0, 0, 220));
 		name2.setText("Player 2 Name");
 		name2.setForeground(Color.gray);
-		select2.add(listScroller2);
+		select.add(listScroller2);
 		select.add(listScroller);
 		
 		
 		startGame = new JButton("Start Game");
 		//startGame.setActionCommand("Start game");
 		startGame.addActionListener(this);
-		startGame.setBounds(width/2 - 100, 690, 200, 100);
-		startGame.setFont(new Font("Comic Sans MS", Font.BOLD, 28));
+		startGame.setBounds(width/2 - (int)(((100)*width)/1920), (int)(((690)*height)/1080), (int)(((200)*width)/1920), (int)(((100)*height)/1080));
+		startGame.setFont(new Font("Agency FB", Font.BOLD, (int)(((35)*width)/1920)));
+		startGame.setBackground(Color.black);
+		startGame.setForeground(Color.white);
 		
 		
 		add1 = new JButton("Lock-In Champion");
-		add1.setBounds(205-100, 530, 250, 50);
+		add1.setBounds((int)(((205-100)*width)/1920), (int)(((530)*height)/1080), (int)(((250)*width)/1920), (int)(((50)*height)/1080));
 		add1.addActionListener(this);
-		add1.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+		add1.setFont(new Font("Agency FB", Font.BOLD, (int)(((25)*width)/1920)));
+		add1.setBackground(new Color(255, 168, 1));
 		
 		add2 = new JButton("Lock-In Champion");
-		add2.setBounds(715+800, 530, 250, 50);
+		add2.setBounds((int)(((715+800)*width)/1920), (int)(((530)*height)/1080), (int)(((250)*width)/1920), (int)(((50)*height)/1080));
 		add2.addActionListener(this);
-		add2.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+		add2.setFont(new Font("Agency FB", Font.BOLD, (int)(((25)*width)/1920)));
+		add2.setBackground(new Color(12, 132, 252));
 		
 		t1="";
 		t2="";
 		team1 = new JTextArea("");
 		team2 = new JTextArea("");
-		team1.setBounds(10, 370, 500, 150);
-		team1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		team2.setBounds(520+510+400-30, 370, 500, 150);
-		team2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		ab1 = new JButton("Ablity 1");
-		ab2 = new JButton("Ablity 2");
-		ab3 = new JButton("Ablity 3");
-		ab4 = new JButton("Ablity 1");
-		ab5 = new JButton("Ablity 2");
-		ab6 = new JButton("Ablity 3");
-		ab1.setBounds(520+50-20, 280, 110, 20);
-		ab2.setBounds(630+50+5-20, 280, 110, 20);
-		ab3.setBounds(740+50+10-20, 280, 110, 20);
-		ab4.setBounds(850+50+55+50+20, 280, 110, 20);
-		ab5.setBounds(960+50+60+50+20, 280, 110, 20);
-		ab6.setBounds(1070+50+65+50+20, 280, 110, 20);
+		team1.setBounds((int)(((10)*width)/1920), (int)(((370)*height)/1080), (int)(((500)*width)/1920), (int)(((150)*height)/1080));
+		team1.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		team1.setBackground(new Color(255, 79, 75));
+		team2.setBounds((int)(((520+510+400-30)*width)/1920), (int)(((370)*height)/1080), (int)(((500)*width)/1920), (int)(((150)*height)/1080));
+		team2.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		team2.setBackground(new Color(82, 89, 169));
+		ab1 = new JButton("Ability 1");
+		ab2 = new JButton("Ability 2");
+		ab3 = new JButton("Ability 3");
+		ab4 = new JButton("Ability 1");
+		ab5 = new JButton("Ability 2");
+		ab6 = new JButton("Ability 3");
+		ab1.setFont(new Font("Arial", Font.BOLD, (int)(((15)*width)/1920)));
+		ab1.setBackground(new Color(255, 168, 1));
+		ab2.setFont(new Font("Arial", Font.BOLD, (int)(((15)*width)/1920)));
+		ab2.setBackground(new Color(255, 168, 1));
+		ab3.setFont(new Font("Arial", Font.BOLD, (int)(((15)*width)/1920)));
+		ab3.setBackground(new Color(255, 168, 1));
+		ab4.setFont(new Font("Arial", Font.BOLD, (int)(((15)*width)/1920)));
+		ab4.setBackground(new Color(12, 132, 252));
+		ab5.setFont(new Font("Arial", Font.BOLD, (int)(((15)*width)/1920)));
+		ab5.setBackground(new Color(12, 132, 252));
+		ab6.setFont(new Font("Arial", Font.BOLD, (int)(((15)*width)/1920)));
+		ab6.setBackground(new Color(12, 132, 252));
+		
+		ab1.setBounds((int)(((520+50-20)*width)/1920), (int)(((280)*height)/1080), (int)(((110)*width)/1920), (int)(((20)*height)/1080));
+		ab2.setBounds((int)(((630+50+5-20)*width)/1920), (int)(((280)*height)/1080), (int)(((110)*width)/1920), (int)(((20)*height)/1080));
+		ab3.setBounds((int)(((740+50+10-20)*width)/1920), (int)(((280)*height)/1080), (int)(((110)*width)/1920), (int)(((20)*height)/1080));
+		ab4.setBounds((int)(((850+50+55+50+20)*width)/1920), (int)(((280)*height)/1080), (int)(((110)*width)/1920), (int)(((20)*height)/1080));
+		ab5.setBounds((int)(((960+50+60+50+20)*width)/1920), (int)(((280)*height)/1080), (int)(((110)*width)/1920), (int)(((20)*height)/1080));
+		ab6.setBounds((int)(((1070+50+65+50+20)*width)/1920), (int)(((280)*height)/1080), (int)(((110)*width)/1920), (int)(((20)*height)/1080));
 		ability1stats = new JTextArea();
 		ability2stats = new JTextArea();
-		ability1stats.setBounds(520, 310, 420, 720-460);
-		ability2stats.setBounds(520+400+50, 310, 420, 720-460);
-		ability1stats.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-		ability2stats.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+		ability1stats.setBounds((int)(((520)*width)/1920), (int)(((310)*height)/1080), (int)(((420)*width)/1920), (int)(((720-460)*height)/1080));
+		ability2stats.setBounds((int)(((520+400+50)*width)/1920), (int)(((310)*height)/1080), (int)(((420)*width)/1920), (int)(((720-460)*height)/1080));
+		ability1stats.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		ability1stats.setBackground(new Color(255, 79, 75));
+		ability2stats.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		ability2stats.setBackground(new Color(82, 89, 169));
 		ab1.addActionListener(this);
 		ab2.addActionListener(this);
 		ab3.addActionListener(this);
@@ -218,28 +249,28 @@ import model.world.Villain;
 		name2.addMouseListener(this);
 		
 		
-		
+
 //		
 		//warning.setForeground(Color.green);
 		select.add(ab1);
 		select.add(ab2);
 		select.add(ab3);
-		select2.add(ab4);
-		select2.add(ab5);
-		select2.add(ab6);
+		select.add(ab4);
+		select.add(ab5);
+		select.add(ab6);
 		selectframe.add(startGame);
 //		select.add(startGame);
-//		select2.add(startGame);
+//		select.add(startGame);
   	    select.add(name1);
-		select2.add(name2);
+		select.add(name2);
 		select.add(add1);
-		select2.add(add2);
+		select.add(add2);
 		select.add(team1);
-		select2.add(team2);
+		select.add(team2);
 		select.add(ability1stats);
-		select2.add(ability2stats);
+		select.add(ability2stats);
 		selectframe.add(select);
-		selectframe.add(select2);
+		select.add(strips);
 		selectframe.setVisible(true);
 	}
 	
@@ -274,13 +305,25 @@ import model.world.Villain;
 			else
 				switch(count){
 				case 0:
-					JOptionPane.showMessageDialog(null, "Please Type a name for each player ya roo7 mother", "WARNING", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Please type a name for each player", "WARNING", JOptionPane.WARNING_MESSAGE);
 				count++;
 				break;
 				case 1:
 					JOptionPane.showMessageDialog(null, "enta fakerni haseebak?", "WARNING", JOptionPane.WARNING_MESSAGE);
-				count--;
+				count++;
 				break;
+				case 2:
+					JOptionPane.showMessageDialog(null, "3awez eh ya 5effa?", "WARNING", JOptionPane.WARNING_MESSAGE);
+					count++;
+					break;
+				case 3:
+					JOptionPane.showMessageDialog(null, "abo to2l dammak ya b3eed...", "WARNING", JOptionPane.WARNING_MESSAGE);
+					count++;
+					break;
+				case 4:
+					JOptionPane.showMessageDialog(null, "ekteb el asami ya roo7 mother", "WARNING", JOptionPane.WARNING_MESSAGE);
+					count = 0;
+					break;
 				}
 				
 		}
@@ -330,102 +373,7 @@ import model.world.Villain;
 			else
 				JOptionPane.showMessageDialog(null,"You already have that champion", "WARNING", JOptionPane.WARNING_MESSAGE);
 		}
-		if(e.getSource()==ab1&& champlist1.getSelectedIndex()!=-1){
-			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(0);
-			String temp = "Name: " + a.getName()+'\n'+
-					"Mana Cost: "+a.getManaCost()+'\n'+
-					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
-					"Cast Range: "+a.getCastRange()+'\n'+
-					"Cast Area: "+a.getCastArea()+'\n'+
-					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
-			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
-			else if (a instanceof DamagingAbility)
-				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
-			else
-				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
-			ability1stats.setText(temp);
-		}
-		if(e.getSource()==ab2&& champlist1.getSelectedIndex()!=-1){
-			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(1);
-			String temp = "Name: " + a.getName()+'\n'+
-					"Mana Cost: "+a.getManaCost()+'\n'+
-					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
-					"Cast Range: "+a.getCastRange()+'\n'+
-					"Cast Area: "+a.getCastArea()+'\n'+
-					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
-			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
-			else if (a instanceof DamagingAbility)
-				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
-			else
-				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
-			ability1stats.setText(temp);
-		}
-		if(e.getSource()==ab3&& champlist1.getSelectedIndex()!=-1){
-			Ability a = availableChampions.get(champlist1.getSelectedIndex()).getAbilities().get(2);
-			String temp = "Name: " + a.getName()+'\n'+
-					"Mana Cost: "+a.getManaCost()+'\n'+
-					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
-					"Cast Range: "+a.getCastRange()+'\n'+
-					"Cast Area: "+a.getCastArea()+'\n'+
-					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
-			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
-			else if (a instanceof DamagingAbility)
-				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
-			else
-				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
-			ability1stats.setText(temp);
-		}
-		if(e.getSource()==ab4&& champlist2.getSelectedIndex()!=-1){
-			Ability a = availableChampions.get(champlist2.getSelectedIndex()).getAbilities().get(0);
-			String temp = "Name: " + a.getName()+'\n'+
-					"Mana Cost: "+a.getManaCost()+'\n'+
-					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
-					"Cast Range: "+a.getCastRange()+'\n'+
-					"Cast Area: "+a.getCastArea()+'\n'+
-					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
-			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
-			else if (a instanceof DamagingAbility)
-				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
-			else
-				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
-			ability2stats.setText(temp);
-		}
-		if(e.getSource()==ab5&& champlist2.getSelectedIndex()!=-1){
-			Ability a = availableChampions.get(champlist2.getSelectedIndex()).getAbilities().get(1);
-			String temp = "Name: " + a.getName()+'\n'+
-					"Mana Cost: "+a.getManaCost()+'\n'+
-					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
-					"Cast Range: "+a.getCastRange()+'\n'+
-					"Cast Area: "+a.getCastArea()+'\n'+
-					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
-			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
-			else if (a instanceof DamagingAbility)
-				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
-			else
-				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
-			ability2stats.setText(temp);
-		}
-		if(e.getSource()==ab6&& champlist2.getSelectedIndex()!=-1){
-			Ability a = availableChampions.get(champlist2.getSelectedIndex()).getAbilities().get(2);
-			String temp = "Name: " + a.getName()+'\n'+
-					"Mana Cost: "+a.getManaCost()+'\n'+
-					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
-					"Cast Range: "+a.getCastRange()+'\n'+
-					"Cast Area: "+a.getCastArea()+'\n'+
-					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
-			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
-			else if (a instanceof DamagingAbility)
-				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
-			else
-				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
-			ability2stats.setText(temp);
-		}
+		
 			
 		
 			
@@ -506,7 +454,7 @@ import model.world.Villain;
 					"Cast Area: "+a.getCastArea()+'\n'+
 					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
 			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName()+ " (" +((CrowdControlAbility)a).getEffect().getDuration() + " Turns)";
 			else if (a instanceof DamagingAbility)
 				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
 			else
@@ -522,7 +470,7 @@ import model.world.Villain;
 					"Cast Area: "+a.getCastArea()+'\n'+
 					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
 			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName()+ " (" +((CrowdControlAbility)a).getEffect().getDuration() + " Turns)";
 			else if (a instanceof DamagingAbility)
 				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
 			else
@@ -538,7 +486,7 @@ import model.world.Villain;
 					"Cast Area: "+a.getCastArea()+'\n'+
 					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
 			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName()+ " (" +((CrowdControlAbility)a).getEffect().getDuration() + " Turns)";
 			else if (a instanceof DamagingAbility)
 				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
 			else
@@ -554,7 +502,7 @@ import model.world.Villain;
 					"Cast Area: "+a.getCastArea()+'\n'+
 					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
 			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName()+ " (" +((CrowdControlAbility)a).getEffect().getDuration() + " Turns)";
 			else if (a instanceof DamagingAbility)
 				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
 			else
@@ -570,7 +518,7 @@ import model.world.Villain;
 					"Cast Area: "+a.getCastArea()+'\n'+
 					"Required Action Points: "+a.getRequiredActionPoints()+'\n';
 			if(a instanceof CrowdControlAbility)
-				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName()+ " (" +((CrowdControlAbility)a).getEffect().getDuration() + " Turns)";
 			else if (a instanceof DamagingAbility)
 				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
 			else
