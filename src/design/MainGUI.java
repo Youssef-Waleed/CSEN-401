@@ -1,3 +1,4 @@
+//aint nothing but a heartache
 package design;
 import model.abilities.Ability;
 import model.abilities.AreaOfEffect;
@@ -43,6 +44,8 @@ import javax.swing.event.MouseInputListener;
 import engine.Game;
 import engine.Player;
 import engine.PriorityQueue;
+import exceptions.AbilityUseException;
+import exceptions.InvalidTargetException;
 import exceptions.NotEnoughResourcesException;
 import exceptions.UnallowedMovementException;
 
@@ -50,7 +53,9 @@ import exceptions.UnallowedMovementException;
 
 public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
 	private JFrame gameframe;
+	private boolean castIsclicked=false;
 	private Game G;
+	private ArrayList<Damageable> targets;
 	private ImageIcon icon, tmpico;
 	private JLabel champ1, champ2, champ3, champ4, champ5, champ6;
 	private JTextArea stats1,stats2, turnorderT;
@@ -69,8 +74,32 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 	
 	public static void main(String[] args) {
-		MainGUI bla = new MainGUI(new Game( new Player("CPU el fashel awy aaa") , new Player("Mohamed El Gamed gdi") ));
+		availableChampions = new ArrayList<Champion>();
+		availableAbilities = new ArrayList<Ability>();
+		try {
+			loadAbilities("Abilities.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		try {
+			loadChampions("Champions.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Player p2 = new Player("mohamed el gamed awy aaa");
+		Player p1 = new Player("CPU el fashel awy aaa");
+		p1.getTeam().add(availableChampions.get(0));
+		p1.setLeader(availableChampions.get(0));
+		p1.getTeam().add(availableChampions.get(1));
+		p1.getTeam().add(availableChampions.get(2));
+		p2.getTeam().add(availableChampions.get(3));
+		p2.setLeader(availableChampions.get(3));
+		p2.getTeam().add(availableChampions.get(4));
+		p2.getTeam().add(availableChampions.get(5));
+		MainGUI bla = new MainGUI(new Game( p1 , p2 ));
 	}
 	
 	public MainGUI(Game newGame){
@@ -90,6 +119,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //			e.printStackTrace();
 //		}
 		G=newGame;
+		targets = new ArrayList<Damageable>();
 		
 	//-----------------------------------------game panel---------------------------------------------------------	
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -107,49 +137,58 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		
 		gameframe = new JFrame();
-		gameframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//gameframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		gameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//gameframe.setSize(width+1, height);
+		gameframe.setLayout(new BorderLayout());
+		gameframe.setSize(width+1, height);
 		gameframe.setLocation(1920/2-width/2,0);
-		gameframe.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-		gameframe.setTitle("Marvel: Ultimate War");
-		//gameframe.setLayout(null);
+		//gameframe.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+		//gameframe.setTitle("Marvel: Ultimate War");
 		gameframe.setIconImage(icon.getImage());
 		
+//========================================================================================================================
+		//											PANELS
 		
 		game = new JPanel();
 		game.setBounds(0, 0, width, height);
 		game.setLayout(new BorderLayout());
+		game.setVisible(true);
 		
 		
 		main = new JPanel();			//the new Panels
 		main.setLayout(new GridLayout(5,5));
+		main.setVisible(true);
 		
 		info = new JPanel();
 		info.setBackground(new Color(0xBB381D));
 		info.setPreferredSize(new Dimension(500, 600));
 		info.setLayout(new BorderLayout());
+		info.setVisible(true);
 		
 		container = new JPanel();
 		container.setBackground(new Color(0xFFFFFF));
 		container.setPreferredSize(new Dimension(600, 200));
 		container.setLayout(new BorderLayout());
+		container.setVisible(true);
 		
 		current = new JPanel();
 		current.setBackground(new Color(0x353535));
-		current.setPreferredSize(new Dimension(800, 200));
+		current.setPreferredSize(new Dimension(800, 300));
 		current.setLayout(new FlowLayout(FlowLayout.LEADING, 50,10));
+		current.setVisible(true);
 		
 		
 		actions = new JPanel();
 		actions.setBackground(new Color(0x555510));
 		actions.setPreferredSize(new Dimension(500, 350));
 		actions.setLayout(null);
+		actions.setVisible(true);
 		
 		charc = new JPanel();
 		charc.setBackground(new Color(0x9D2E18));
 		charc.setPreferredSize(new Dimension(200, 600));
 		charc.setLayout(null);
+		charc.setVisible(true);
 		info.add(charc,BorderLayout.CENTER);
 		
 		
@@ -170,20 +209,20 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		champ5 = new JLabel();
 		champ6 = new JLabel();
 		
-		champ1.setBorder(BorderFactory.createLineBorder(Color.black, 3));
-		champ2.setBorder(BorderFactory.createLineBorder(Color.black, 3));
-		champ3.setBorder(BorderFactory.createLineBorder(Color.black, 3));
-		champ4.setBorder(BorderFactory.createLineBorder(Color.black, 3));
-		champ5.setBorder(BorderFactory.createLineBorder(Color.black, 3));
-		champ6.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+//		champ1.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+//		champ2.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+//		champ3.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+//		champ4.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+//		champ5.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+//		champ6.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 		
 		
-		champ1.setBounds(40, 60, 120,120);
-		champ2.setBounds(30, 60+130, 140,140);  //Leader 1
-		champ3.setBounds(40, 60+130+150, 120,120);
-		champ4.setBounds(40+200, 60, 120,120);
-		champ5.setBounds(30+200, 60+130, 140,140);  // Leader 2
-		champ6.setBounds(40+200, 60+130+150, 120,120);
+		champ1.setBounds(50, 60, 90,90);
+		champ2.setBounds(40, 60+100, 110,110);  //Leader 1
+		champ3.setBounds(50, 60+100+120, 90,90);
+		champ4.setBounds(50+205, 60, 90,90);
+		champ5.setBounds(40+205+5, 60+100,100,110);  // Leader 2
+		champ6.setBounds(50+205, 60+100+120, 90,90);
 		
 				//sub-labels
 				JLabel pONE = new JLabel(G.getFirstPlayer().getName(), SwingConstants.CENTER);
@@ -201,22 +240,40 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		charc.add(champ6);
 		charc.add(pONE);
 		charc.add(pTWO);
+		
 		for(int i =0;i<3;i++){
 			if(G.getFirstPlayer().getTeam().get(i) != G.getFirstPlayer().getLeader())
-				if(champ1.getIcon()==null)
-					champ1.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
-				else
-					champ3.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
-			else
-				champ2.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(140,140,Image.SCALE_SMOOTH)));
+				if(champ1.getIcon()==null){
+					champ1.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH)));
+					if(G.getTurnOrder().peekMin() == G.getFirstPlayer().getTeam().get(i))
+						champ1.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+				}
+				else{
+					champ3.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH)));
+					if(G.getTurnOrder().peekMin() == G.getFirstPlayer().getTeam().get(i))
+						champ3.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+					}
+			else{
+				champ2.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(110,110,Image.SCALE_SMOOTH)));
+				if(G.getTurnOrder().peekMin() == G.getFirstPlayer().getTeam().get(i))
+					champ2.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+				}
 			if(G.getSecondPlayer().getTeam().get(i) != G.getSecondPlayer().getLeader())
-				if(champ4.getIcon()==null)
-					champ4.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
-				else
-					champ6.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(120,120,Image.SCALE_SMOOTH)));
-			else
-				champ5.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(140,140,Image.SCALE_SMOOTH)));
-			
+				if(champ4.getIcon()==null){
+					champ4.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH)));
+					if(G.getTurnOrder().peekMin() == G.getSecondPlayer().getTeam().get(i))
+						champ4.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+				}
+				else{
+					champ6.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH)));
+					if(G.getTurnOrder().peekMin() == G.getSecondPlayer().getTeam().get(i))
+						champ6.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+				}
+			else{
+				champ5.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(110,110,Image.SCALE_SMOOTH)));
+				if(G.getTurnOrder().peekMin() == G.getSecondPlayer().getTeam().get(i))
+					champ5.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+			}
 		}
 		
 	//------------------------------------------------TEXTFIELDS----------------------------------------------------------	
@@ -315,6 +372,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				Gridbuttons[i][j].setFont(new Font("Comic Sans MS", Font.BOLD, 16));
 				Gridbuttons[i][j].setFocusable(false);
 				Gridbuttons[i][j].addActionListener(this);
+				//Gridbuttons[i][j].setBackground(new Color(0xA2CCE8));
 				Object[][] board = G.getBoard();
 				if(board[i][j] instanceof Champion)
 					Gridbuttons[i][j].setIcon(	new ImageIcon(((((Champion)board[i][j])).getIcon().getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH))));				//((Champion)board[i][j]).getIcon());
@@ -322,58 +380,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					Gridbuttons[i][j].setIcon(new ImageIcon(((((Cover)board[i][j])).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));			//((Cover)board[i][j]).getIcon());
 				main.add(Gridbuttons[i][j]);
 			}
-		
-		//---------------------------------------------Character select------------------------
-//		select = new JPanel();
-//		select.setBounds(0, 0, width, height);
-//		select.setLayout(null);
-//		String[] names = new String[20];
-//		for(int i = 0;i<availableChampions.size();i++)
-//			names[i]=availableChampions.get(i).getName(); 
-//		list1 = new JList(names); //data has type Object[]
-//		list1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		list1.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-//		list1.setVisibleRowCount(-1);
-//		list1.addListSelectionListener(this);
-//		JScrollPane listScroller = new JScrollPane(list1);
-//		listScroller.setPreferredSize(new Dimension(500, 300));
-//		listScroller.setBounds(10,10, 500, 300);
-//		list1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-//		list2 = new JList(names); //data has type Object[]
-//		list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		list2.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-//		list2.setVisibleRowCount(-1);
-//		list2.addListSelectionListener(this);
-//		JScrollPane listScroller2 = new JScrollPane(list2);
-//		listScroller2.setPreferredSize(new Dimension(500, 300));
-//		listScroller2.setBounds(520,10, 500, 300);
-//		list2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-//		stats1 = new JTextArea();
-//		stats1.setBounds(520+510, 0, 400, 720-300);
-//		stats1.setText("Select Leader");
-//		stats1.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-//		select.add(stats1);
-//		stats2 = new JTextArea();
-//		stats2.setBounds(520+510+400, 0, 400, 720-300);
-//		stats2.setText("Select Leader");
-//		stats2.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-//		select.add(stats2);
-//		
-//		select.add(listScroller2);
-//		select.add(listScroller);
-//		startGame = new JButton("Start Game");
-//		startGame.setActionCommand("Start game");
-//		startGame.addActionListener(this);
-//		startGame.setBounds(500, 500, 200, 100);
-//		select.add(startGame);
-//
-//		
-//
 		gameframe.setVisible(true);
-//		gameframe.add(select);
-//		//gameframe.validate(); 3ayzeen net check law di sa7
-//		//game=new Game( firstPlayer,  secondPlayer);	
-//	
+
 		}
 
 
@@ -388,7 +396,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==up)
+		if(e.getSource()==up&&!castIsclicked)
 		{
 			boolean no = false;
 			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
@@ -406,7 +414,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    Gridbuttons[G.getCurrentChampion().getLocation().x-1][G.getCurrentChampion().getLocation().y].setIcon(null);
 			}
 		}
-		if(e.getSource()==down)
+		if(e.getSource()==down&&!castIsclicked)
 		{
 			boolean no = false;
 			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
@@ -424,7 +432,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    Gridbuttons[G.getCurrentChampion().getLocation().x+1][G.getCurrentChampion().getLocation().y].setIcon(null);
 			}
 		}
-		if(e.getSource()==right)
+		if(e.getSource()==right&&!castIsclicked)
 		{
 			boolean no = false;
 			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
@@ -442,7 +450,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y-1].setIcon(null);
 			}
 		}
-		if(e.getSource()==left)
+		if(e.getSource()==left&&!castIsclicked)
 		{
 			boolean no = false;
 			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
@@ -460,7 +468,94 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y+1].setIcon(null);
 			}
 		}
+		
+		//===============================================================================================================================================
+		// CASTABILITY
+		if(e.getSource()==castability){
+			if(castIsclicked){
+				try {
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2));
+				} catch (NotEnoughResourcesException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (AbilityUseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (CloneNotSupportedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				for(int i = 0;i<targets.size();i++)
+				{
+					castability.setBackground(Color.ORANGE);
+					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(null);
+					//Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setIcon(I);
+					System.out.println(Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].getBackground()== null);
+				}
+				castIsclicked=false;
+			}
+			else{
+				castability.setBackground(Color.PINK);
+				castIsclicked=true;
+				System.out.println("works");
 			
+			
+			try {
+				targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2));
+				for(int i = 0;i<targets.size();i++)
+				{
+					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(new Color(251, 252, 136));
+				}
+			} catch (NotEnoughResourcesException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (AbilityUseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				G.castAbility(G.getCurrentChampion().getAbilities().get(2),4,1);
+				targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0));
+				for(int i = 0;i<targets.size();i++)
+				{
+					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(new Color(251, 252, 136));
+				}
+			} catch (NotEnoughResourcesException e2) {
+				// TODO Auto-generated catch block
+				
+			} catch (AbilityUseException e2) {
+				// TODO Auto-generated catch block
+				
+			} catch (InvalidTargetException e2) {
+				System.out.println("Enta bethazar?");
+				
+			} catch (CloneNotSupportedException e2) {
+				// TODO Auto-generated catch block
+				
+			}
+		    try {
+				G.castAbility(G.getCurrentChampion().getAbilities().get(2),Direction.UP);
+				targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0));
+				for(int i = 0;i<targets.size();i++)
+				{
+					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(new Color(251, 252, 136));
+				}
+			} catch (NotEnoughResourcesException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (AbilityUseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+		
 
 	}
 	

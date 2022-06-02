@@ -339,7 +339,7 @@ public class Game {
 		}
 	}
 
-	public void castAbility(Ability a)
+	public ArrayList<Damageable> castAbility(Ability a)
 			throws NotEnoughResourcesException, AbilityUseException, CloneNotSupportedException {
 		validateCastAbility(a);
 		ArrayList<Damageable> targets = new ArrayList<Damageable>();
@@ -384,12 +384,7 @@ public class Game {
 			targets = prepareTargetsFromPoints(a, possiblePoints);
 		}
 
-		a.execute(targets);
-		getCurrentChampion().setMana(getCurrentChampion().getMana() - a.getManaCost());
-		getCurrentChampion()
-				.setCurrentActionPoints(getCurrentChampion().getCurrentActionPoints() - a.getRequiredActionPoints());
-		cleanup(targets);
-		a.setCurrentCooldown(a.getBaseCooldown());
+		return targets;
 
 	}
 
@@ -405,8 +400,8 @@ public class Game {
 		else if (a.getCurrentCooldown() > 0)
 			throw new AbilityUseException("You can not use an ability while it is in cooldown");
 	}
-
-	public void castAbility(Ability a, Direction d)
+	
+	public ArrayList<Damageable> castAbility(Ability a, Direction d)
 			throws NotEnoughResourcesException, AbilityUseException, CloneNotSupportedException {
 		validateCastAbility(a);
 		ArrayList<Point> possiblePoints = new ArrayList<Point>();
@@ -433,16 +428,9 @@ public class Game {
 			possiblePoints.add(new Point(currx, curry));
 		}
 		ArrayList<Damageable> targets = prepareTargetsFromPoints(a, possiblePoints);
-
-		a.execute(targets);
-		getCurrentChampion().setMana(getCurrentChampion().getMana() - a.getManaCost());
-		getCurrentChampion()
-				.setCurrentActionPoints(getCurrentChampion().getCurrentActionPoints() - a.getRequiredActionPoints());
-
-		a.setCurrentCooldown(a.getBaseCooldown());
-		cleanup(targets);
-
+		return targets;
 	}
+
 
 	private ArrayList<Damageable> prepareTargetsFromPoints(Ability a, ArrayList<Point> possiblePoints) {
 		ArrayList<Damageable> targets = new ArrayList<Damageable>();
@@ -487,7 +475,7 @@ public class Game {
 		return targets;
 	}
 
-	public void castAbility(Ability a, int x, int y) throws NotEnoughResourcesException, AbilityUseException,
+	public ArrayList<Damageable> castAbility(Ability a, int x, int y) throws NotEnoughResourcesException, AbilityUseException,
 			InvalidTargetException, CloneNotSupportedException {
 		validateCastAbility(a);
 		if (board[x][y] == null)
@@ -531,6 +519,10 @@ public class Game {
 			} else
 				targets.add(c);
 		}
+		return targets;
+	}
+		
+	public void FinishHim(ArrayList<Damageable> targets,Ability a) throws CloneNotSupportedException{
 		a.execute(targets);
 		getCurrentChampion().setMana(getCurrentChampion().getMana() - a.getManaCost());
 		getCurrentChampion()
@@ -538,7 +530,8 @@ public class Game {
 		a.setCurrentCooldown(a.getBaseCooldown());
 		cleanup(targets);
 	}
-
+	
+	
 	public void useLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException {
 		if (getCurrentChampion() != firstPlayer.getLeader() && getCurrentChampion() != secondPlayer.getLeader())
 			throw new LeaderNotCurrentException("The current champion is not a leader");
