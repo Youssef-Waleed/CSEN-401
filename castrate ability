@@ -1,0 +1,129 @@
+public ArrayList<Damageable> castAbility(Ability a, Direction d)
+			throws NotEnoughResourcesException, AbilityUseException, CloneNotSupportedException {
+		validateCastAbility(a);
+		ArrayList<Point> possiblePoints = new ArrayList<Point>();
+		int currx = (int) getCurrentChampion().getLocation().getX();
+		int curry = (int) getCurrentChampion().getLocation().getY();
+		for (int i = 0; i < a.getCastRange(); i++) {
+			if (d == Direction.UP) {
+				currx++;
+				if (currx == BOARDHEIGHT)
+					break;
+			} else if (d == Direction.DOWN) {
+				currx--;
+				if (currx < 0)
+					break;
+			} else if (d == Direction.LEFT) {
+				curry--;
+				if (curry < 0)
+					break;
+			} else if (d == Direction.RIGHT) {
+				curry++;
+				if (curry == BOARDWIDTH)
+					break;
+			}
+			possiblePoints.add(new Point(currx, curry));
+		}
+		ArrayList<Damageable> targets = prepareTargetsFromPoints(a, possiblePoints);
+		return targets;
+	}
+
+
+	private ArrayList<Damageable> prepareTargetsFromPoints(Ability a, ArrayList<Point> possiblePoints) {
+		ArrayList<Damageable> targets = new ArrayList<Damageable>();
+		for (Point p : possiblePoints) {
+			int x = (int) p.getX();
+			int y = (int) p.getY();
+			if (x >= 0 && x < BOARDHEIGHT && y >= 0 && y < BOARDWIDTH) {
+				Object o = board[x][y];
+				if (o != null) {
+					if (o instanceof Cover) {
+						if (a instanceof DamagingAbility)
+							targets.add((Damageable) o);
+					} else {
+
+						boolean friendly = ((firstPlayer.getTeam().contains(getCurrentChampion())
+								&& firstPlayer.getTeam().contains(o))
+								|| ((secondPlayer.getTeam().contains(getCurrentChampion())
+										&& secondPlayer.getTeam().contains(o)))) ? true : false;
+						if (a instanceof HealingAbility && friendly)
+							targets.add((Damageable) o);
+						else if (a instanceof DamagingAbility && !friendly) {
+							Champion c = (Champion) o;
+							if (hasEffect(c, "Shield")) {
+								for (Effect e : c.getAppliedEffects()) {
+									if (e instanceof Shield) {
+										c.getAppliedEffects().remove(e);
+										break;
+									}
+								}
+							} else
+								targets.add((Damageable) o);
+						} else if (a instanceof CrowdControlAbility
+								&& ((CrowdControlAbility) a).getEffect().getType() == EffectType.DEBUFF && !friendly)
+							targets.add((Damageable) o);
+						else if (a instanceof CrowdControlAbility
+								&& ((CrowdControlAbility) a).getEffect().getType() == EffectType.BUFF && friendly)
+							targets.add((Damageable) o);
+					}
+				}
+			}
+		}
+		return targets;
+	}
+
+	public ArrayList<Damageable> castAbility(Ability a, int x, int y) throws NotEnoughResourcesException, AbilityUseException,
+			InvalidTargetException, CloneNotSupportedException {
+		validateCastAbility(a);
+		if (board[x][y] == null)
+			throw new InvalidTargetException("You can not cast an ability on an empty cell");
+		int distance = Math.abs((int) getCurrentChampion().getLocation().getX() - x)
+				+ Math.abs((int) getCurrentChampion().getLocation().getY() - y);
+		if (distance > a.getCastRange())
+			throw new AbilityUseException("Target out of the ability's cast range");
+
+		if (board[x][y] instanceof Cover && !(a instanceof DamagingAbility))
+			throw new InvalidTargetException("Covers can only be damaged");
+		if (board[x][y] instanceof Champion) {
+			Champion target = (Champion) board[x][y];
+			boolean friendly = ((firstPlayer.getTeam().contains(getCurrentChampion())
+					&& firstPlayer.getTeam().contains(target))
+					|| ((secondPlayer.getTeam().contains(getCurrentChampion())
+							&& secondPlayer.getTeam().contains(target)))) ? true : false;
+			if (friendly && a instanceof DamagingAbility)
+				throw new InvalidTargetException("Can not cast damaging ability on friendly targets");
+			if (friendly && a instanceof CrowdControlAbility
+					&& ((CrowdControlAbility) a).getEffect().getType() == EffectType.DEBUFF)
+				throw new InvalidTargetException("Can not debuff friendly targets");
+			if (!friendly && a instanceof HealingAbility)
+				throw new InvalidTargetException("Can not cast healing ability on enemy targets");
+			if (!friendly && a instanceof CrowdControlAbility
+					&& ((CrowdControlAbility) a).getEffect().getType() == EffectType.BUFF)
+				throw new InvalidTargetException("Can not buff enemy targets");
+		}
+		ArrayList<Damageable> targets = new ArrayList<Damageable>();
+		if (board[x][y] instanceof Cover && a instanceof DamagingAbility)
+			targets.add((Cover) board[x][y]);
+		else {
+			Champion c = (Champion) board[x][y];
+			if (hasEffect(c, "Shield")) {
+				for (Effect e : c.getAppliedEffects()) {
+					if (e instanceof Shield) {
+						c.getAppliedEffects().remove(e);
+						break;
+					}
+				}
+			} else
+				targets.add(c);
+		}
+		return targets;
+	}
+		
+	public void FinishHim(ArrayList<Damageable> targets,Ability a) throws CloneNotSupportedException{
+		a.execute(targets);
+		getCurrentChampion().setMana(getCurrentChampion().getMana() - a.getManaCost());
+		getCurrentChampion()
+				.setCurrentActionPoints(getCurrentChampion().getCurrentActionPoints() - a.getRequiredActionPoints());
+		a.setCurrentCooldown(a.getBaseCooldown());
+		cleanup(targets);
+	}
