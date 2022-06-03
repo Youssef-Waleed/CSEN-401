@@ -60,12 +60,14 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private Game G;
 	private Color asfarika = new Color(251, 252, 136);
 	private ArrayList<Damageable> targets;
-	private ImageIcon icon, tmpico;
-	private JLabel champ1, champ2, champ3, champ4, champ5, champ6;
+	private ImageIcon icon, tmpico, leaderbordericon= new ImageIcon(this.getClass().getResource("/resources/icons/leadercrown.png"))
+								, defaultbordericon = new ImageIcon(this.getClass().getResource("/resources/icons/defaultborder.png"));
+	private JLabel champ1, champ2, champ3, champ4, champ5, champ6,
+								champ1border, champ2border, champ3border, champ4border,champ5border,champ6border;
 	private JTextArea stats1,stats2, turnorderT;
 	private JTextPane ability1stats;
 	private JPanel info,main, container, current, actions,game, charc;
-	private JButton up,down,right,left,attack,castability,useleaderab,endturn ,ab1,ab2,ab3, confirmability
+	private JButton up,down,right,left,attack,castability,useleaderab,endturn ,ab1 =new JButton() ,ab2=new JButton() ,ab3=new JButton(), confirmability
 				/*,b11,b12,b13,b14,b15,
 					b21,b22,b23,b24,b25,
 					b31,b32,b33,b34,b35,
@@ -98,16 +100,21 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		Player p1 = new Player("CPU el fashel awy aaa");
 		p1.getTeam().add(availableChampions.get(0));
 		p1.setLeader(availableChampions.get(0));
+		p1.getLeader().setCurrentHP(0);
 		p1.getTeam().add(availableChampions.get(1));
 		p1.getTeam().add(availableChampions.get(2));
+		
 		p2.getTeam().add(availableChampions.get(3));
 		p2.setLeader(availableChampions.get(3));
+		p2.getLeader().setCurrentHP(0);
 		p2.getTeam().add(availableChampions.get(4));
 		p2.getTeam().add(availableChampions.get(5));
 		MainGUI bla = new MainGUI(new Game( p1 , p2 ));
 	}
 	
 	public MainGUI(Game newGame){
+		
+		
 //		availableChampions = new ArrayList<Champion>();
 //		availableAbilities = new ArrayList<Ability>();
 //		try {
@@ -126,7 +133,22 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		G=newGame;
 		targets = new ArrayList<Damageable>();
 		
-	//-----------------------------------------game panel---------------------------------------------------------	
+//			||===============================================||
+//			||		 ----------------------					 ||
+//			||	-----Constructor  APPENDIX:----------		 ||
+//			||		 ----------------------					 ||
+//			||			*Game Panel							 ||
+//			||			*other Panels						 ||
+//			||			*Labels								 ||
+//			||			*TextFields & TextPanels			 ||
+//			||			*Buttons							 ||
+//			||												 ||	
+//			||===============================================||
+		
+		
+		
+	//-----------------------------------------GAME PANEL---------------------------------------------------------	
+		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)screenSize.getWidth();
 		int height = (int)screenSize.getHeight();
@@ -185,7 +207,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		actions = new JPanel();
 		actions.setBackground(new Color(0x555510));
-		actions.setPreferredSize(new Dimension(500, 350));
+		actions.setPreferredSize(new Dimension(500, 325));
 		actions.setLayout(null);
 		actions.setVisible(true);
 		
@@ -214,28 +236,52 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		champ5 = new JLabel();
 		champ6 = new JLabel();
 		
+		champ1border = new JLabel();
+		champ1border.setIcon(new ImageIcon(defaultbordericon.getImage().getScaledInstance(117,117,Image.SCALE_SMOOTH)));
+		champ1border.setBounds(27, 27, 117,117);
+		
+		champ2border = new JLabel();		//Leader 1
+		champ2border.setIcon(new ImageIcon(leaderbordericon.getImage().getScaledInstance(155,155,Image.SCALE_SMOOTH)));
+		champ2border.setBounds(8, 22+100+10, 155,155);  
+
+		champ3border = new JLabel();
+		champ3border.setIcon(new ImageIcon(defaultbordericon.getImage().getScaledInstance(117,117,Image.SCALE_SMOOTH)));
+		champ3border.setBounds(27, 27+100+120+20, 117,117);
+
+		champ4border = new JLabel();
+		champ4border.setIcon(new ImageIcon(defaultbordericon.getImage().getScaledInstance(117,117,Image.SCALE_SMOOTH)));
+		champ4border.setBounds(27+205, 27, 117,117);
+
+		champ5border = new JLabel();		// Leader 2
+		champ5border.setIcon(new ImageIcon(leaderbordericon.getImage().getScaledInstance(155,155,Image.SCALE_SMOOTH)));
+		champ5border.setBounds(8+205+5, 22+100+10,155,155);
+
+		champ6border = new JLabel();
+		champ6border.setIcon(new ImageIcon(defaultbordericon.getImage().getScaledInstance(117,117,Image.SCALE_SMOOTH)));
+		champ6border.setBounds(27+205, 27+100+120+20, 117,117);
+		
 //		champ1.setBorder(BorderFactory.createLineBorder(Color.black, 3));
-//		champ2.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+//		champ2.setBorder(BorderFactory.createLineBorder(Color.green, 3));
 //		champ3.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 //		champ4.setBorder(BorderFactory.createLineBorder(Color.black, 3));
-//		champ5.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+//		champ5.setBorder(BorderFactory.createLineBorder(Color.green, 3));
 //		champ6.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 		
 		
-		champ1.setBounds(50, 60, 90,90);
-		champ2.setBounds(40, 60+100, 110,110);  //Leader 1
-		champ3.setBounds(50, 60+100+120, 90,90);
-		champ4.setBounds(50+205, 60, 90,90);
-		champ5.setBounds(40+205+5, 60+100,100,110);  // Leader 2
-		champ6.setBounds(50+205, 60+100+120, 90,90);
+		champ1.setBounds(50, 50, 70,70);
+		champ2.setBounds(40, 50+100+15 ,90,90);  //Leader 1
+		champ3.setBounds(50, 50+100+120+20, 70,70);
+		champ4.setBounds(50+205, 50, 70,70);
+		champ5.setBounds(40+205+5, 50+100+12, 90,90);  // Leader 2
+		champ6.setBounds(50+205, 50+100+120+20, 70,70);
 		
 				//sub-labels
 				JLabel pONE = new JLabel(G.getFirstPlayer().getName(), SwingConstants.CENTER);
 				JLabel pTWO = new JLabel(G.getSecondPlayer().getName(), SwingConstants.CENTER);
 				pONE.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 				pTWO.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
-				pONE.setBounds(10, 10, 180, 50);
-				pTWO.setBounds(210, 10, 180, 50);
+				pONE.setBounds(10, 2, 180, 50);
+				pTWO.setBounds(210, 2, 180, 50);
 		
 		charc.add(champ1);
 		charc.add(champ2);
@@ -245,43 +291,63 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		charc.add(champ6);
 		charc.add(pONE);
 		charc.add(pTWO);
+		charc.add(champ1border);
+		charc.add(champ2border);
+		charc.add(champ3border);
+		charc.add(champ4border);
+		charc.add(champ5border);
+		charc.add(champ6border);
 		
 		for(int i =0;i<3;i++){
 			if(G.getFirstPlayer().getTeam().get(i) != G.getFirstPlayer().getLeader())
 				if(champ1.getIcon()==null){
-					champ1.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH)));
+					champ1.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(70,70,Image.SCALE_SMOOTH)));
+					champ1.setText(G.getFirstPlayer().getTeam().get(i).getName());
+					champ1.setFont(new Font("", Font.PLAIN, 0));
 					if(G.getTurnOrder().peekMin() == G.getFirstPlayer().getTeam().get(i))
 						champ1.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
 				}
 				else{
-					champ3.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH)));
+					champ3.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(70,70,Image.SCALE_SMOOTH)));
+					champ3.setText(G.getFirstPlayer().getTeam().get(i).getName());
+					champ3.setFont(new Font("", Font.PLAIN, 0));
 					if(G.getTurnOrder().peekMin() == G.getFirstPlayer().getTeam().get(i))
 						champ3.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
 					}
 			else{
-				champ2.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(110,110,Image.SCALE_SMOOTH)));
+				champ2.setIcon(new ImageIcon(((ImageIcon)G.getFirstPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH)));
+				champ2.setText(G.getFirstPlayer().getTeam().get(i).getName());
+				champ2.setFont(new Font("", Font.PLAIN, 0));
 				if(G.getTurnOrder().peekMin() == G.getFirstPlayer().getTeam().get(i))
 					champ2.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
 				}
 			if(G.getSecondPlayer().getTeam().get(i) != G.getSecondPlayer().getLeader())
 				if(champ4.getIcon()==null){
-					champ4.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH)));
+					champ4.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(70,70,Image.SCALE_SMOOTH)));
+					champ4.setText(G.getSecondPlayer().getTeam().get(i).getName());
+					champ4.setFont(new Font("", Font.PLAIN, 0));
 					if(G.getTurnOrder().peekMin() == G.getSecondPlayer().getTeam().get(i))
 						champ4.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
 				}
 				else{
-					champ6.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH)));
+					champ6.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(70,70,Image.SCALE_SMOOTH)));
+					champ6.setText(G.getSecondPlayer().getTeam().get(i).getName());
+					champ6.setFont(new Font("", Font.PLAIN, 0));
 					if(G.getTurnOrder().peekMin() == G.getSecondPlayer().getTeam().get(i))
 						champ6.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
 				}
 			else{
-				champ5.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(110,110,Image.SCALE_SMOOTH)));
+				champ5.setIcon(new ImageIcon(((ImageIcon)G.getSecondPlayer().getTeam().get(i).getIcon()).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH)));
+				champ5.setText(G.getSecondPlayer().getTeam().get(i).getName());
+				champ5.setFont(new Font("", Font.PLAIN, 0));
 				if(G.getTurnOrder().peekMin() == G.getSecondPlayer().getTeam().get(i))
 					champ5.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
 			}
 		}
 		
-	//------------------------------------------------TEXTFIELDS----------------------------------------------------------	
+	//------------------------------------------------TEXTFIELDS----------------------------------------------------------
+		
+		
 		turnorderT = new JTextArea("The Turn Order:" + '\n' );
 		turnorderT.setPreferredSize(new Dimension(200,400));
 		turnorderT.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
@@ -307,6 +373,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		
 	//------------------------------------------------BUTTONS----------------------------------------------------------	
+		
+		
 		
 		up= new JButton( new ImageIcon(upicon.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH)));
 		up.setHorizontalTextPosition(JButton.CENTER);
@@ -378,7 +446,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		confirmability.setFocusable(false);
 		confirmability.setVisible(false);
 		confirmability.addActionListener(this);
-		
+
 		ab1 =new JButton(G.getCurrentChampion().getAbilities().get(0).getName());
 		ab1.setActionCommand(G.getCurrentChampion().getAbilities().get(0).getName());
 		ab1.setBounds(170, 70, 250, 50);
@@ -418,6 +486,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		endturn.setBackground(new Color(0xAF2929));
 		endturn.setForeground(Color.WHITE);
 		endturn.setFocusable(false);
+		endturn.addActionListener(this);
 		
 		actions.add(endturn);
 		actions.add(confirmability);
@@ -486,10 +555,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				G.move(Direction.UP);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -504,10 +573,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				G.move(Direction.DOWN);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -522,10 +591,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				G.move(Direction.RIGHT);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -540,10 +609,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				G.move(Direction.LEFT);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -566,6 +635,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				}
 				if(a!=null){
 					G.FinishHim(targets, a);
+					for(Damageable d: targets)
+						System.out.println(d.getCurrentHP());
+					cleanGrid();
+					resetbuttons();
+					castIsclicked=false;
 					clearHighlight();
 					}
 				else
@@ -596,6 +670,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				}
 				if(a!=null){
 					G.FinishHim(targets, a);
+					for(Damageable d: targets)
+						System.out.println(d.getCurrentHP());
+					cleanGrid();
+					resetbuttons();
+					castIsclicked=false;
 					clearHighlight();
 					}
 				else
@@ -627,6 +706,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				}
 				if(a!=null){
 					G.FinishHim(targets, a);
+					for(Damageable d: targets)
+						System.out.println(d.getCurrentHP());
+					cleanGrid();
+					resetbuttons();
+					castIsclicked=false;
 					clearHighlight();
 					}
 				else
@@ -658,6 +742,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				}
 				if(a!=null){
 					G.FinishHim(targets, a);
+					for(Damageable d: targets)
+						System.out.println(d.getCurrentHP());
+					cleanGrid();
+					resetbuttons();
+					castIsclicked=false;
 					clearHighlight();
 					}
 				else
@@ -675,7 +764,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		}
 		
 		
-		//===============================================================================================================================================
+	//===============================================================================================================================================
 														// CASTABILITY
 		
 		
@@ -702,16 +791,14 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2));
 				} catch (NotEnoughResourcesException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 				} catch (AbilityUseException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 				} catch (CloneNotSupportedException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 				}
-				for(int i = 0;i<targets.size();i++)
-					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(null);
 					
 				castIsclicked=false;
 			}
@@ -734,42 +821,6 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				System.out.println("works");
 			
 			
-			try {
-				targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2));
-//				for(int i = 0;i<targets.size();i++)
-//				{
-//					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(asfarika);
-//				}
-			} catch (NotEnoughResourcesException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (AbilityUseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (CloneNotSupportedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			try {
-				G.castAbility(G.getCurrentChampion().getAbilities().get(2),4,1);
-				targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0));
-				for(int i = 0;i<targets.size();i++)
-				{
-					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(asfarika);
-				}
-			} catch (NotEnoughResourcesException e2) {
-				// TODO Auto-generated catch block
-				
-			} catch (AbilityUseException e2) {
-				// TODO Auto-generated catch block
-				
-			} catch (InvalidTargetException e2) {
-				System.out.println("Enta bethazar?");
-				
-			} catch (CloneNotSupportedException e2) {
-				// TODO Auto-generated catch block
-				
-			}
 		    
 		}
 	}
@@ -805,6 +856,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			clearHighlight();
 			}
 	//---------------------------------------------THE CONFIRM ABILITYY BUTTON----------------------------------------------------------------------
+		
+		if(e.getSource()== confirmability && ab1.getBackground() != Color.GREEN 
+																&& ab2.getBackground() != Color.GREEN 
+																&& ab3.getBackground() != Color.GREEN){
+			JOptionPane.showMessageDialog(null,"Please Choose an Ability","Marvel", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		
 		if(e.getSource()== confirmability){
 			confirmability.setVisible(false);
@@ -844,6 +902,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			try {
 				targets = G.castAbility(a);
 				G.FinishHim(targets, a);
+				for(Damageable d: targets)
+					System.out.println(d.getCurrentHP());
+				cleanGrid();
+				resetbuttons();
+				castIsclicked=false;
 				clearHighlight();
 			} catch (NotEnoughResourcesException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
@@ -880,6 +943,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 							try {
 								targets=G.castAbility(a, i, j);
 								G.FinishHim(targets, a);
+								for(Damageable d: targets)
+									System.out.println(d.getCurrentHP());
+								cleanGrid();
+								resetbuttons();
+								castIsclicked=false;
 								ability1stats.setText("Ability applied...");
 								ab1.setVisible(false);
 								ab2.setVisible(false);
@@ -903,51 +971,25 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 							}
 					}
 			}
-
+//---------------------------------------------------ENDING  TURN-----------------------------------------------------------------
+	
+	if(e.getSource() == endturn){
+		G.endTurn();
+		turnOrderSetText();
+	}
+	
+	if(G.getCurrentChampion().getCurrentActionPoints()==0){
+		G.endTurn();
+		turnOrderSetText();
 	}
 	
 	
 	
 	
-	
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-//		if(e.getValueIsAdjusting()==false){
-//			if(list1.getSelectedIndex()!=-1){
-//				Champion c = availableChampions.get(list1.getSelectedIndex());
-//				//System.out.println(list1.getSelectedIndex());
-//				stats1.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
-//			}
-//			if(list2.getSelectedIndex()!=-1){
-//				Champion c = availableChampions.get(list2.getSelectedIndex());
-//				//System.out.println(list1.getSelectedIndex());
-//				stats2.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
-//			}
-//		}
-		
-		
-	}	
-	
-
-	
-	
-
-
-
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
-
-
-
-
-
-
-
-
+	
+	
+	
 
 
 
@@ -1020,8 +1062,6 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 
-
-
 	@Override
 	public void mouseExited(MouseEvent e) {
 		if(e.getSource() != ab1 && e.getSource() != ab2 && e.getSource() != ab3){
@@ -1043,6 +1083,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 	@Override
@@ -1051,31 +1096,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 	}
 
-
-
-
-
-
-
-
-
-
-
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
-
-
-
-
-
-
-
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
@@ -1084,20 +1109,31 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	}
 
 
-
-
-
-
-
-
-
-
-
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+	
+
+	
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+//		if(e.getValueIsAdjusting()==false){
+//			if(list1.getSelectedIndex()!=-1){
+//				Champion c = availableChampions.get(list1.getSelectedIndex());
+//				//System.out.println(list1.getSelectedIndex());
+//				stats1.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
+//			}
+//			if(list2.getSelectedIndex()!=-1){
+//				Champion c = availableChampions.get(list2.getSelectedIndex());
+//				//System.out.println(list1.getSelectedIndex());
+//				stats2.setText("Name: "+c.getName()+'\n'+"HP: "+c.getMaxHP()+'\n'+"Mana: "+c.getMana()+'\n'+"Speed: "+c.getSpeed()+'\n'+"Action Points "+c.getMaxActionPointsPerTurn());
+//			}
+//		}
+		
+		
+	}	
 	
 	public static void loadAbilities(String filePath) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -1221,10 +1257,107 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		return null;
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public void turnOrderSetText(){
 		PriorityQueue turnz= G.getTurnOrder().clone();
+		turnorderT.setText("The Turn order:" +'\n' );
 		while(!turnz.isEmpty())
 			turnorderT.setText(turnorderT.getText()+'\n' +((Champion)turnz.remove()).getName());
+		
+		//Updating Abilities Button
+		
+
+		ab1.setActionCommand(G.getCurrentChampion().getAbilities().get(0).getName());
+		ab1.setText(ab1.getActionCommand());
+		
+		ab2.setActionCommand(G.getCurrentChampion().getAbilities().get(1).getName());
+		ab2.setText(ab2.getActionCommand());
+		
+		ab3.setActionCommand(G.getCurrentChampion().getAbilities().get(2).getName());
+		ab3.setText(ab3.getActionCommand());
+		
+		
+		//Updating highlighting Champ Border:
+		
+		if(G.getCurrentChampion().getName().equals( champ1.getText() )){
+			champ1.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+			champ2.setBorder(null);
+			champ3.setBorder(null);
+			champ4.setBorder(null);
+			champ5.setBorder(null);
+			champ6.setBorder(null);
+		
+		}
+		else if(G.getCurrentChampion().getName().equals( champ3.getText() )){
+			champ3.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+			champ2.setBorder(null);
+			champ1.setBorder(null);
+			champ4.setBorder(null);
+			champ5.setBorder(null);
+			champ6.setBorder(null);
+				
+		}
+		else if(G.getCurrentChampion().getName().equals( champ2.getText())){
+			champ2.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+			champ1.setBorder(null);
+			champ3.setBorder(null);
+			champ4.setBorder(null);
+			champ5.setBorder(null);
+			champ6.setBorder(null);
+		}			
+					
+			
+		if (G.getCurrentChampion().getName().equals( champ4.getText()) ) {
+			champ4.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+			champ5.setBorder(null);
+			champ6.setBorder(null);
+			champ1.setBorder(null);
+			champ2.setBorder(null);
+			champ3.setBorder(null);
+		} else if (G.getCurrentChampion().getName().equals( champ6.getText())) {
+			champ6.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+			champ4.setBorder(null);
+			champ5.setBorder(null);
+			champ1.setBorder(null);
+			champ2.setBorder(null);
+			champ3.setBorder(null);
+		} else if (G.getCurrentChampion().getName().equals( champ5.getText())) {
+			champ5.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+			champ4.setBorder(null);
+			champ6.setBorder(null);
+			champ1.setBorder(null);
+			champ2.setBorder(null);
+			champ3.setBorder(null);
+		}
+		
+	}
+	
+	public void resetbuttons(){
+
+		castIsclicked=false;
+		ability1stats.setText("Ability applied...");
+		ab1.setVisible(false);
+		ab2.setVisible(false);
+		ab3.setVisible(false);
+		up.setVisible(true);
+		down.setVisible(true);
+		right.setVisible(true);
+		left.setVisible(true);
+		attack.setVisible(true);
+		useleaderab.setVisible(true);
+		endturn.setVisible(true);
+		castability.setBackground(null);
+		ab1.setBackground(Color.DARK_GRAY);
+		ab2.setBackground(Color.DARK_GRAY);
+		ab3.setBackground(Color.DARK_GRAY);
 	}
 	
 	private void clearHighlight(){
@@ -1235,6 +1368,19 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 	private /*Youssef*/ void highlight(Ability a, AreaOfEffect e){
 		
+	}
+	
+	private void cleanGrid(){
+		for(int i =4; i>=0; i--)
+			for(int j =0; j<5; j++){
+				Object[][] board = G.getBoard();
+				if(board[i][j] instanceof Champion)
+					Gridbuttons[i][j].setIcon(	new ImageIcon(((((Champion)board[i][j])).getIcon().getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH))));
+				else if(board[i][j] instanceof Cover)
+					Gridbuttons[i][j].setIcon(new ImageIcon(((((Cover)board[i][j])).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
+				else
+					Gridbuttons[i][j].setIcon(null);
+		}
 	}
 
 }

@@ -589,6 +589,7 @@ public class Game {
 
 			}
 		}
+		checkGameOver();
 
 	}
 
