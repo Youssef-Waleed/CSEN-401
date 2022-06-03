@@ -1,6 +1,8 @@
 package design;
 import java.io.File;
+import java.net.URL;
 
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
@@ -9,18 +11,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
     public class Media {
-    	private File file;
+    	//private File file;
     	private Clip clip;
-    	private String path;
-    	
-    	public Media(String path){
+    	private URL path;
+
+    	public Media(URL path){
     		this.path=path;
     	}
         public void play() {
             try {
-            	file = new File(path);
+            	//file = new File(path);
+            	AudioInputStream sound =AudioSystem.getAudioInputStream(path); 
                 clip = AudioSystem.getClip();
-                clip.open(AudioSystem.getAudioInputStream(file));
+                clip.open(sound);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
                 clip.start();
             } catch (Exception e) {
