@@ -25,6 +25,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -834,22 +835,22 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				ab1.setBackground(Color.green);
 				ab2.setBackground(Color.DARK_GRAY);
 				ab3.setBackground(Color.DARK_GRAY);
-				clearHighlight();
+				//clearHighlight();
+				System.out.println("wtf");
 				highlight(findAbilityByName(ab1.getText()), findAbilityByName(ab1.getText()).getCastArea());
 			} else if(e.getSource()== ab2){
 				ab1.setBackground(Color.DARK_GRAY);
 				ab2.setBackground(Color.GREEN);
 				ab3.setBackground(Color.DARK_GRAY);
-				clearHighlight();
+				//clearHighlight();
 				highlight(findAbilityByName(ab2.getText()), findAbilityByName(ab2.getText()).getCastArea());
 			}else if(e.getSource()== ab3){
 				ab1.setBackground(Color.DARK_GRAY);
 				ab2.setBackground(Color.DARK_GRAY);
 				ab3.setBackground(Color.GREEN);
-				clearHighlight();
+				//clearHighlight();
 				highlight(findAbilityByName(ab3.getText()), findAbilityByName(ab3.getText()).getCastArea());
 			}
-			
 		}
 		else if((e.getSource()== ab1 || e.getSource()== ab2 || e.getSource()== ab3)){
 			((JButton)e.getSource()).setBackground(Color.DARK_GRAY);
@@ -884,7 +885,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				down.setVisible(true);
 				right.setVisible(true);
 				left.setVisible(true);
-				highlight(a, AreaOfEffect.DIRECTIONAL);	
+				clearHighlight();
+				//highlight(a, AreaOfEffect.DIRECTIONAL);	wtf is this?
 			}
 			else if(a.getCastArea() == AreaOfEffect.SELFTARGET || a.getCastArea() == AreaOfEffect.TEAMTARGET || a.getCastArea() == AreaOfEffect.SURROUND){
 				ability1stats.setText("Ability applied...");
@@ -900,6 +902,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				endturn.setVisible(true);
 				castability.setBackground(null);
 			try {
+				clearHighlight();
 				targets = G.castAbility(a);
 				G.FinishHim(targets, a);
 				for(Damageable d: targets)
@@ -907,7 +910,6 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				cleanGrid();
 				resetbuttons();
 				castIsclicked=false;
-				clearHighlight();
 			} catch (NotEnoughResourcesException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (AbilityUseException e1) {
@@ -960,6 +962,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 								useleaderab.setVisible(true);
 								endturn.setVisible(true);
 								castability.setBackground(null);
+								clearHighlight();
 							} catch (CloneNotSupportedException e1) {
 								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 							} catch (NotEnoughResourcesException e1) {
@@ -1366,8 +1369,72 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				Gridbuttons[i][j].setBackground(null);
 	}
 	
-	private /*Youssef*/ void highlight(Ability a, AreaOfEffect e){
-		
+	private void highlight(Ability a, AreaOfEffect e){
+		System.out.println("high");
+		System.out.println("highlight");
+//		switch(e)
+//		{
+//		case TEAMTARGET :
+//		case SURROUND :	
+//		case SELFTARGET :
+//			try {
+//				targets = G.castAbility(a);
+//			} catch (NotEnoughResourcesException | AbilityUseException
+//					| CloneNotSupportedException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			break;
+//		case DIRECTIONAL :
+//			try {
+//				targets = G.castAbility(a, Direction.UP);
+//			} catch (NotEnoughResourcesException | AbilityUseException
+//					| CloneNotSupportedException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			try {
+//				targets = G.castAbility(a, Direction.DOWN);
+//			} catch (NotEnoughResourcesException | AbilityUseException
+//					| CloneNotSupportedException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			try {
+//				targets = G.castAbility(a, Direction.RIGHT);
+//			} catch (NotEnoughResourcesException | AbilityUseException
+//					| CloneNotSupportedException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			try {
+//				targets = G.castAbility(a, Direction.LEFT);
+//			} catch (NotEnoughResourcesException | AbilityUseException
+//					| CloneNotSupportedException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			break;
+//		case SINGLETARGET:
+//			Object[][] board = G.getBoard();
+//			targets = new ArrayList<Damageable>();
+//			for(int i = 4;i>=0;i--)
+//				for(int j = 0;j<5;j++)
+//				{
+//					ArrayList<Champion> enemy = new ArrayList<Champion>(); 
+//					Point l = G.getCurrentChampion().getLocation();
+//					int range = Math.abs(l.x-i) + Math.abs(l.y-j);
+//					if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion()))
+//					   enemy = G.getSecondPlayer().getTeam();
+//					else
+//						enemy = G.getFirstPlayer().getTeam();
+//					if(range<=a.getCastRange() && enemy.contains((Champion)board[i][j]))
+//						targets.add((Damageable)board[i][j]);
+//				}
+//			break;
+//		}
+//		for(int i = 0;i<targets.size();i++)
+//			Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setBackground(asfarika);
 	}
 	
 	private void cleanGrid(){
