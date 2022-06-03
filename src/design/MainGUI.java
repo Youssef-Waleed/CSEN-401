@@ -835,21 +835,21 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				ab1.setBackground(Color.green);
 				ab2.setBackground(Color.DARK_GRAY);
 				ab3.setBackground(Color.DARK_GRAY);
-				//clearHighlight();
+				clearHighlight();
 				System.out.println("wtf");
-				highlight(findAbilityByName(ab1.getText()), findAbilityByName(ab1.getText()).getCastArea());
+				highlight(G.getCurrentChampion().getAbilities().get(0), G.getCurrentChampion().getAbilities().get(0).getCastArea());
 			} else if(e.getSource()== ab2){
 				ab1.setBackground(Color.DARK_GRAY);
 				ab2.setBackground(Color.GREEN);
 				ab3.setBackground(Color.DARK_GRAY);
-				//clearHighlight();
-				highlight(findAbilityByName(ab2.getText()), findAbilityByName(ab2.getText()).getCastArea());
+				clearHighlight();
+				highlight(G.getCurrentChampion().getAbilities().get(1), G.getCurrentChampion().getAbilities().get(1).getCastArea());
 			}else if(e.getSource()== ab3){
 				ab1.setBackground(Color.DARK_GRAY);
 				ab2.setBackground(Color.DARK_GRAY);
 				ab3.setBackground(Color.GREEN);
-				//clearHighlight();
-				highlight(findAbilityByName(ab3.getText()), findAbilityByName(ab3.getText()).getCastArea());
+				clearHighlight();
+				highlight(G.getCurrentChampion().getAbilities().get(2), G.getCurrentChampion().getAbilities().get(2).getCastArea());
 			}
 		}
 		else if((e.getSource()== ab1 || e.getSource()== ab2 || e.getSource()== ab3)){
@@ -1372,69 +1372,78 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private void highlight(Ability a, AreaOfEffect e){
 		System.out.println("high");
 		System.out.println("highlight");
-//		switch(e)
-//		{
-//		case TEAMTARGET :
-//		case SURROUND :	
-//		case SELFTARGET :
-//			try {
-//				targets = G.castAbility(a);
-//			} catch (NotEnoughResourcesException | AbilityUseException
-//					| CloneNotSupportedException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			break;
-//		case DIRECTIONAL :
-//			try {
-//				targets = G.castAbility(a, Direction.UP);
-//			} catch (NotEnoughResourcesException | AbilityUseException
-//					| CloneNotSupportedException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			try {
-//				targets = G.castAbility(a, Direction.DOWN);
-//			} catch (NotEnoughResourcesException | AbilityUseException
-//					| CloneNotSupportedException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			try {
-//				targets = G.castAbility(a, Direction.RIGHT);
-//			} catch (NotEnoughResourcesException | AbilityUseException
-//					| CloneNotSupportedException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			try {
-//				targets = G.castAbility(a, Direction.LEFT);
-//			} catch (NotEnoughResourcesException | AbilityUseException
-//					| CloneNotSupportedException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			break;
-//		case SINGLETARGET:
-//			Object[][] board = G.getBoard();
-//			targets = new ArrayList<Damageable>();
-//			for(int i = 4;i>=0;i--)
-//				for(int j = 0;j<5;j++)
-//				{
-//					ArrayList<Champion> enemy = new ArrayList<Champion>(); 
-//					Point l = G.getCurrentChampion().getLocation();
-//					int range = Math.abs(l.x-i) + Math.abs(l.y-j);
-//					if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion()))
-//					   enemy = G.getSecondPlayer().getTeam();
-//					else
-//						enemy = G.getFirstPlayer().getTeam();
-//					if(range<=a.getCastRange() && enemy.contains((Champion)board[i][j]))
-//						targets.add((Damageable)board[i][j]);
-//				}
-//			break;
-//		}
-//		for(int i = 0;i<targets.size();i++)
-//			Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setBackground(asfarika);
+		switch(e)
+		{
+		case TEAMTARGET :
+		case SURROUND :	
+		case SELFTARGET :
+			try {
+				targets = G.castAbility(a);
+			} catch (NotEnoughResourcesException | AbilityUseException
+					| CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			break;
+		case DIRECTIONAL :
+			System.out.println("directional");
+			try {
+				targets = G.castAbility(a, Direction.UP);
+				for(int i = 0;i<targets.size();i++)
+					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(asfarika);
+			} catch (NotEnoughResourcesException | AbilityUseException
+					| CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				targets = G.castAbility(a, Direction.DOWN);
+				for(int i = 0;i<targets.size();i++)
+					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(asfarika);
+			} catch (NotEnoughResourcesException | AbilityUseException
+					| CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				targets = G.castAbility(a, Direction.RIGHT);
+				for(int i = 0;i<targets.size();i++)
+					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(asfarika);
+			} catch (NotEnoughResourcesException | AbilityUseException
+					| CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				targets = G.castAbility(a, Direction.LEFT);
+				for(int i = 0;i<targets.size();i++)
+					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(asfarika);
+			} catch (NotEnoughResourcesException | AbilityUseException
+					| CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			break;
+		case SINGLETARGET:
+			Object[][] board = G.getBoard();
+			targets = new ArrayList<Damageable>();
+			for(int i = 4;i>=0;i--)
+				for(int j = 0;j<5;j++)
+				{
+					ArrayList<Champion> enemy = new ArrayList<Champion>(); 
+					Point l = G.getCurrentChampion().getLocation();
+					int range = Math.abs(l.x-i) + Math.abs(l.y-j);
+					if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion()))
+					   enemy = G.getSecondPlayer().getTeam();
+					else
+						enemy = G.getFirstPlayer().getTeam();
+					if(range<=a.getCastRange() && board[i][j] instanceof Champion && enemy.contains((Champion)board[i][j]))
+						targets.add((Damageable)board[i][j]);
+				}
+			break;
+		}
+		for(int i = 0;i<targets.size();i++)
+			Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(asfarika);
 	}
 	
 	private void cleanGrid(){
