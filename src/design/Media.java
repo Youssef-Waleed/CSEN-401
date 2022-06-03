@@ -14,9 +14,11 @@ import javax.swing.JPanel;
     	//private File file;
     	private Clip clip;
     	private URL path;
+    	private boolean loop;
 
-    	public Media(URL path){
+    	public Media(URL path, boolean loop){
     		this.path=path;
+    		this.loop=loop;
     	}
         public void play() {
             try {
@@ -24,7 +26,8 @@ import javax.swing.JPanel;
             	AudioInputStream sound =AudioSystem.getAudioInputStream(path); 
                 clip = AudioSystem.getClip();
                 clip.open(sound);
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
+                if(loop)
+                	clip.loop(Clip.LOOP_CONTINUOUSLY);
                 clip.start();
             } catch (Exception e) {
                 System.err.println("Put the music.wav file in the sound folder if you want to play background music, only optional!");

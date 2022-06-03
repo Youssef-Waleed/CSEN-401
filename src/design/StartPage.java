@@ -22,13 +22,14 @@ public class StartPage implements ActionListener,
 	private JPanel pane;
 	private JLabel marvel;
 	private Media audio;
+	private static boolean loop = true;
 	
 	
 	public StartPage(){
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)screenSize.getWidth();
 		int height = (int)screenSize.getHeight();
-		audio = new Media(this.getClass().getResource("/resources/audios/AvengersMarvelTheme.wav"));
+		audio = new Media(this.getClass().getResource("/resources/audios/AvengersMarvelTheme.wav") , loop);
 		startwindow = new JFrame();
 		startbt = new JButton("START");
 		marvel = new JLabel();
