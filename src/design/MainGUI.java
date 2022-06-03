@@ -40,6 +40,9 @@ import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputListener;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import engine.Game;
 import engine.Player;
@@ -55,12 +58,14 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private JFrame gameframe;
 	private boolean castIsclicked=false;
 	private Game G;
+	private Color asfarika = new Color(251, 252, 136);
 	private ArrayList<Damageable> targets;
 	private ImageIcon icon, tmpico;
 	private JLabel champ1, champ2, champ3, champ4, champ5, champ6;
 	private JTextArea stats1,stats2, turnorderT;
-	private JPanel info,main, container, current, actions,game,select, charc;
-	private JButton up,down,right,left,attack,castability,useleaderab,startGame 
+	private JTextPane ability1stats;
+	private JPanel info,main, container, current, actions,game, charc;
+	private JButton up,down,right,left,attack,castability,useleaderab,endturn ,ab1,ab2,ab3, confirmability
 				/*,b11,b12,b13,b14,b15,
 					b21,b22,b23,b24,b25,
 					b31,b32,b33,b34,b35,
@@ -137,13 +142,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		
 		gameframe = new JFrame();
-		//gameframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		gameframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		gameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameframe.setLayout(new BorderLayout());
 		gameframe.setSize(width+1, height);
 		gameframe.setLocation(1920/2-width/2,0);
 		//gameframe.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-		//gameframe.setTitle("Marvel: Ultimate War");
+		gameframe.setTitle("Marvel: Ultimate War");
 		gameframe.setIconImage(icon.getImage());
 		
 //========================================================================================================================
@@ -174,7 +179,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		current = new JPanel();
 		current.setBackground(new Color(0x353535));
 		current.setPreferredSize(new Dimension(800, 300));
-		current.setLayout(new FlowLayout(FlowLayout.LEADING, 50,10));
+		current.setLayout(new FlowLayout(FlowLayout.TRAILING, 50,10));
 		current.setVisible(true);
 		
 		
@@ -281,8 +286,24 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		turnorderT.setPreferredSize(new Dimension(200,400));
 		turnorderT.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		turnorderT.setBackground(new Color(0xE7694F));
+		turnorderT.setEditable(false);
 		turnOrderSetText();
 		info.add(turnorderT, BorderLayout.EAST);
+		
+																//TEXTPANE
+		ability1stats = new JTextPane();
+		ability1stats.setText("Ability Details...");
+		ability1stats.setPreferredSize(new Dimension(500,300));
+		ability1stats.setFont(new Font("Agency FB", Font.BOLD, 25));
+		ability1stats.setBackground(new Color(0x4A4A4A));
+		ability1stats.setForeground(Color.WHITE);
+		StyledDocument doc = ability1stats.getStyledDocument();				//Don't mind these here
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		ability1stats.setEditable(false);
+		
+		current.add(ability1stats);
 		
 		
 	//------------------------------------------------BUTTONS----------------------------------------------------------	
@@ -327,24 +348,79 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		attack.setActionCommand("ATTACK");
 		attack.addMouseListener(this);
 		
-		castability= new JButton("CAST ABILITY", new ImageIcon(casticon.getImage().getScaledInstance(120,80,Image.SCALE_SMOOTH)));
+		castability= new JButton( new ImageIcon(casticon.getImage().getScaledInstance(100,100,Image.SCALE_SMOOTH)));
 		castability.setVerticalTextPosition(JButton.BOTTOM);
 		castability.setHorizontalTextPosition(JButton.CENTER);
-		castability.setFont(new Font("Comic Sans MS", Font.BOLD, 10));
+		castability.setFont(new Font("Comic Sans MS", Font.BOLD, 13));
 		castability.setFocusable(false);
-		castability.setBounds(20,205,150,100);
-		castability.setActionCommand("CAST ABILITY");
+		castability.setBounds(40,40,120,100);
+		castability.setBorder(BorderFactory.createSoftBevelBorder(3));
+		castability.setBackground(null);
+		castability.setForeground(Color./*zeft*/WHITE);
+		castability.setActionCommand("<html>" + "CAST" + "<br>" + "ABILITY" + "</html>");
 		castability.addMouseListener(this);
 		
-		useleaderab= new JButton("USE LEADER ABILITY", new ImageIcon(leadicon.getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
+		useleaderab= new JButton( new ImageIcon(leadicon.getImage().getScaledInstance(100,100,Image.SCALE_SMOOTH)));
 		useleaderab.setVerticalTextPosition(JButton.BOTTOM);
 		useleaderab.setHorizontalTextPosition(JButton.CENTER);
-		useleaderab.setFont(new Font("Comic Sans MS", Font.BOLD, 10));
+		useleaderab.setFont(new Font("Comic Sans MS", Font.BOLD, 13));
 		useleaderab.setFocusable(false);
-		useleaderab.setBounds(450,205,150,100);
-		useleaderab.setActionCommand("USE LEADER ABILITY");
+		useleaderab.setBounds(450,40,120,100);
+		useleaderab.setBorder(BorderFactory.createSoftBevelBorder(3));
+		useleaderab.setBackground(null);
+		useleaderab.setForeground(Color./*zeft*/WHITE);
+		useleaderab.setActionCommand("<html>" + "USE" + "<br>" + "LEADER" + "<br>" + "ABILITY"+ "</html>");
 		useleaderab.addMouseListener(this);
 		
+		confirmability = new JButton("Confirm Ability");
+		confirmability.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+		confirmability.setBounds(430, 270, 150, 45);
+		confirmability.setFocusable(false);
+		confirmability.setVisible(false);
+		confirmability.addActionListener(this);
+		
+		ab1 =new JButton(G.getCurrentChampion().getAbilities().get(0).getName());
+		ab1.setActionCommand(G.getCurrentChampion().getAbilities().get(0).getName());
+		ab1.setBounds(170, 70, 250, 50);
+		ab1.setFont(new Font("Comic Sans MS", Font.BOLD, 19));
+		ab1.setBackground(Color.DARK_GRAY);
+		ab1.setForeground(Color.white);
+		ab1.setFocusable(false);
+		ab1.setVisible(false);
+		ab1.addMouseListener(this);
+		ab1.addActionListener(this);
+		
+		ab2 =new JButton(G.getCurrentChampion().getAbilities().get(1).getName());
+		ab2.setActionCommand(G.getCurrentChampion().getAbilities().get(1).getName());
+		ab2.setBounds(170, 70+50+25, 250, 50);
+		ab2.setFont(new Font("Comic Sans MS", Font.BOLD, 19));
+		ab2.setBackground(Color.DARK_GRAY);
+		ab2.setForeground(Color.white);
+		ab2.setFocusable(false);
+		ab2.setVisible(false);
+		ab2.addMouseListener(this);
+		ab2.addActionListener(this);
+		
+		ab3 =new JButton(G.getCurrentChampion().getAbilities().get(2).getName());
+		ab3.setActionCommand(G.getCurrentChampion().getAbilities().get(2).getName());
+		ab3.setBounds(170, 70+50+50+50, 250, 50);
+		ab3.setFont(new Font("Comic Sans MS", Font.BOLD, 19));
+		ab3.setBackground(Color.DARK_GRAY);
+		ab3.setForeground(Color.white);
+		ab3.setFocusable(false);
+		ab3.setVisible(false);
+		ab3.addMouseListener(this);
+		ab3.addActionListener(this);
+		
+		endturn = new JButton("EndTurn");
+		endturn.setFont(new Font("Comic Sans MS", Font.BOLD, 19));
+		endturn.setBounds(445, 270, 120, 45);
+		endturn.setBackground(new Color(0xAF2929));
+		endturn.setForeground(Color.WHITE);
+		endturn.setFocusable(false);
+		
+		actions.add(endturn);
+		actions.add(confirmability);
 		actions.add(up);
 		actions.add(down);
 		actions.add(right);
@@ -352,6 +428,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		actions.add(castability);
 		actions.add(attack);
 		actions.add(useleaderab);
+		actions.add(ab1);
+		actions.add(ab2);
+		actions.add(ab3);
 
 		
 		up.addActionListener(this);
@@ -396,6 +475,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+	//-----------------------------------------UP 	DOWN 	LEFT 	RIGHT--------------------------------------------------------
+		
 		if(e.getSource()==up&&!castIsclicked)
 		{
 			boolean no = false;
@@ -469,10 +551,153 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			}
 		}
 		
+		if(e.getSource()==up&&castIsclicked){
+			try {
+				Ability a = null;
+				if(ab1.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab1.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0),Direction.UP);
+				} else if(ab2.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab2.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(1),Direction.UP);
+				}else if(ab3.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab3.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2),Direction.UP);
+				}
+				if(a!=null){
+					G.FinishHim(targets, a);
+					clearHighlight();
+					}
+				else
+					JOptionPane.showMessageDialog(null,"Please choose an ability","Marvel", JOptionPane.ERROR_MESSAGE);
+			} catch (NotEnoughResourcesException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			} catch (AbilityUseException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			} catch (CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		if(e.getSource()==down&&castIsclicked){
+			try {
+				Ability a = null;
+				if(ab1.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab1.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0),Direction.DOWN);
+				} else if(ab2.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab2.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(1),Direction.DOWN);
+				}else if(ab3.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab3.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2),Direction.DOWN);
+				}
+				if(a!=null){
+					G.FinishHim(targets, a);
+					clearHighlight();
+					}
+				else
+					JOptionPane.showMessageDialog(null,"Please choose an ability","Marvel", JOptionPane.ERROR_MESSAGE);
+			} catch (NotEnoughResourcesException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			} catch (AbilityUseException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			} catch (CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		
+		if(e.getSource()==right&&castIsclicked){
+			try {
+				Ability a = null;
+				if(ab1.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab1.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0),Direction.RIGHT);
+				} else if(ab2.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab2.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(1),Direction.RIGHT);
+				}else if(ab3.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab3.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2),Direction.RIGHT);
+				}
+				if(a!=null){
+					G.FinishHim(targets, a);
+					clearHighlight();
+					}
+				else
+					JOptionPane.showMessageDialog(null,"Please choose an ability","Marvel", JOptionPane.ERROR_MESSAGE);
+			} catch (NotEnoughResourcesException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			} catch (AbilityUseException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			} catch (CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		
+		if(e.getSource()==left&&castIsclicked){
+			try {
+				Ability a = null;
+				if(ab1.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab1.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0),Direction.LEFT);
+				} else if(ab2.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab2.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(1),Direction.LEFT);
+				}else if(ab3.getBackground()== Color.GREEN){
+					a=findAbilityByName(ab3.getText());
+					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2),Direction.LEFT);
+				}
+				if(a!=null){
+					G.FinishHim(targets, a);
+					clearHighlight();
+					}
+				else
+					JOptionPane.showMessageDialog(null,"Please choose an ability","Marvel", JOptionPane.ERROR_MESSAGE);
+			} catch (NotEnoughResourcesException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			} catch (AbilityUseException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			} catch (CloneNotSupportedException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		
+		
 		//===============================================================================================================================================
-		// CASTABILITY
+														// CASTABILITY
+		
+		
 		if(e.getSource()==castability){
 			if(castIsclicked){
+				endturn.setVisible(true);
+				confirmability.setVisible(false);
+				ab1.setVisible(false);
+				ab2.setVisible(false);
+				ab3.setVisible(false);
+				up.setVisible(true);
+				down.setVisible(true);
+				right.setVisible(true);
+				left.setVisible(true);
+				attack.setVisible(true);
+				useleaderab.setVisible(true);
+				ability1stats.setText("Ability Details...");
+				ab1.setBackground(Color.DARK_GRAY);
+				ab2.setBackground(Color.DARK_GRAY);
+				ab3.setBackground(Color.DARK_GRAY);
+				castability.setBackground(null);
+				clearHighlight();
 				try {
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2));
 				} catch (NotEnoughResourcesException e1) {
@@ -486,26 +711,35 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					e1.printStackTrace();
 				}
 				for(int i = 0;i<targets.size();i++)
-				{
-					castability.setBackground(Color.ORANGE);
 					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(null);
-					//Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setIcon(I);
-					System.out.println(Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].getBackground()== null);
-				}
+					
 				castIsclicked=false;
 			}
 			else{
-				castability.setBackground(Color.PINK);
+				endturn.setVisible(false);
+				confirmability.setVisible(true);
+				ab1.setVisible(true);
+				ab2.setVisible(true);
+				ab3.setVisible(true);
+				up.setVisible(false);
+				down.setVisible(false);
+				right.setVisible(false);
+				left.setVisible(false);
+				attack.setVisible(false);
+				useleaderab.setVisible(false);
+				ability1stats.setText("Ability Details..."+'\n'+'\n'
+						+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");
+				castability.setBackground(new Color(0xCF4F3D));
 				castIsclicked=true;
 				System.out.println("works");
 			
 			
 			try {
 				targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2));
-				for(int i = 0;i<targets.size();i++)
-				{
-					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(new Color(251, 252, 136));
-				}
+//				for(int i = 0;i<targets.size();i++)
+//				{
+//					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(asfarika);
+//				}
 			} catch (NotEnoughResourcesException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -521,7 +755,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0));
 				for(int i = 0;i<targets.size();i++)
 				{
-					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(new Color(251, 252, 136));
+					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(asfarika);
 				}
 			} catch (NotEnoughResourcesException e2) {
 				// TODO Auto-generated catch block
@@ -536,28 +770,144 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				// TODO Auto-generated catch block
 				
 			}
-		    try {
-				G.castAbility(G.getCurrentChampion().getAbilities().get(2),Direction.UP);
-				targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0));
-				for(int i = 0;i<targets.size();i++)
-				{
-					Gridbuttons[targets.get(i).getLocation().x][targets.get(i).getLocation().y].setBackground(new Color(251, 252, 136));
-				}
-			} catch (NotEnoughResourcesException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (AbilityUseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (CloneNotSupportedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		    
 		}
 	}
 		
+		
+	//---------------------------------------------THE THREE ABILITIESSSS BUTTON----------------------------------------------------------------------
+		
+		
+		if( (e.getSource()== ab1 || e.getSource()== ab2 || e.getSource()== ab3) && ((JButton)e.getSource()).getBackground() == Color.DARK_GRAY ){ 
+			if(e.getSource()== ab1){
+				ab1.setBackground(Color.green);
+				ab2.setBackground(Color.DARK_GRAY);
+				ab3.setBackground(Color.DARK_GRAY);
+				clearHighlight();
+				highlight(findAbilityByName(ab1.getText()), findAbilityByName(ab1.getText()).getCastArea());
+			} else if(e.getSource()== ab2){
+				ab1.setBackground(Color.DARK_GRAY);
+				ab2.setBackground(Color.GREEN);
+				ab3.setBackground(Color.DARK_GRAY);
+				clearHighlight();
+				highlight(findAbilityByName(ab2.getText()), findAbilityByName(ab2.getText()).getCastArea());
+			}else if(e.getSource()== ab3){
+				ab1.setBackground(Color.DARK_GRAY);
+				ab2.setBackground(Color.DARK_GRAY);
+				ab3.setBackground(Color.GREEN);
+				clearHighlight();
+				highlight(findAbilityByName(ab3.getText()), findAbilityByName(ab3.getText()).getCastArea());
+			}
+			
+		}
+		else if((e.getSource()== ab1 || e.getSource()== ab2 || e.getSource()== ab3)){
+			((JButton)e.getSource()).setBackground(Color.DARK_GRAY);
+			clearHighlight();
+			}
+	//---------------------------------------------THE CONFIRM ABILITYY BUTTON----------------------------------------------------------------------
+		
+		if(e.getSource()== confirmability){
+			confirmability.setVisible(false);
+			Ability a = null;
+			if(ab1.getBackground()== Color.GREEN){
+				a=findAbilityByName(ab1.getText());
+			} else if(ab2.getBackground()== Color.GREEN){
+				a=findAbilityByName(ab2.getText());
+			}else if(ab3.getBackground()== Color.GREEN){
+				a=findAbilityByName(ab3.getText());
+			}
+			
+			if(a.getCastArea() == AreaOfEffect.DIRECTIONAL){
+				ability1stats.setText("Choose DIRECTION from buttons" + '\n'+ "Warning: once you click the direction the ability will be casted!");
+				ab1.setVisible(false);
+				ab2.setVisible(false);
+				ab3.setVisible(false);
+				up.setVisible(true);
+				down.setVisible(true);
+				right.setVisible(true);
+				left.setVisible(true);
+				highlight(a, AreaOfEffect.DIRECTIONAL);	
+			}
+			else if(a.getCastArea() == AreaOfEffect.SELFTARGET || a.getCastArea() == AreaOfEffect.TEAMTARGET || a.getCastArea() == AreaOfEffect.SURROUND){
+				ability1stats.setText("Ability applied...");
+				ab1.setVisible(false);
+				ab2.setVisible(false);
+				ab3.setVisible(false);
+				up.setVisible(true);
+				down.setVisible(true);
+				right.setVisible(true);
+				left.setVisible(true);
+				attack.setVisible(true);
+				useleaderab.setVisible(true);
+				endturn.setVisible(true);
+				castability.setBackground(null);
+			try {
+				targets = G.castAbility(a);
+				G.FinishHim(targets, a);
+				clearHighlight();
+			} catch (NotEnoughResourcesException e1) {
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			} catch (AbilityUseException e1) {
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			} catch (CloneNotSupportedException e1) {
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			}
+		
+		}
+			else if(a.getCastArea() == AreaOfEffect.SINGLETARGET){
+				ability1stats.setText("Please choose a target on the board!");
+				ab1.setVisible(false);
+				ab2.setVisible(false);
+				ab3.setVisible(false);
+			}
+		}
+		
+		
+	//--------------------------------------------GRIDBUTTONS-------------------------------------------------------------
+		for(int i =0 ; i<5; i++)
+			for(int j=0; j<5; j++){
+				if(e.getSource() == Gridbuttons[i][j])
+					if(castIsclicked){
+						Ability a = null;
+						if(ab1.getBackground()== Color.GREEN){
+							a=findAbilityByName(ab1.getText());
+						} else if(ab2.getBackground()== Color.GREEN){
+							a=findAbilityByName(ab2.getText());
+						}else if(ab3.getBackground()== Color.GREEN){
+							a=findAbilityByName(ab3.getText());
+						}
+						if(a.getCastArea() == AreaOfEffect.SINGLETARGET)
+							try {
+								targets=G.castAbility(a, i, j);
+								G.FinishHim(targets, a);
+								ability1stats.setText("Ability applied...");
+								ab1.setVisible(false);
+								ab2.setVisible(false);
+								ab3.setVisible(false);
+								up.setVisible(true);
+								down.setVisible(true);
+								right.setVisible(true);
+								left.setVisible(true);
+								attack.setVisible(true);
+								useleaderab.setVisible(true);
+								endturn.setVisible(true);
+								castability.setBackground(null);
+							} catch (CloneNotSupportedException e1) {
+								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+							} catch (NotEnoughResourcesException e1) {
+								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+							} catch (AbilityUseException e1) {
+								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+							} catch (InvalidTargetException e1) {
+								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+							}
+					}
+			}
 
 	}
+	
+	
+	
 	
 	
 	@Override
@@ -603,9 +953,62 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		tmpico = new ImageIcon(((ImageIcon) ((JButton)e.getSource()).getIcon()).getImage());
-		((JButton)e.getSource()).setIcon(null);
-		((JButton)e.getSource()).setText(((JButton)e.getSource()).getActionCommand());
+		if(e.getSource() != ab1 && e.getSource() != ab2 && e.getSource() != ab3){
+			tmpico = new ImageIcon(((ImageIcon) ((JButton)e.getSource()).getIcon()).getImage());
+			((JButton)e.getSource()).setIcon(null);
+			((JButton)e.getSource()).setText(((JButton)e.getSource()).getActionCommand());
+			}
+		else
+			if(e.getSource()== ab1){
+				ab1.setText("Ability 1");
+				Ability a = G.getCurrentChampion().getAbilities().get(0);
+				String temp = "Name: " + a.getName()+'\n'+
+						"Mana Cost: "+a.getManaCost()+'\n'+
+						"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+						"Cast Range: "+a.getCastRange()+'\n'+
+						"Cast Area: "+a.getCastArea()+'\n'+	"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+				if(a instanceof CrowdControlAbility)
+					temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+				else if (a instanceof DamagingAbility)
+					temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+				else
+					temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+				ability1stats.setText(temp);
+			}
+			
+	
+			else if(e.getSource()== ab2){	
+				ab2.setText("Ability 2");
+				Ability a = G.getCurrentChampion().getAbilities().get(1);
+				String temp = "Name: " + a.getName()+'\n'+
+						"Mana Cost: "+a.getManaCost()+'\n'+
+						"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+						"Cast Range: "+a.getCastRange()+'\n'+
+						"Cast Area: "+a.getCastArea()+'\n'+	"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+				if(a instanceof CrowdControlAbility)
+					temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+				else if (a instanceof DamagingAbility)
+					temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+				else
+					temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+				ability1stats.setText(temp);
+			}
+			else if(e.getSource()== ab3){	
+				ab3.setText("Ability 3");
+				Ability a = G.getCurrentChampion().getAbilities().get(2);
+				String temp = "Name: " + a.getName()+'\n'+
+						"Mana Cost: "+a.getManaCost()+'\n'+
+						"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+						"Cast Range: "+a.getCastRange()+'\n'+
+						"Cast Area: "+a.getCastArea()+'\n'+	"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+				if(a instanceof CrowdControlAbility)
+					temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+				else if (a instanceof DamagingAbility)
+					temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+				else
+					temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+				ability1stats.setText(temp);
+			}
 		
 	}
 
@@ -621,14 +1024,18 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		
+		if(e.getSource() != ab1 && e.getSource() != ab2 && e.getSource() != ab3){
 			((JButton)e.getSource()).setIcon(tmpico);;
-		if(e.getSource() != this.castability && e.getSource() != this.useleaderab )
 			((JButton)e.getSource()).setText("");
-		
+		}
+		else
+			if(e.getSource()== ab1){	/*THEN*/ ab1.setText(ab1.getActionCommand());	ability1stats.setText("Ability Details..."+'\n'+'\n'
+														+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");}
+			else if(e.getSource()== ab2){	/*THEN*/ ab2.setText(ab2.getActionCommand());	ability1stats.setText("Ability Details..."+'\n'+'\n'
+					+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");}
+			else if(e.getSource()== ab3){	/*THEN*/ ab3.setText(ab3.getActionCommand());	ability1stats.setText("Ability Details..."+'\n'+'\n'
+					+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");}
 	}
-
-
 
 
 
@@ -818,6 +1225,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		PriorityQueue turnz= G.getTurnOrder().clone();
 		while(!turnz.isEmpty())
 			turnorderT.setText(turnorderT.getText()+'\n' +((Champion)turnz.remove()).getName());
+	}
+	
+	private void clearHighlight(){
+		for(int i =4; i>=0; i--)
+			for(int j =0; j<5; j++)
+				Gridbuttons[i][j].setBackground(null);
+	}
+	
+	private /*Youssef*/ void highlight(Ability a, AreaOfEffect e){
+		
 	}
 
 }
