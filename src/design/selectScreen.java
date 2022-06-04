@@ -48,7 +48,8 @@ import model.world.Villain;
 	private int count = 0;
 	private String t1,t2 = "";
 	private JTextArea team1,team2,ability1stats,ability2stats = new JTextArea("");
-	private ImageIcon icon, selbkground;
+	private ImageIcon icon, selbkground, leaderbordericon= new ImageIcon(this.getClass().getResource("/resources/icons/leadercrown.png"))
+	, defaultbordericon = new ImageIcon(this.getClass().getResource("/resources/icons/defaultborder.png"));
 	private JTextField name1,name2;
 	private JFrame selectframe;
 	private JPanel select;
@@ -58,7 +59,7 @@ import model.world.Villain;
 	private JButton startGame, add1, add2,ab1,ab2,ab3,ab4,ab5,ab6;
 	private ArrayList<Champion> temp1,temp2;
 	private String[] names1, names2;
-	private JLabel strips;
+	private JLabel strips, ld1b, ld2b, ch1b, ch2b, ch3b, ch4b, ld1, ld2, ch1, ch2, ch3, ch4;
 	
 	public static void main(String[]args){
 		selectScreen test = new selectScreen();
@@ -185,7 +186,7 @@ import model.world.Villain;
 		add1.setBackground(new Color(255, 168, 1));
 		
 		add2 = new JButton("Lock-In Champion");
-		add2.setBounds((int)(((715+800)*width)/1920), (int)(((530)*height)/1080), (int)(((250)*width)/1920), (int)(((50)*height)/1080));
+		add2.setBounds((int)(((715+840)*width)/1920), (int)(((530)*height)/1080), (int)(((250)*width)/1920), (int)(((50)*height)/1080));
 		add2.addActionListener(this);
 		add2.setFont(new Font("Agency FB", Font.BOLD, (int)(((25)*width)/1920)));
 		add2.setBackground(new Color(12, 132, 252));
@@ -248,6 +249,38 @@ import model.world.Villain;
 		name1.addMouseListener(this);
 		name2.addMouseListener(this);
 		
+		ld1b = new JLabel(new ImageIcon(leaderbordericon.getImage().getScaledInstance(250, 250,Image.SCALE_SMOOTH)));
+		ld2b = new JLabel(new ImageIcon(leaderbordericon.getImage().getScaledInstance(250,250,Image.SCALE_SMOOTH)));
+		ch1b = new JLabel(new ImageIcon(defaultbordericon.getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH)));
+		ch2b = new JLabel(new ImageIcon(defaultbordericon.getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH)));
+		ch3b = new JLabel(new ImageIcon(defaultbordericon.getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH)));
+		ch4b = new JLabel(new ImageIcon(defaultbordericon.getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH)));
+		
+		ld1 = new JLabel("", JLabel.CENTER);
+		ld2 = new JLabel("", JLabel.CENTER);
+		ch1 = new JLabel("", JLabel.CENTER);
+		ch2 = new JLabel("", JLabel.CENTER);
+		ch3 = new JLabel("", JLabel.CENTER);
+		ch4 = new JLabel("", JLabel.CENTER);
+		
+		
+		ch1b.setBounds((int)((((width/4)-125-200-100)*width)/1920), (int)(((530+150)*height)/1080), (int)(((200)*width)/1920), (int)(((200)*height)/1080));
+		ld1b.setBounds((int)((((width/4)-125-100)*width)/1920), (int)(((530+125)*height)/1080), (int)(((250)*width)/1920), (int)(((250)*height)/1080));
+		ch2b.setBounds((int)((((width/4)-125+225-100+30)*width)/1920), (int)(((530+125+25)*height)/1080), (int)(((200)*width)/1920), (int)(((200)*height)/1080));
+		
+		ch1.setBounds((int)((((width/4)-125-200-100)*width)/1920), (int)(((530+150)*height)/1080), (int)(((200)*width)/1920), (int)(((200)*height)/1080));
+		ld1.setBounds((int)((((width/4)-125-100)*width)/1920), (int)(((530+125)*height)/1080), (int)(((250)*width)/1920), (int)(((250)*height)/1080));
+		ch2.setBounds((int)((((width/4)-125+225-100+30)*width)/1920), (int)(((530+125+25)*height)/1080), (int)(((200)*width)/1920), (int)(((200)*height)/1080));
+		
+		ch3b.setBounds((int)(((((width)*3/4)-45-200)*width)/1920), (int)(((530+150)*height)/1080), (int)(((200)*width)/1920), (int)(((200)*height)/1080));
+		ld2b.setBounds((int)(((((width)*3/4)-45)*width)/1920), (int)(((530+125)*height)/1080), (int)(((250)*width)/1920), (int)(((250)*height)/1080));
+		ch4b.setBounds((int)(((((width)*3/4)-45+225+30)*width)/1920), (int)(((530+125+25)*height)/1080), (int)(((200)*width)/1920), (int)(((200)*height)/1080));
+		
+		ch3.setBounds((int)(((((width)*3/4)-45-200)*width)/1920), (int)(((530+150)*height)/1080), (int)(((200)*width)/1920), (int)(((200)*height)/1080));
+		ld2.setBounds((int)(((((width)*3/4)-45)*width)/1920), (int)(((530+125)*height)/1080), (int)(((250)*width)/1920), (int)(((250)*height)/1080));
+		ch4.setBounds((int)(((((width)*3/4)-45+225+30)*width)/1920), (int)(((530+125+25)*height)/1080), (int)(((200)*width)/1920), (int)(((200)*height)/1080));
+		
+		
 		
 
 //		
@@ -270,7 +303,24 @@ import model.world.Villain;
 		select.add(ability1stats);
 		select.add(ability2stats);
 		selectframe.add(select);
+		select.add(ld1);
+		select.add(ld2);
+		select.add(ch1);
+		select.add(ch2);
+		select.add(ch3);
+		select.add(ch4);
+		select.add(ld1b);
+		select.add(ld2b);
+		select.add(ch1b);
+		select.add(ch2b);
+		select.add(ch3b);
+		select.add(ch4b);
+		
+		
+		
+		
 		select.add(strips);
+		
 		selectframe.setVisible(true);
 	}
 	
@@ -334,7 +384,14 @@ import model.world.Villain;
 			    c = availableChampions.get(champlist1.getSelectedIndex());
 			else
 				JOptionPane.showMessageDialog(null,"maybe select smth first?", "WARNING", JOptionPane.WARNING_MESSAGE);
-			if(!temp1.contains(c))
+			if(!temp1.contains(c)){
+				if(t1.equals("") && ld1.getIcon()==null)
+					ld1.setIcon(new ImageIcon(c.getIcon().getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+				else if(ch1.getIcon() == null)
+					ch1.setIcon(new ImageIcon(c.getIcon().getImage().getScaledInstance(125, 125, Image.SCALE_SMOOTH)));
+				else if(ch2.getIcon() == null)
+					ch2.setIcon(new ImageIcon(c.getIcon().getImage().getScaledInstance(125, 125, Image.SCALE_SMOOTH)));
+					
 				if(temp1.size()<3)
 				{
 				    temp1.add(c);
@@ -347,6 +404,7 @@ import model.world.Villain;
 				}
 				else
 					JOptionPane.showMessageDialog(null,"only 3 per team plz. coroona b2a w keda ", "WARNING", JOptionPane.WARNING_MESSAGE);
+			}
 			else
 				JOptionPane.showMessageDialog(null,"You already have that champion", "WARNING", JOptionPane.WARNING_MESSAGE);
 		}
@@ -357,7 +415,14 @@ import model.world.Villain;
 			    c = availableChampions.get(champlist2.getSelectedIndex());
 			else
 				JOptionPane.showMessageDialog(null,"maybe select smth first?", "WARNING", JOptionPane.WARNING_MESSAGE);
-			if(!temp2.contains(c))
+			if(!temp2.contains(c)){
+				if(t2.equals("") && ld2.getIcon()==null)
+					ld2.setIcon(new ImageIcon(c.getIcon().getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+				else if(ch3.getIcon() == null)
+					ch3.setIcon(new ImageIcon(c.getIcon().getImage().getScaledInstance(125, 125, Image.SCALE_SMOOTH)));
+				else if(ch4.getIcon() == null)
+					ch4.setIcon(new ImageIcon(c.getIcon().getImage().getScaledInstance(125, 125, Image.SCALE_SMOOTH)));
+				
 				if(temp2.size()<3)
 				{
 				    temp2.add(c);
@@ -370,6 +435,7 @@ import model.world.Villain;
 				}
 				else
 					JOptionPane.showMessageDialog(null,"only 3 per team plz. coroona b2a w keda ", "WARNING", JOptionPane.WARNING_MESSAGE);
+			}
 			else
 				JOptionPane.showMessageDialog(null,"You already have that champion", "WARNING", JOptionPane.WARNING_MESSAGE);
 		}
