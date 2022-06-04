@@ -20,6 +20,7 @@ import model.world.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -76,6 +77,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					b41,b42,b43,b44,b45,
 					b51,b52,b53,b54,b55*/;
 	private JButton[][] Gridbuttons;
+	private Toolkit toolkit;
+	private Cursor c;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	
@@ -548,6 +551,24 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					Gridbuttons[i][j].setIcon(new ImageIcon(((((Cover)board[i][j])).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));			//((Cover)board[i][j]).getIcon());
 				main.add(Gridbuttons[i][j]);
 			}
+		
+		
+		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
+			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+			gameframe.setCursor (c);
+		}
+		else{
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
+			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+			gameframe.setCursor (c);
+		}
+			
+		
+		
+		
 		gameframe.setVisible(true);
 		
 		updateStats();
@@ -1053,11 +1074,39 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	if(e.getSource() == endturn){
 		G.endTurn();
 		turnOrderSetText();
+		
+
+		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
+			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+			gameframe.setCursor (c);
+		}
+		else{
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
+			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+			gameframe.setCursor (c);
+		}
 	}
 	
 	if(G.getCurrentChampion().getCurrentActionPoints()==0){
 		G.endTurn();
 		turnOrderSetText();
+		
+
+		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
+			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+			gameframe.setCursor (c);
+		}
+		else{
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
+			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+			gameframe.setCursor (c);
+		}
 	}
 	
 	

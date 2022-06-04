@@ -2,6 +2,7 @@ package design;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -22,13 +23,14 @@ public class StartPage implements ActionListener,
 	private JPanel pane;
 	private JLabel marvel;
 	private Media audio;
+	private int width , height;
 	private static boolean loop = true;
 	
 	
 	public StartPage(){
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = (int)screenSize.getWidth();
-		int height = (int)screenSize.getHeight();
+		width = (int)screenSize.getWidth();
+		height = (int)screenSize.getHeight();
 		audio = new Media(this.getClass().getResource("/resources/audios/AvengersMarvelTheme.wav") , loop);
 		startwindow = new JFrame();
 		startbt = new JButton("START");
@@ -40,8 +42,10 @@ public class StartPage implements ActionListener,
 		ImageIcon icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
 		ImageIcon bkground= new ImageIcon(this.getClass().getResource("/resources/icons/Marvelstart.png"));
 		startwindow = new JFrame();
-		startwindow.setSize(1500, height);
-		startwindow.setLocation(1920/2-width/2,0);
+		startwindow.setSize(width, height);
+		startwindow.setLocation(0,0);
+		startwindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		startwindow.setResizable(false);
 		startwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		startwindow.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		startwindow.setTitle("Marvel: Ultimate War");
@@ -51,16 +55,17 @@ public class StartPage implements ActionListener,
 		startwindow.add(pane, BorderLayout.CENTER);
 		pane.setLayout(null);
 		
-		marvel.setIcon(new ImageIcon(bkground.getImage().getScaledInstance(1500, 1050,Image.SCALE_SMOOTH)));
+		marvel.setIcon(new ImageIcon(bkground.getImage().getScaledInstance(width, height,Image.SCALE_SMOOTH)));
 		
-		marvel.setBounds(0, 0, startwindow.getWidth(), startwindow.getHeight());
+		marvel.setBounds(0, 0, width, height);
 		
 		pane.add(startbt);
 		pane.add(marvel);
 		startbt.setFont(new Font("Comic Sans MS",Font.PLAIN, 45));
 		startbt.setFocusable(false);
 		startbt.setBackground(new Color(0xFFE20B));
-		startbt.setBounds(650, 700, 250, 100);
+		startbt.setBounds(width/2-100, (3*height)/4, 250, 100);
+		startbt.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
 		audio.play();
 		startwindow.setVisible(true);
@@ -79,15 +84,16 @@ public class StartPage implements ActionListener,
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		startbt.setBounds(625, 675, 300, 150);
+		startbt.setBounds(width/2-100-25, (3*height)/4-25, 300, 150);
 		startbt.setFont(new Font("Comic Sans MS",Font.PLAIN, 65));
 		startbt.setBackground(new Color(0xD99F6A));
+		
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		startbt.setBounds(650, 700, 250, 100);
+		startbt.setBounds(width/2-100, (3*height)/4, 250, 100);
 		startbt.setFont(new Font("Comic Sans MS",Font.PLAIN, 45));
 		startbt.setBackground(new Color(0xFFE20B));
 	}
