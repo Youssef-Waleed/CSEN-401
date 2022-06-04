@@ -553,18 +553,18 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			}
 		
 		
-		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
-			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
-			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
-			gameframe.setCursor (c);
-		}
-		else{
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
-			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
-			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
-			gameframe.setCursor (c);
-		}
+//		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
+//			Toolkit toolkit = Toolkit.getDefaultToolkit();
+//			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
+//			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+//			gameframe.setCursor (c);
+//		}
+//		else{
+//			Toolkit toolkit = Toolkit.getDefaultToolkit();
+//			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
+//			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+//			gameframe.setCursor (c);
+//		}
 			
 		
 		
@@ -1076,18 +1076,18 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		turnOrderSetText();
 		
 
-		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
-			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
-			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
-			gameframe.setCursor (c);
-		}
-		else{
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
-			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
-			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
-			gameframe.setCursor (c);
-		}
+//		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
+//			Toolkit toolkit = Toolkit.getDefaultToolkit();
+//			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
+//			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+//			gameframe.setCursor (c);
+//		}
+//		else{
+//			Toolkit toolkit = Toolkit.getDefaultToolkit();
+//			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
+//			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+//			gameframe.setCursor (c);
+//		}
 	}
 	
 	if(G.getCurrentChampion().getCurrentActionPoints()==0){
@@ -1095,18 +1095,18 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		turnOrderSetText();
 		
 
-		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
-			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
-			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
-			gameframe.setCursor (c);
-		}
-		else{
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
-			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
-			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
-			gameframe.setCursor (c);
-		}
+//		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
+//			Toolkit toolkit = Toolkit.getDefaultToolkit();
+//			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
+//			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+//			gameframe.setCursor (c);
+//		}
+//		else{
+//			Toolkit toolkit = Toolkit.getDefaultToolkit();
+//			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
+//			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+//			gameframe.setCursor (c);
+//		}
 	}
 	
 	
