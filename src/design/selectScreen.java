@@ -472,7 +472,7 @@ import model.world.Villain;
 			    c = availableChampions.get(champlist1.getSelectedIndex());
 			else
 				JOptionPane.showMessageDialog(null,"maybe select smth first?", "WARNING", JOptionPane.WARNING_MESSAGE);
-			if(!temp1.contains(c)){
+			if(!temp2.contains(c) && !temp1.contains(c)){
 				if(t1.equals("") && ld1.getIcon()==null)
 					ld1.setIcon(new ImageIcon(c.getIcon().getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
 				else if(ch1.getIcon() == null)
@@ -494,7 +494,7 @@ import model.world.Villain;
 					JOptionPane.showMessageDialog(null,"only 3 per team plz. coroona b2a w keda ", "WARNING", JOptionPane.WARNING_MESSAGE);
 			}
 			else
-				JOptionPane.showMessageDialog(null,"You already have that champion", "WARNING", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"This champion has already been selected", "WARNING", JOptionPane.WARNING_MESSAGE);
 		}
 		
 		if(e.getSource()==add2){
@@ -503,7 +503,7 @@ import model.world.Villain;
 			    c = availableChampions.get(champlist2.getSelectedIndex());
 			else
 				JOptionPane.showMessageDialog(null,"maybe select smth first?", "WARNING", JOptionPane.WARNING_MESSAGE);
-			if(!temp2.contains(c)){
+			if(!temp2.contains(c) && !temp1.contains(c)){
 				if(t2.equals("") && ld2.getIcon()==null)
 					ld2.setIcon(new ImageIcon(c.getIcon().getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
 				else if(ch3.getIcon() == null)
@@ -525,7 +525,7 @@ import model.world.Villain;
 					JOptionPane.showMessageDialog(null,"only 3 per team plz. coroona b2a w keda ", "WARNING", JOptionPane.WARNING_MESSAGE);
 			}
 			else
-				JOptionPane.showMessageDialog(null,"You already have that champion", "WARNING", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"This champion has already been selected", "WARNING", JOptionPane.WARNING_MESSAGE);
 		}
 		
 			
