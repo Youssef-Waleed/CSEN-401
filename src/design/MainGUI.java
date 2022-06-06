@@ -27,7 +27,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,7 +37,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputListener;
@@ -55,11 +53,10 @@ import exceptions.InvalidTargetException;
 import exceptions.NotEnoughResourcesException;
 import exceptions.UnallowedMovementException;
 
-@SuppressWarnings("serial")
 
 public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
 	private JFrame gameframe;
-	private boolean castIsclicked=false;
+	private boolean castIsclicked=false, isAttackMode= false;
 	private Game G;
 	private Color asfarika = new Color(251, 252, 136);
 	private ArrayList<Damageable> targets;
@@ -69,8 +66,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 								champ1border, champ2border, champ3border, champ4border,champ5border,champ6border;
 	private JTextArea turnorderT;
 	private JTextPane ability1stats, stats1;
-	private JPanel info,main, container, current, actions,game, charc;
-	private JButton up,down,right,left,attack,castability,useleaderab,endturn ,ab1 =new JButton() ,ab2=new JButton() ,ab3=new JButton(), confirmability
+	private JPanel info,main, container, current, actions,game, charc, allcontentspane;
+	private JButton up,down,right,left,attack,attack2,castability,useleaderab,endturn ,ab1 =new JButton() ,ab2=new JButton() ,ab3=new JButton(), confirmability
 				/*,b11,b12,b13,b14,b15,
 					b21,b22,b23,b24,b25,
 					b31,b32,b33,b34,b35,
@@ -376,7 +373,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		stats1 = new JTextPane();
 		stats1.setText("Current Champion Stats:");
 		stats1.setPreferredSize(new Dimension(500,300));
-		stats1.setFont(new Font("Agency FB", Font.BOLD, 25));
+		stats1.setFont(new Font("Agency FB", Font.BOLD, 23));
 		stats1.setBackground(new Color(0x404040));
 		stats1.setForeground(Color.WHITE);
 		StyledDocument doc1 = stats1.getStyledDocument();				//Don't mind these here
@@ -433,6 +430,17 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		attack.setActionCommand("ATTACK");
 		attack.addMouseListener(this);
 		attack.addActionListener(this);
+		
+		attack2= new JButton(new ImageIcon(attackicon.getImage().getScaledInstance(65,65,Image.SCALE_SMOOTH)));
+		attack2.setHorizontalTextPosition(JButton.CENTER);
+		attack2.setFont(new Font("Comic Sans MS", Font.BOLD, 10));
+		attack2.setFocusable(false);
+		attack2.setBounds(270,125,75,75);
+		attack2.setActionCommand("attack");
+		attack2.setVisible(false);
+		attack2.setBackground(Color.PINK);
+		attack2.addMouseListener(this);
+		attack2.addActionListener(this);
 		
 		castability= new JButton( new ImageIcon(casticon.getImage().getScaledInstance(100,100,Image.SCALE_SMOOTH)));
 		castability.setVerticalTextPosition(JButton.BOTTOM);
@@ -517,6 +525,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		actions.add(left);
 		actions.add(castability);
 		actions.add(attack);
+		actions.add(attack2);
 		actions.add(useleaderab);
 		actions.add(ab1);
 		actions.add(ab2);
@@ -553,18 +562,18 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			}
 		
 		
-//		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
-//			Toolkit toolkit = Toolkit.getDefaultToolkit();
-//			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
-//			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
-//			gameframe.setCursor (c);
-//		}
-//		else{
-//			Toolkit toolkit = Toolkit.getDefaultToolkit();
-//			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
-//			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
-//			gameframe.setCursor (c);
-//		}
+		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
+			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+			gameframe.setCursor (c);
+		}
+		else{
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
+			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+			gameframe.setCursor (c);
+		}
 			
 		
 		
@@ -578,7 +587,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 	
 	
-	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
 	
@@ -590,72 +599,76 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 	//-----------------------------------------UP 	DOWN 	LEFT 	RIGHT--------------------------------------------------------
 		
-		if(e.getSource()==up&&!castIsclicked)
+		if(e.getSource()==up&&!castIsclicked && !attack2.isVisible())
 		{
+			resetbuttons();
 			boolean no = false;
 			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
 			try {
 				G.move(Direction.UP);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 			    Gridbuttons[G.getCurrentChampion().getLocation().x-1][G.getCurrentChampion().getLocation().y].setIcon(null);
 			}
 		}
-		if(e.getSource()==down&&!castIsclicked)
+		if(e.getSource()==down&&!castIsclicked && !attack2.isVisible())
 		{
+			resetbuttons();
 			boolean no = false;
 			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
 			try {
 				G.move(Direction.DOWN);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 			    Gridbuttons[G.getCurrentChampion().getLocation().x+1][G.getCurrentChampion().getLocation().y].setIcon(null);
 			}
 		}
-		if(e.getSource()==right&&!castIsclicked)
+		if(e.getSource()==right&&!castIsclicked && !attack2.isVisible())
 		{
+			resetbuttons();
 			boolean no = false;
 			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
 			try {
 				G.move(Direction.RIGHT);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y-1].setIcon(null);
 			}
 		}
-		if(e.getSource()==left&&!castIsclicked)
+		if(e.getSource()==left&&!castIsclicked && !attack2.isVisible())
 		{
+			resetbuttons();
 			boolean no = false;
 			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
 			try {
 				G.move(Direction.LEFT);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -807,42 +820,54 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		}
 		
 
-		if(e.getSource()==up && attack.getBackground()==Color.PINK){
+		if(e.getSource()==up && attack2.isVisible()){
 			try {
 				G.attack(Direction.UP);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
+			clearHighlight();
+			resetbuttons();
+			updateStats();
 		}
 		
-		if(e.getSource()==down && attack.getBackground()==Color.PINK){
+		if(e.getSource()==down && attack2.isVisible()){
 			try {
 				G.attack(Direction.DOWN);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
+			clearHighlight();
+			resetbuttons();
+			updateStats();
 		}
 		
 
-		if(e.getSource()==right && attack.getBackground()==Color.PINK){
+		if(e.getSource()==right && attack2.isVisible()){
 			try {
 				G.attack(Direction.RIGHT);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
+			clearHighlight();
+			resetbuttons();
+			updateStats();
 		}
 		
 
-		if(e.getSource()==left && attack.getBackground()==Color.PINK){
+		if(e.getSource()==left && attack2.isVisible()){
 			try {
 				G.attack(Direction.LEFT);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
+			clearHighlight();
+			resetbuttons();
+			updateStats();
 		}
 		
 	//===============================================================================================================================================
@@ -1048,7 +1073,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //--------------------------------------------------- A T T A C K-----------------------------------------------------------------
 		
 		
-		if(e.getSource()==attack && attack.getBackground()== UIManager.getColor("Button.background")){
+		if(e.getSource()==attack){
 			castability.setVisible(false);
 			confirmability.setVisible(false);
 			useleaderab.setVisible(false);
@@ -1060,11 +1085,15 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			down.setVisible(true);
 			right.setVisible(true);
 			left.setVisible(true);
-			attack.setBackground(Color.PINK);
-		}else if(e.getSource()==attack && attack.getBackground()!=UIManager.getColor("Button.background")){
+			isAttackMode=true;
+			attack.setVisible(false);
+			attack2.setVisible(true);
+		}
+		if(e.getSource()==attack2){
 			clearHighlight();
 			resetbuttons();
-			attack.setBackground(UIManager.getColor("Button.background"));
+			attack.setVisible(true);
+			attack2.setVisible(false);
 			
 		}
 		
@@ -1114,6 +1143,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 
 	updateStats();
+	cleanGrid();
 	
 	if(G.getCurrentChampion().getAbilities().get(0).getCurrentCooldown()!=0)
 		ab1.setEnabled(false);
@@ -1228,7 +1258,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 														+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");
 														if(ab3.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  clearHighlight();}
 	
-		if(e.getSource() == attack && attack.getBackground()!=Color.PINK)
+		if(e.getSource() == attack && !isAttackMode)
 			clearHighlight();
 	}
 
@@ -1238,37 +1268,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	@Override public void mouseClicked(MouseEvent e){}
+	@Override public void mousePressed(MouseEvent e) {}
+	@Override public void mouseReleased(MouseEvent arg0) {}
+	@Override public void mouseDragged(MouseEvent e) {}
+	@Override public void mouseMoved(MouseEvent e) {}
 	
 
 	
@@ -1511,6 +1515,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		if(ab1.getBackground()==Color.GREEN || ab2.getBackground()==Color.GREEN || ab3.getBackground()==Color.GREEN)
 			ability1stats.setText("Ability applied...");
 		castIsclicked=false;
+		isAttackMode = false;
 		ab1.setVisible(false);
 		ab2.setVisible(false);
 		ab3.setVisible(false);
@@ -1519,9 +1524,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		right.setVisible(true);
 		left.setVisible(true);
 		attack.setVisible(true);
+		attack2.setVisible(false);
 		useleaderab.setVisible(true);
 		endturn.setVisible(true);
 		castability.setBackground(null);
+		castability.setVisible(true);
 		confirmability.setVisible(false);
 		ab1.setBackground(Color.DARK_GRAY);
 		ab2.setBackground(Color.DARK_GRAY);
@@ -1743,14 +1750,17 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				+"HP: "+c.getCurrentHP()+'\n'
 				+"Mana: "+c.getMana()+'\n'
 				+"Speed: "+c.getSpeed()+'\n'
-				+"Action Points "+c.getCurrentActionPoints()+'\n'
-				+"Type: "+type);	
+				+"Action Points: "+c.getCurrentActionPoints()+'\n'
+				+"Type: "+type+'\n'
+				+"Normal Attack Damage: "+ c.getAttackDamage()+'\n'
+				+"Maximum Range: " + c.getAttackRange()+'\n'
+				+"Current State: "+ c.getCondition());	
 		
 	//Grid Stats Update
 		
 		for(int i=0; i<5; i++)
 			for(int j=0; j<5; j++)
-				if(Gridbuttons[i][j].getIcon() != null)
+				if(G.getBoard()[i][j] != null)
 					if(G.getBoard()[i][j] instanceof Cover)
 						Gridbuttons[i][j].setText("HP: "+ ((Cover)G.getBoard()[i][j]).getCurrentHP() );
 					else
