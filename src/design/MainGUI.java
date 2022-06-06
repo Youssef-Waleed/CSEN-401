@@ -50,13 +50,15 @@ import engine.PriorityQueue;
 import exceptions.AbilityUseException;
 import exceptions.ChampionDisarmedException;
 import exceptions.InvalidTargetException;
+import exceptions.LeaderAbilityAlreadyUsedException;
+import exceptions.LeaderNotCurrentException;
 import exceptions.NotEnoughResourcesException;
 import exceptions.UnallowedMovementException;
 
 
 public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
 	private JFrame gameframe;
-	private boolean castIsclicked=false, isAttackMode= false;
+	private boolean castIsclicked=false, isAttackMode= false, leaderClicked = false;
 	private Game G;
 	private Color asfarika = new Color(251, 252, 136);
 	private ArrayList<Damageable> targets;
@@ -67,7 +69,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private JTextArea turnorderT;
 	private JTextPane ability1stats, stats1;
 	private JPanel info,main, container, current, actions,game, charc, allcontentspane;
-	private JButton up,down,right,left,attack,attack2,castability,useleaderab,endturn ,ab1 =new JButton() ,ab2=new JButton() ,ab3=new JButton(), confirmability
+	private JButton up,down,right,left,attack,attack2,castability,useleaderab,endturn ,ab1 =new JButton() ,ab2=new JButton() ,ab3=new JButton(), confirmability, confirm
 				/*,b11,b12,b13,b14,b15,
 					b21,b22,b23,b24,b25,
 					b31,b32,b33,b34,b35,
@@ -78,6 +80,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private Cursor c;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
+	private ArrayList<Champion> leadertargs;
 	
 	
 	public static void main(String[] args) {
@@ -465,6 +468,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		useleaderab.setForeground(Color./*zeft*/WHITE);
 		useleaderab.setActionCommand("<html>" + "USE" + "<br>" + "LEADER" + "<br>" + "ABILITY"+ "</html>");
 		useleaderab.addMouseListener(this);
+		if(G.getCurrentChampion() == G.getFirstPlayer().getLeader() || G.getCurrentChampion() == G.getSecondPlayer().getLeader())
+			useleaderab.setEnabled(true);
+		else
+			useleaderab.setEnabled(false);
 		
 		confirmability = new JButton("Confirm Ability");
 		confirmability.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
@@ -472,6 +479,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		confirmability.setFocusable(false);
 		confirmability.setVisible(false);
 		confirmability.addActionListener(this);
+		
+		confirm = new JButton("Confirm");
+		confirm.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+		confirm.setBounds(430, 270, 150, 45);
+		confirm.setFocusable(false);
+		confirm.setVisible(false);
+		confirm.addActionListener(this);
 
 		ab1 =new JButton(G.getCurrentChampion().getAbilities().get(0).getName());
 		ab1.setActionCommand(G.getCurrentChampion().getAbilities().get(0).getName());
@@ -519,6 +533,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		actions.add(endturn);
 		actions.add(confirmability);
+		actions.add(confirm);
 		actions.add(up);
 		actions.add(down);
 		actions.add(right);
@@ -596,6 +611,54 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+	//---------------------------------------       LEADER  ABILITY      ---------------------------------------------------------------------
+		if(e.getSource()==useleaderab){
+			leadertargs = new ArrayList<>();
+			if(!leaderClicked){
+				endturn.setVisible(false);
+				castability.setVisible(false);
+				confirm.setVisible(true);
+				up.setVisible(false);
+				down.setVisible(false);
+				right.setVisible(false);
+				left.setVisible(false);
+				attack.setVisible(false);
+				boolean first = false;
+				if(G.getCurrentChampion() == G.getFirstPlayer().getLeader())
+					first = true;
+				if(G.getCurrentChampion() instanceof Hero){
+					if(first)
+						leadertargs = G.getFirstPlayer().getTeam();
+					else
+						leadertargs = G.getSecondPlayer().getTeam();
+				}
+				else if(G.getCurrentChampion() instanceof Villain){
+					if(first)
+						leadertargs = G.getSecondPlayer().getTeam();
+					else
+						leadertargs = G.getFirstPlayer().getTeam();
+				}
+				else{
+					for(Champion c: G.getFirstPlayer().getTeam())
+						leadertargs.add(c);
+					for(Champion c: G.getSecondPlayer().getTeam())
+						leadertargs.add(c);
+					leadertargs.remove(G.getFirstPlayer().getLeader());
+					leadertargs.remove(G.getSecondPlayer().getLeader());
+				}
+				for(int i = 0;i<leadertargs.size();i++)
+					Gridbuttons[leadertargs.get(i).getLocation().x][leadertargs.get(i).getLocation().y].setBackground(asfarika);
+				leaderClicked = true;
+				ability1stats.setText("Use Leader Ability?");
+			}
+			else{
+				ability1stats.setText("Ability Details...");
+				resetbuttons();
+				clearHighlight();
+				leadertargs = null;
+				leaderClicked = false;
+			}
+		}
 		
 	//-----------------------------------------UP 	DOWN 	LEFT 	RIGHT--------------------------------------------------------
 		
@@ -1007,10 +1070,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				castIsclicked=false;
 			} catch (NotEnoughResourcesException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				castIsclicked=false;
 			} catch (AbilityUseException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				castIsclicked=false;
 			} catch (CloneNotSupportedException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				castIsclicked=false;
 			}
 		
 		}
@@ -1020,6 +1086,27 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				ab2.setVisible(false);
 				ab3.setVisible(false);
 			}
+		}
+		
+		if(e.getSource()==confirm && leaderClicked){
+			try {
+				G.useLeaderAbility();
+			} catch (LeaderNotCurrentException e1) {
+				
+			} catch (LeaderAbilityAlreadyUsedException e1) {
+				resetbuttons();
+				clearHighlight();
+				leadertargs = null;
+				leaderClicked = false;
+				ability1stats.setText("Ability Details...");
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				
+			};
+			ability1stats.setText("Leader Ability Used");
+			resetbuttons();
+			clearHighlight();
+			leadertargs = null;
+			leaderClicked = false;
 		}
 		
 		
@@ -1103,6 +1190,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	if(e.getSource() == endturn){
 		G.endTurn();
 		turnOrderSetText();
+		if(G.getCurrentChampion() == G.getFirstPlayer().getLeader() || G.getCurrentChampion() == G.getSecondPlayer().getLeader())
+			useleaderab.setEnabled(true);
+		else
+			useleaderab.setEnabled(false);
 		
 
 //		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
@@ -1117,12 +1208,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
 //			gameframe.setCursor (c);
 //		}
-	}
 	
-	if(G.getCurrentChampion().getCurrentActionPoints()==0){
-		G.endTurn();
-		turnOrderSetText();
-		
 
 //		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
 //			Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -1530,6 +1616,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		castability.setBackground(null);
 		castability.setVisible(true);
 		confirmability.setVisible(false);
+		confirm.setVisible(false);
 		ab1.setBackground(Color.DARK_GRAY);
 		ab2.setBackground(Color.DARK_GRAY);
 		ab3.setBackground(Color.DARK_GRAY);
