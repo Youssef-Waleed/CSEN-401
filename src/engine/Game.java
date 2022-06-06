@@ -291,6 +291,7 @@ public class Game {
 					((Cover) board[currx][curry]).setCurrentHP(curhp);
 					if (curhp <= 0)
 						board[currx][curry] = null;
+					this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints() - 2);
 					return;
 				} else if (board[currx][curry] instanceof Champion) {
 
@@ -326,6 +327,7 @@ public class Game {
 						damage = (int) (damage * 1.5);
 
 					target.setCurrentHP(target.getCurrentHP() - damage);
+					System.out.println("should decrement APs");
 					curr.setCurrentActionPoints(curr.getCurrentActionPoints() - 2);
 					ArrayList<Damageable> targets = new ArrayList<Damageable>();
 					targets.add(target);
