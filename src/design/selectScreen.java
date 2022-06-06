@@ -52,22 +52,35 @@ import model.world.Villain;
 	, defaultbordericon = new ImageIcon(this.getClass().getResource("/resources/icons/defaultborder.png"));
 	private JTextField name1,name2;
 	private JFrame selectframe;
-	private JPanel select;
+	private JPanel select, loading =new JPanel();;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	private JList champlist1,champlist2;
 	private JButton startGame, add1, add2,ab1,ab2,ab3,ab4,ab5,ab6;
 	private ArrayList<Champion> temp1,temp2;
 	private String[] names1, names2;
-	private JLabel strips, ld1b, ld2b, ch1b, ch2b, ch3b, ch4b, ld1, ld2, ch1, ch2, ch3, ch4;
+	private JLabel strips, ld1b, ld2b, ch1b, ch2b, ch3b, ch4b, ld1, ld2, ch1, ch2, ch3, ch4,
+							loadingframe, loadingbar, marvelLogo;
+	private Media theme;
+	private Timer timer;
+	private ActionListener al;
+	private Player p1,p2;
+	
 	
 	public static void main(String[]args){
 		selectScreen test = new selectScreen();
 	}
 	
 	public selectScreen(){
+		
 		temp1 = new ArrayList<Champion>();
 		temp2 = new ArrayList<Champion>();
+
+		
+		icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
+		theme = new Media(this.getClass().getResource("/resources/audios/selectpage-theme.wav") , true);
+		theme.play();
+		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int) screenSize.getWidth();
 		int height = (int) screenSize.getHeight();
@@ -88,7 +101,63 @@ import model.world.Villain;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
+		
+		
+
+		loading = new JPanel();
+		loading.setOpaque(true);
+		loading.setBackground(Color.BLACK);
+		loading.setLayout(null);
+		loading.setBounds(0, 0,width, height);
+		loading.setVisible(false);
+		
+		loadingframe = new JLabel();
+		loadingframe.setBounds(width/2 - 270, height/2- 40, 520, 100);
+		loadingframe.setBorder(BorderFactory.createLineBorder(Color.CYAN,4 ));
+		loading.add(loadingframe);
+		
+		loadingbar = new JLabel();
+		loadingbar.setBounds(width/2 - 250, height/2- 20, 5, 60);	//final = 500,60 (size)
+		loadingbar.setText(""+(int)(loadingbar.getSize().width/5)+"%");
+		loadingbar.setHorizontalTextPosition(JLabel.RIGHT);
+		loadingbar.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		loadingbar.setOpaque(true);
+		loadingbar.setBackground(Color.CYAN);
+		loading.add(loadingbar);
+		
+//		marvelLogo= new JLabel();
+//		marvelLogo.setBounds(width/2- 125, height/4-150, (int)(((450)*width)/1920), (int)(((100)*width)/1080));
+//		marvelLogo.setIcon(new ImageIcon(icon.getImage().getScaledInstance(marvelLogo.getSize().width, marvelLogo.getSize().height,Image.SCALE_SMOOTH)));
+//		loading.add(marvelLogo);
+		
+		JLabel ldtext= new JLabel("Loading...");
+		ldtext.setFont(new Font("Agency FB", Font.BOLD, (int)(((40)*width)/1920)));
+		ldtext.setForeground(Color.CYAN);
+		ldtext.setBounds( width/2 - 310, height/2- 130,250,70);
+		loading.add(ldtext);
+		
+		al=new ActionListener() { public void actionPerformed(ActionEvent ae) {
+									loadingbar.setBounds((int)(loadingbar.getLocation().getX()),
+											(int)(loadingbar.getLocation().getY()) ,
+											loadingbar.getSize().width+5 , 60);
+									loadingbar.setText(""+(int)(loadingbar.getSize().width/5)+"%");
+									if(loadingbar.getSize().width== 500){
+										MainGUI newgame = new MainGUI(new Game(p1,p2));
+										theme.pause();
+										selectframe.setVisible(false);
+										timer.stop();
+									}
+								 }
+    							};
+    
+	
+	timer = new Timer(100, al);
+    //timer.setInitialDelay(500);
+   // timer.start();
+
+		
+		
+		
 		selbkground = new ImageIcon(this.getClass().getResource("/resources/icons/SelectBackground.jpg"));
 		selectframe = new JFrame();
 		selectframe.setTitle("Character Select");
@@ -100,6 +169,7 @@ import model.world.Villain;
 	    strips.setIcon(new ImageIcon(selbkground.getImage().getScaledInstance(width, height,Image.SCALE_SMOOTH)));
 	    
 		select = new JPanel();
+		//select.setVisible(false);
 		select.setBounds(0, 0, width, height);
 		select.setLayout(null);
 		
@@ -256,6 +326,7 @@ import model.world.Villain;
 		ch3b = new JLabel(new ImageIcon(defaultbordericon.getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH)));
 		ch4b = new JLabel(new ImageIcon(defaultbordericon.getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH)));
 		
+		
 		ld1 = new JLabel("", JLabel.CENTER);
 		ld2 = new JLabel("", JLabel.CENTER);
 		ch1 = new JLabel("", JLabel.CENTER);
@@ -263,6 +334,19 @@ import model.world.Villain;
 		ch3 = new JLabel("", JLabel.CENTER);
 		ch4 = new JLabel("", JLabel.CENTER);
 		
+//		ld1.setOpaque(true);
+//		ld2.setOpaque(true);
+//		ch1.setOpaque(true);
+//		ch2.setOpaque(true);
+//		ch3.setOpaque(true);
+//		ch4.setOpaque(true);
+//		
+//		ld1.setBackground(Color.WHITE);
+//		ld2.setBackground(Color.WHITE);
+//		ch1.setBackground(Color.WHITE);
+//		ch2.setBackground(Color.WHITE);
+//		ch3.setBackground(Color.WHITE);
+//		ch4.setBackground(Color.WHITE);
 		
 		ch1b.setBounds((int)((((width/4)-125-200-100)*width)/1920), (int)(((530+150)*height)/1080), (int)(((200)*width)/1920), (int)(((200)*height)/1080));
 		ld1b.setBounds((int)((((width/4)-125-100)*width)/1920), (int)(((530+125)*height)/1080), (int)(((250)*width)/1920), (int)(((250)*height)/1080));
@@ -291,7 +375,7 @@ import model.world.Villain;
 		select.add(ab4);
 		select.add(ab5);
 		select.add(ab6);
-		selectframe.add(startGame);
+		select.add(startGame);
 //		select.add(startGame);
 //		select.add(startGame);
   	    select.add(name1);
@@ -315,6 +399,7 @@ import model.world.Villain;
 		select.add(ch2b);
 		select.add(ch3b);
 		select.add(ch4b);
+		selectframe.add(loading);
 		
 		
 		
@@ -332,8 +417,8 @@ import model.world.Villain;
 		{
 			boolean alldone = false;
 			if(!name1.getText().equals("") && !name2.getText().equals("") && !(name1.getForeground()==Color.gray) && !(name2.getForeground()==Color.gray)){
-				Player p1 = new Player(name1.getText());
-				Player p2 = new Player(name2.getText());
+				p1 = new Player(name1.getText());
+				p2 = new Player(name2.getText());
 				if(temp1.size()<3||temp2.size()<3)
 					JOptionPane.showMessageDialog(null, "Select 3 Champions for each team", "WARNING", JOptionPane.WARNING_MESSAGE);
 				else{
@@ -347,9 +432,12 @@ import model.world.Villain;
 					    if(i == 0)
 					    	p2.setLeader(p2.getTeam().get(i));
 					}
-					MainGUI newgame = new MainGUI(new Game(p1,p2));
+					//MainGUI newgame = new MainGUI(new Game(p1,p2));
 					//selectframe.dispatchEvent(new WindowEvent(selectframe, WindowEvent.WINDOW_CLOSING));
-					selectframe.setVisible(false);
+					//selectframe.setVisible(false);
+					select.setVisible(false);
+					loading.setVisible(true);
+					timer.start();
 					}
 			}
 			else
@@ -608,7 +696,10 @@ import model.world.Villain;
 	public void mousePressed(MouseEvent e) {
 		if(e.getSource()==name1 || e.getSource()==name2){
 			((JTextField)e.getSource()).setText("");
-			((JTextField)e.getSource()).setForeground(Color.black);
+			if(e.getSource()==name1)
+				((JTextField)e.getSource()).setForeground(Color.black);
+			else
+				((JTextField)e.getSource()).setForeground(Color.WHITE);
 		}
 		
 	}

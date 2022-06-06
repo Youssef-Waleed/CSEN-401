@@ -21,27 +21,99 @@ public class StartPage implements ActionListener,
 	private JFrame startwindow;
 	private JButton startbt;
 	private JPanel pane;
-	private JLabel marvel;
-	private Media audio;
-	private int width , height;
+	private JLabel marvel, marvelgif, teamlogo;
+	private Media audio, intro;
+	private int width , height, tMode=1;
 	private static boolean loop = true;
+	private Timer timer;
 	
+	private float opacity=1f;
+	private ActionListener al;
 	
 	public StartPage(){
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		width = (int)screenSize.getWidth();
-		height = (int)screenSize.getHeight();
-		audio = new Media(this.getClass().getResource("/resources/audios/AvengersMarvelTheme.wav") , loop);
-		startwindow = new JFrame();
-		startbt = new JButton("START");
-		marvel = new JLabel();
-		
-		startbt.addActionListener(this);
-		startbt.addMouseListener(this);
+        
+        
 		
 		ImageIcon icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
 		ImageIcon bkground= new ImageIcon(this.getClass().getResource("/resources/icons/Marvelstart.png"));
+		ImageIcon logo = new ImageIcon(this.getClass().getResource("/resources/icons/team-logo.png"));
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		width = (int)screenSize.getWidth();
+		height = (int)screenSize.getHeight();
+		
+		audio = new Media(this.getClass().getResource("/resources/audios/startpage-theme.wav") , loop);
+		intro = new Media(this.getClass().getResource("/resources/audios/intro-music.wav") , !loop);
+		intro.play();
 		startwindow = new JFrame();
+		
+		startbt = new JButton("START");
+		startbt.setVisible(false);
+		startbt.addActionListener(this);
+		startbt.addMouseListener(this);
+		
+		marvel = new JLabel();
+		
+		teamlogo = new JLabel();
+		teamlogo.setOpaque(true);
+		teamlogo.setBackground(Color.BLACK);
+		teamlogo.setIcon(new ImageIcon(logo.getImage().getScaledInstance(width/4, height/2, Image.SCALE_SMOOTH)));
+		teamlogo.setPreferredSize(new Dimension(width/4,height/2));
+		teamlogo.setHorizontalAlignment(JLabel.CENTER);
+		
+		JFrame gifcontain= new JFrame();
+		gifcontain.setUndecorated(true);
+		gifcontain.setAlwaysOnTop(true);
+		
+		
+		marvelgif = new JLabel();
+		
+		
+		
+			al=new ActionListener() { public void actionPerformed(ActionEvent ae) {
+										//do your task
+            	
+										System.out.println("lllll");
+										if(tMode==1)
+											opacity-=0.001f;
+										else
+											opacity+=0.001f;
+										gifcontain.setOpacity(opacity);
+										System.out.println(opacity);
+            	
+										if(opacity<0.01f){
+											marvelgif.setVisible(false);
+											gifcontain.add(teamlogo, BorderLayout.CENTER);
+											//opacity=1f;
+											tMode++;
+										}
+										else if(opacity>0.99f && tMode==2){
+											tMode++;
+										}
+										if(tMode==3){
+											marvel.setIcon(new ImageIcon(bkground.getImage().getScaledInstance(width, height,Image.SCALE_SMOOTH)));
+											startbt.setBackground(new Color(0xFFE20B));
+											startbt.setVisible(true);
+											timer.stop();
+											intro.pause();
+											audio.play();
+											gifcontain.dispatchEvent(new WindowEvent(gifcontain, WindowEvent.WINDOW_CLOSING));
+										}	
+									 }
+        							};
+        
+		
+		timer = new Timer(5, al);
+        //timer.setInitialDelay(500);
+        timer.start();
+
+
+        
+        
+		gifcontain.setSize(width,height-100);
+		gifcontain.setLocation(0, 30);
+		
+		
 		startwindow.setSize(width, height);
 		startwindow.setLocation(0,0);
 		startwindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -52,23 +124,33 @@ public class StartPage implements ActionListener,
 		startwindow.setIconImage(icon.getImage());
 		
 		pane = new JPanel();
-		startwindow.add(pane, BorderLayout.CENTER);
 		pane.setLayout(null);
-		
-		marvel.setIcon(new ImageIcon(bkground.getImage().getScaledInstance(width, height,Image.SCALE_SMOOTH)));
+		pane.setOpaque(true);
+		pane.setBackground(Color.BLACK);
+		startwindow.add(pane, BorderLayout.CENTER);
 		
 		marvel.setBounds(0, 0, width, height);
 		
-		pane.add(startbt);
-		pane.add(marvel);
+		marvelgif.setIcon(new ImageIcon(this.getClass().getResource("/resources/icons/marvel-comics.gif")));
+		marvelgif.setPreferredSize(new Dimension( 550, 206));
+		marvelgif.setHorizontalAlignment(JLabel.CENTER);
+		marvelgif.setOpaque(true);
+		marvelgif.setBackground(Color.BLACK);
+		
 		startbt.setFont(new Font("Comic Sans MS",Font.PLAIN, 45));
 		startbt.setFocusable(false);
-		startbt.setBackground(new Color(0xFFE20B));
+		startbt.setBackground(new Color(0x3F3E00));
 		startbt.setBounds(width/2-100, (3*height)/4, 250, 100);
 		startbt.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
-		audio.play();
+		
+		
+		gifcontain.add(marvelgif, BorderLayout.CENTER);
+		pane.add(startbt);
+		pane.add(marvel);
 		startwindow.setVisible(true);
+
+		gifcontain.setVisible(true);
 	}
 
 	
@@ -76,11 +158,6 @@ public class StartPage implements ActionListener,
 	
 	
 	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
@@ -101,7 +178,7 @@ public class StartPage implements ActionListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//selectScreen m = new selectScreen();
+		selectScreen m = new selectScreen();
 		audio.pause();
 		//startwindow.dispatchEvent(new WindowEvent(startwindow, WindowEvent.WINDOW_CLOSING));
 		startwindow.setVisible(false);
@@ -109,37 +186,20 @@ public class StartPage implements ActionListener,
 	}
 	
 	
-	public static void main(String[]args){
-		StartPage p = new StartPage();
-		
-	}
+	
+	
+	
+	
+	public static void main(String[]args)	{	StartPage p = new StartPage();	}
 
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	
+	
+	
+	
+	@Override public void mouseClicked(MouseEvent e) {}
+	@Override public void mousePressed(MouseEvent arg0) {}
+	@Override public void mouseReleased(MouseEvent arg0) {}
+	@Override public void mouseDragged(MouseEvent arg0) {}
+	@Override public void mouseMoved(MouseEvent arg0) {}
 
 }
