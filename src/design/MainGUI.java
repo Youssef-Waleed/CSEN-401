@@ -28,10 +28,12 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -59,7 +61,7 @@ import exceptions.UnallowedMovementException;
 
 public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
 	private JFrame gameframe, championstats= new JFrame();
-	private boolean castIsclicked=false, isAttackMode= false, leaderClicked = false;
+	private boolean castIsclicked=false, isAttackMode= false, leaderClicked = false,alreadyclickedufuckingidiot = false;
 	private Game G;
 	private Color asfarika = new Color(251, 252, 136);
 	private ArrayList<Damageable> targets;
@@ -67,10 +69,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 								, defaultbordericon = new ImageIcon(this.getClass().getResource("/resources/icons/defaultborder.png"));
 	private JLabel champ1, champ2, champ3, champ4, champ5, champ6,
 								champ1border, champ2border, champ3border, champ4border,champ5border,champ6border;
-	private JTextArea turnorderT;
+	private JTextArea turnorderT,applieff;
 	private JTextPane ability1stats, stats1;
 	private JPanel info,main, container, current, actions,game, charc, allcontentspane;
-	private JButton up,down,right,left,attack,attack2,castability,useleaderab,endturn ,ab1 =new JButton() ,ab2=new JButton() ,ab3=new JButton(), confirmability, confirm
+	private JButton up,down,right,left,attack,attack2,castability,useleaderab,endturn ,ab1 =new JButton() ,ab2=new JButton() ,ab3=new JButton(), confirmability, confirmleaderab
 				/*,b11,b12,b13,b14,b15,
 					b21,b22,b23,b24,b25,
 					b31,b32,b33,b34,b35,
@@ -105,13 +107,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		Player p1 = new Player("CPU el fashel awy aaa");
 		p1.getTeam().add(availableChampions.get(0));
 		p1.setLeader(availableChampions.get(0));
-		p1.getLeader().setCurrentHP(0);
+		//p1.getLeader().setCurrentHP(0);
 		p1.getTeam().add(availableChampions.get(1));
 		p1.getTeam().add(availableChampions.get(2));
 		
 		p2.getTeam().add(availableChampions.get(3));
 		p2.setLeader(availableChampions.get(3));
-		p2.getLeader().setCurrentHP(0);
+		//p2.getLeader().setCurrentHP(0);
 		p2.getTeam().add(availableChampions.get(4));
 		p2.getTeam().add(availableChampions.get(5));
 		MainGUI bla = new MainGUI(new Game( p1 , p2 ));
@@ -177,6 +179,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		//gameframe.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		gameframe.setTitle("Marvel: Ultimate War");
 		gameframe.setIconImage(icon.getImage());
+		gameframe.addMouseListener(this);
+		JLabel l = new JLabel("i work");
+		l.setBounds(0,0,90,10);
+		gameframe.add(l);
 		
 //========================================================================================================================
 		//											PANELS
@@ -188,7 +194,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		
 		main = new JPanel();			//the new Panels
-		main.setLayout(new GridLayout(5,5));
+		GridLayout laylay = new GridLayout(5,5);
+		laylay.setHgap(5);
+		laylay.setVgap(5);
+		main.setLayout(laylay);
 		main.setVisible(true);
 		
 		info = new JPanel();
@@ -206,7 +215,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		current = new JPanel();
 		current.setBackground(new Color(0x353535));
 		current.setPreferredSize(new Dimension(800, 300));
-		current.setLayout(new FlowLayout(FlowLayout.TRAILING, 50,10));
+		current.setLayout(null);
 		current.setVisible(true);
 		
 		
@@ -364,7 +373,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 																//TEXTPANE
 		ability1stats = new JTextPane();
 		ability1stats.setText("Ability Details...");
-		ability1stats.setPreferredSize(new Dimension(500,300));
+		ability1stats.setBounds(width-550*width/1920,0,500,300);
 		ability1stats.setFont(new Font("Agency FB", Font.BOLD, 25));
 		ability1stats.setBackground(new Color(0x4A4A4A));
 		ability1stats.setForeground(Color.WHITE);
@@ -373,22 +382,27 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		ability1stats.setEditable(false);
-		
-		
+		//System.out.println(getappEffects(G.getCurrentChampion()));
+		applieff = new JTextArea(getappEffects(G.getCurrentChampion()));
+		applieff.setFont(new Font("Agency FB", Font.BOLD, 25));
+		applieff.setBackground(new Color(0x404040));
+		applieff.setForeground(Color.WHITE);
+		applieff.setBounds(305, 0, 300, 300);
 		stats1 = new JTextPane();
 		stats1.setText("Current Champion Stats:");
-		stats1.setPreferredSize(new Dimension(500,300));
-		stats1.setFont(new Font("Agency FB", Font.BOLD, 23));
+		stats1.setBounds(0,0,300,300);
+		stats1.setFont(new Font("Agency FB", Font.BOLD, 25));
 		stats1.setBackground(new Color(0x404040));
 		stats1.setForeground(Color.WHITE);
 		StyledDocument doc1 = stats1.getStyledDocument();				//Don't mind these here
 		SimpleAttributeSet center1 = new SimpleAttributeSet();
-		StyleConstants.setAlignment(center1, StyleConstants.ALIGN_CENTER);
+		StyleConstants.setAlignment(center1, StyleConstants.ALIGN_LEFT);
 		doc1.setParagraphAttributes(0, doc1.getLength(), center1, false);
 		stats1.setEditable(false);
 		
 		current.add(stats1);
 		current.add(ability1stats);
+		current.add(applieff);
 		
 		
 	//------------------------------------------------BUTTONS----------------------------------------------------------	
@@ -482,12 +496,12 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		confirmability.setVisible(false);
 		confirmability.addActionListener(this);
 		
-		confirm = new JButton("Confirm");
-		confirm.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
-		confirm.setBounds(430, 270, 150, 45);
-		confirm.setFocusable(false);
-		confirm.setVisible(false);
-		confirm.addActionListener(this);
+		confirmleaderab = new JButton("Confirm");
+		confirmleaderab.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+		confirmleaderab.setBounds(430, 270, 150, 45);
+		confirmleaderab.setFocusable(false);
+		confirmleaderab.setVisible(false);
+		confirmleaderab.addActionListener(this);
 
 		ab1 =new JButton(G.getCurrentChampion().getAbilities().get(0).getName());
 		ab1.setActionCommand(G.getCurrentChampion().getAbilities().get(0).getName());
@@ -535,7 +549,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		actions.add(endturn);
 		actions.add(confirmability);
-		actions.add(confirm);
+		actions.add(confirmleaderab);
 		actions.add(up);
 		actions.add(down);
 		actions.add(right);
@@ -569,6 +583,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				Gridbuttons[i][j].setHorizontalTextPosition(JLabel.CENTER);
 				Gridbuttons[i][j].setFocusable(false);
 				Gridbuttons[i][j].addActionListener(this);
+				Gridbuttons[i][j].addMouseListener(this);
 				//Gridbuttons[i][j].setBackground(new Color(0xA2CCE8));
 				Object[][] board = G.getBoard();
 				if(board[i][j] instanceof Champion)
@@ -620,7 +635,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			if(!leaderClicked){
 				endturn.setVisible(false);
 				castability.setVisible(false);
-				confirm.setVisible(true);
+				confirmleaderab.setVisible(true);
 				up.setVisible(false);
 				down.setVisible(false);
 				right.setVisible(false);
@@ -1099,9 +1114,14 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			}
 		}
 		
-		if(e.getSource()==confirm && leaderClicked){
+		if(e.getSource()==confirmleaderab && leaderClicked){
 			try {
 				G.useLeaderAbility();
+				ability1stats.setText("Leader Ability Used");
+				resetbuttons();
+				clearHighlight();
+				leadertargs = null;
+				leaderClicked = false;
 			} catch (LeaderNotCurrentException e1) {
 				
 			} catch (LeaderAbilityAlreadyUsedException e1) {
@@ -1112,12 +1132,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				ability1stats.setText("Ability Details...");
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 				
-			};
-			ability1stats.setText("Leader Ability Used");
-			resetbuttons();
-			clearHighlight();
-			leadertargs = null;
-			leaderClicked = false;
+			}
 		}
 		
 		
@@ -1161,6 +1176,43 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 							}
 					}
+					else if(!(G.getBoard()[i][j] instanceof Cover)&& G.getBoard()[i][j] !=null && !alreadyclickedufuckingidiot){
+							championstats=new JFrame();
+							championstats.setUndecorated(true);
+				            String s = getStats((Champion)G.getBoard()[i][j]);
+				            String eff = getappEffects((Champion)G.getBoard()[i][j]);
+				            TextArea stats = new TextArea(s);
+				            TextArea effects = new TextArea(eff);
+							stats.setBounds(0,0,300,250);
+							stats.setBackground(new Color(0x404040));
+							effects.setBounds(300,0,300,250);
+							effects.setBackground(new Color(0x404040));
+							//championstats.setUndecorated(true);
+							//int xloc= (MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10 ;
+							//int yloc= (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5 ;
+							Point m = MouseInfo.getPointerInfo().getLocation();
+							championstats.setLocation(m.x+1, m.y+1);
+							championstats.setSize( 600, 250);
+							stats.setFont(new Font("Agency FB", Font.BOLD, 18));
+							stats.setBackground(new Color(0x404040));
+							stats.setForeground(Color.WHITE);
+							stats.setEditable(false);
+							effects.setFont(new Font("Agency FB", Font.BOLD, 18));
+							effects.setBackground(new Color(0x404040));
+							effects.setForeground(Color.WHITE);
+							effects.setEditable(false);
+							championstats.setVisible(true);
+							championstats.setAlwaysOnTop(true);
+							//championstats.setFocusable(true);
+							JScrollPane pain1 = new JScrollPane(stats,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					        JScrollPane pain2 = new JScrollPane(effects,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					        pain1.setBounds(0,0,300,250);
+					        pain2.setBounds(300,0,300,250);
+							championstats.add(pain1);
+							championstats.add(pain2);
+							alreadyclickedufuckingidiot = true;
+						}
+				
 			}
 		
 //--------------------------------------------------- A T T A C K-----------------------------------------------------------------
@@ -1236,6 +1288,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 	updateStats();
 	cleanGrid();
+	applieff.setText(getappEffects(G.getCurrentChampion()));
+	System.out.println("it should work");
 	
 	if(G.getCurrentChampion().getAbilities().get(0).getCurrentCooldown()!=0)
 		ab1.setEnabled(false);
@@ -1261,86 +1315,94 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if(e.getSource() != ab1 && e.getSource() != ab2 && e.getSource() != ab3){
+		if(e.getSource() == attack || e.getSource() == attack2 || e.getSource() == up || e.getSource() == up
+				|| e.getSource() == down || e.getSource() == right || e.getSource() == left ||
+				e.getSource() == castability || e.getSource() == useleaderab){
 			tmpico = new ImageIcon(((ImageIcon) ((JButton)e.getSource()).getIcon()).getImage());
 			((JButton)e.getSource()).setIcon(null);
 			((JButton)e.getSource()).setText(((JButton)e.getSource()).getActionCommand());
 			}
-		else
-			if(e.getSource()== ab1){
-				ab1.setText("Ability 1");
-				Ability a = G.getCurrentChampion().getAbilities().get(0);
-				String temp = "Name: " + a.getName()+'\n'+
-						"Mana Cost: "+a.getManaCost()+'\n'+
-						"Base Cooldown: "+a.getBaseCooldown()+'\n'+
-						"Cast Range: "+a.getCastRange()+'\n'+
-						"Cast Area: "+a.getCastArea()+'\n'+	"Required Action Points: "+a.getRequiredActionPoints()+'\n';
-				if(a instanceof CrowdControlAbility)
-					temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
-				else if (a instanceof DamagingAbility)
-					temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
-				else
-					temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
-				ability1stats.setText(temp);
-				highlight(a, a.getCastArea());
-			}
-			
-	
-			else if(e.getSource()== ab2){	
-				ab2.setText("Ability 2");
-				Ability a = G.getCurrentChampion().getAbilities().get(1);
-				String temp = "Name: " + a.getName()+'\n'+
-						"Mana Cost: "+a.getManaCost()+'\n'+
-						"Base Cooldown: "+a.getBaseCooldown()+'\n'+
-						"Cast Range: "+a.getCastRange()+'\n'+
-						"Cast Area: "+a.getCastArea()+'\n'+	"Required Action Points: "+a.getRequiredActionPoints()+'\n';
-				if(a instanceof CrowdControlAbility)
-					temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
-				else if (a instanceof DamagingAbility)
-					temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
-				else
-					temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
-				ability1stats.setText(temp);
-				highlight(a, a.getCastArea());
-			}
-			else if(e.getSource()== ab3){	
-				ab3.setText("Ability 3");
-				Ability a = G.getCurrentChampion().getAbilities().get(2);
-				String temp = "Name: " + a.getName()+'\n'+
-						"Mana Cost: "+a.getManaCost()+'\n'+
-						"Base Cooldown: "+a.getBaseCooldown()+'\n'+
-						"Cast Range: "+a.getCastRange()+'\n'+
-						"Cast Area: "+a.getCastArea()+'\n'+	"Required Action Points: "+a.getRequiredActionPoints()+'\n';
-				if(a instanceof CrowdControlAbility)
-					temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
-				else if (a instanceof DamagingAbility)
-					temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
-				else
-					temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
-				ability1stats.setText(temp);
-				highlight(a, a.getCastArea());
-			}
-			if(e.getSource()== useleaderab && useleaderab.isEnabled()){
-				String temp=(leaderClicked)?"Use your Leader Ability?":"Ability Details...";
-				if(G.getCurrentChampion() instanceof Hero)
-					ability1stats.setText(temp+'\n'+'\n'
-						+"Confirming will Remove all negative effects from the player’s entire team and adds an Embrace effect to them which lasts for 2 turns.");
-				else if(G.getCurrentChampion() instanceof Villain)
-					ability1stats.setText(temp+'\n'+'\n'+ "Confirming will Immediately eliminates (knocks out) all enemy champions with less than 30% healthpoints");
-				else if(G.getCurrentChampion() instanceof AntiHero)
-					ability1stats.setText(temp+'\n'+'\n'+ "Confirming will stun ALL Champions on the board for 2 turns EXCEPT for the Leaders of each team.");
-			}
+		if(e.getSource()== ab1){
+			ab1.setText("Ability 1");
+			Ability a = G.getCurrentChampion().getAbilities().get(0);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+	"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+			ability1stats.setText(temp);
+			highlight(a, a.getCastArea());
+		}
+		if(e.getSource()== ab2){	
+			ab2.setText("Ability 2");
+			Ability a = G.getCurrentChampion().getAbilities().get(1);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+	"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+			ability1stats.setText(temp);
+			highlight(a, a.getCastArea());
+		}	
+		if(e.getSource()== ab3){	
+			ab3.setText("Ability 3");
+			Ability a = G.getCurrentChampion().getAbilities().get(2);
+			String temp = "Name: " + a.getName()+'\n'+
+					"Mana Cost: "+a.getManaCost()+'\n'+
+					"Base Cooldown: "+a.getBaseCooldown()+'\n'+
+					"Cast Range: "+a.getCastRange()+'\n'+
+					"Cast Area: "+a.getCastArea()+'\n'+	"Required Action Points: "+a.getRequiredActionPoints()+'\n';
+			if(a instanceof CrowdControlAbility)
+				temp += "Effect: "+((CrowdControlAbility)a).getEffect().getName();
+			else if (a instanceof DamagingAbility)
+				temp += "Damage Amount: "+((DamagingAbility)a).getDamageAmount();
+			else
+				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
+			ability1stats.setText(temp);
+			highlight(a, a.getCastArea());
+		}	
+		if(e.getSource()== useleaderab && useleaderab.isEnabled()){
+			String temp=(leaderClicked)?"Use your Leader Ability?":"Ability Details...";
+			if(G.getCurrentChampion() instanceof Hero)
+				ability1stats.setText(temp+'\n'+'\n'
+					+"Confirming will Remove all negative effects from the player’s entire team and adds an Embrace effect to them which lasts for 2 turns.");
+			else if(G.getCurrentChampion() instanceof Villain)
+				ability1stats.setText(temp+'\n'+'\n'+ "Confirming will Immediately eliminates (knocks out) all enemy champions with less than 30% healthpoints");
+			else if(G.getCurrentChampion() instanceof AntiHero)
+				ability1stats.setText(temp+'\n'+'\n'+ "Confirming will stun ALL Champions on the board for 2 turns EXCEPT for the Leaders of each team.");
+		}	
 		
 			
-		for(int i =0 ; i<5; i++)
-			for(int j=0; j<5; j++){
-				if(e.getSource() == Gridbuttons[i][j] && !(G.getBoard()[i][j] instanceof Cover)&& G.getBoard()[i][j] !=null){
-					championstats=new JFrame();
-					//championstats.setUndecorated(true);
-					//int xloc= (MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10 ;
-					//int yloc= (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5 ;
-					championstats.setLocation(0, 0);
-					championstats.setSize( 200, 100);
+//		for(int i =0 ; i<5; i++)
+//			for(int j=0; j<5; j++){
+//				if(e.getSource() == Gridbuttons[i][j] && !(G.getBoard()[i][j] instanceof Cover)&& G.getBoard()[i][j] !=null){
+//						championstats=new JFrame();
+//						String s = getStats((Champion)G.getBoard()[i][j]);
+//						TextArea l = new TextArea(s);
+//						l.setBounds(0,0,400,200);
+//						//championstats.setUndecorated(true);
+//						//int xloc= (MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10 ;
+//						//int yloc= (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5 ;
+//						Point m = MouseInfo.getPointerInfo().getLocation();
+//						championstats.setLocation(m.x, m.y);
+//						championstats.setSize( 400, 200);
+//						championstats.setVisible(true);
+//						championstats.setAlwaysOnTop(true);
+//						championstats.setFocusable(false);
+//						//championstats.setUndecorated(true);
+//						championstats.add(l);
 					
 //					JPanel pp=new JPanel();
 //					pp.setLayout(new FlowLayout(0,1,FlowLayout.LEADING));
@@ -1383,11 +1445,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //					pp.add(chStats);
 //					pp.add(appAB);		
 //					
-					championstats.setVisible(true);
-					championstats.setAlwaysOnTop(true);
+					//championstats.setVisible(true);
+					//championstats.setAlwaysOnTop(true);
 					
-				}
-			}
+				//}
+			//}
 			
 			
 			
@@ -1405,7 +1467,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		if(e.getSource() != ab1 && e.getSource() != ab2 && e.getSource() != ab3){
+		if(e.getSource() == attack || e.getSource() == attack2 || e.getSource() == up || e.getSource() == up
+				|| e.getSource() == down || e.getSource() == right || e.getSource() == left ||
+				e.getSource() == castability || e.getSource() == useleaderab){
 			((JButton)e.getSource()).setIcon(tmpico);;
 			((JButton)e.getSource()).setText("");
 		}
@@ -1427,8 +1491,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		for(int i =0 ; i<5; i++)
 			for(int j=0; j<5; j++){
 				if(e.getSource() == Gridbuttons[i][j]){
-					if(championstats.isVisible())
-						championstats.setVisible(false);
+						championstats.dispatchEvent(new WindowEvent(championstats, WindowEvent.WINDOW_CLOSING));
+						alreadyclickedufuckingidiot = false;
 				}
 			}
 	}
@@ -1702,7 +1766,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		castability.setBackground(null);
 		castability.setVisible(true);
 		confirmability.setVisible(false);
-		confirm.setVisible(false);
+		confirmleaderab.setVisible(false);
 		ab1.setBackground(Color.DARK_GRAY);
 		ab2.setBackground(Color.DARK_GRAY);
 		ab3.setBackground(Color.DARK_GRAY);
@@ -1930,9 +1994,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 	private String getappEffects(Champion c){
 		String ret="";
-		
 		for(Effect e : c.getAppliedEffects()){
-			ret+= "Effect: "+e.getName()+", duration: "+e.getDuration()+", Type: "+e.getType()+'\n';
+			ret+= "- Effect: "+e.getName()+", "+e.getDuration()+" Turn(s), "+e.getType()+'\n';
 		}
 		
 		return ret;
