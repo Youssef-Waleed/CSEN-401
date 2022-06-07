@@ -137,7 +137,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		G=newGame;
+		G = newGame;
 		targets = new ArrayList<Damageable>();
 		
 //			||===============================================||
@@ -795,13 +795,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			try {
 				Ability a = null;
 				if(ab1.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab1.getText());
+					a=G.getCurrentChampion().getAbilities().get(0);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0),Direction.UP);
 				} else if(ab2.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab2.getText());
+					a=G.getCurrentChampion().getAbilities().get(1);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(1),Direction.UP);
 				}else if(ab3.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab3.getText());
+					a=G.getCurrentChampion().getAbilities().get(2);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2),Direction.UP);
 				}
 				if(a!=null){
@@ -830,13 +830,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			try {
 				Ability a = null;
 				if(ab1.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab1.getText());
+					a=G.getCurrentChampion().getAbilities().get(0);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0),Direction.DOWN);
 				} else if(ab2.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab2.getText());
+					a=G.getCurrentChampion().getAbilities().get(1);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(1),Direction.DOWN);
 				}else if(ab3.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab3.getText());
+					a=G.getCurrentChampion().getAbilities().get(2);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2),Direction.DOWN);
 				}
 				if(a!=null){
@@ -866,13 +866,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			try {
 				Ability a = null;
 				if(ab1.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab1.getText());
+					a=G.getCurrentChampion().getAbilities().get(0);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0),Direction.RIGHT);
 				} else if(ab2.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab2.getText());
+					a=G.getCurrentChampion().getAbilities().get(1);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(1),Direction.RIGHT);
 				}else if(ab3.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab3.getText());
+					a=G.getCurrentChampion().getAbilities().get(2);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2),Direction.RIGHT);
 				}
 				if(a!=null){
@@ -902,13 +902,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			try {
 				Ability a = null;
 				if(ab1.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab1.getText());
+					a=G.getCurrentChampion().getAbilities().get(0);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(0),Direction.LEFT);
 				} else if(ab2.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab2.getText());
+					a=G.getCurrentChampion().getAbilities().get(1);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(1),Direction.LEFT);
 				}else if(ab3.getBackground()== Color.GREEN){
-					a=findAbilityByName(ab3.getText());
+					a=G.getCurrentChampion().getAbilities().get(2);
 					targets = G.castAbility(G.getCurrentChampion().getAbilities().get(2),Direction.LEFT);
 				}
 				if(a!=null){
@@ -1079,11 +1079,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			confirmability.setVisible(false);
 			Ability a = null;
 			if(ab1.getBackground()== Color.GREEN){
-				a=findAbilityByName(ab1.getText());
+				a=G.getCurrentChampion().getAbilities().get(0);
 			} else if(ab2.getBackground()== Color.GREEN){
-				a=findAbilityByName(ab2.getText());
+				a=G.getCurrentChampion().getAbilities().get(1);
 			}else if(ab3.getBackground()== Color.GREEN){
-				a=findAbilityByName(ab3.getText());
+				a=G.getCurrentChampion().getAbilities().get(2);
 			}
 			
 			if(a.getCastArea() == AreaOfEffect.DIRECTIONAL){
@@ -1169,11 +1169,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					if(castIsclicked){
 						Ability a = null;
 						if(ab1.getBackground()== Color.GREEN){
-							a=findAbilityByName(ab1.getText());
+							a=G.getCurrentChampion().getAbilities().get(0);
 						} else if(ab2.getBackground()== Color.GREEN){
-							a=findAbilityByName(ab2.getText());
+							a=G.getCurrentChampion().getAbilities().get(1);
 						}else if(ab3.getBackground()== Color.GREEN){
-							a=findAbilityByName(ab3.getText());
+							a=G.getCurrentChampion().getAbilities().get(2);
 						}
 						if(a.getCastArea() == AreaOfEffect.SINGLETARGET)
 							try {
