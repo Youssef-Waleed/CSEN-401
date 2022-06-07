@@ -1327,7 +1327,12 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		ab3.setEnabled(false);
 	else	
 		ab3.setEnabled(true);
-	
+	if(G.checkGameOver()!=null)
+	{
+		JOptionPane.showMessageDialog(null,"Gameover, buddy. it's over go home","Marvel", JOptionPane.WARNING_MESSAGE);
+		gameframe.setVisible(false);
+		new winnerwinnerChickenDinner(G.checkGameOver());
+	}
 	}
 	
 	
