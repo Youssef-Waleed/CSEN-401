@@ -63,12 +63,12 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private JFrame gameframe, championstats= new JFrame();
 	private boolean castIsclicked=false, isAttackMode= false, leaderClicked = false,alreadyclickedufuckingidiot = false;
 	private Game G;
-	private Color asfarika = new Color(251, 252, 136);
+	private Color asfarika = new Color(251, 252, 136), a7marika = new Color(0xE8ADAD), azra2ika= new Color(0xADC5E8);
 	private ArrayList<Damageable> targets;
 	private ImageIcon icon, tmpico, leaderbordericon= new ImageIcon(this.getClass().getResource("/resources/icons/leadercrown.png"))
 								, defaultbordericon = new ImageIcon(this.getClass().getResource("/resources/icons/defaultborder.png"));
 	private JLabel champ1, champ2, champ3, champ4, champ5, champ6,
-								champ1border, champ2border, champ3border, champ4border,champ5border,champ6border;
+								champ1border, champ2border, champ3border, champ4border,champ5border,champ6border, redteam, blueteam;
 	private JTextArea turnorderT,applieff;
 	private JTextPane ability1stats, stats1;
 	private JPanel info,main, container, current, actions,game, charc, allcontentspane;
@@ -252,27 +252,27 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		champ1border = new JLabel();
 		champ1border.setIcon(new ImageIcon(defaultbordericon.getImage().getScaledInstance(117,117,Image.SCALE_SMOOTH)));
-		champ1border.setBounds(27, 27, 117,117);
+		champ1border.setBounds(37, 27, 117,117);
 		
 		champ2border = new JLabel();		//Leader 1
 		champ2border.setIcon(new ImageIcon(leaderbordericon.getImage().getScaledInstance(155,155,Image.SCALE_SMOOTH)));
-		champ2border.setBounds(8, 22+100+10, 155,155);  
+		champ2border.setBounds(18, 18+100+10, 155,155);  
 
 		champ3border = new JLabel();
 		champ3border.setIcon(new ImageIcon(defaultbordericon.getImage().getScaledInstance(117,117,Image.SCALE_SMOOTH)));
-		champ3border.setBounds(27, 27+100+120+20, 117,117);
+		champ3border.setBounds(37, 27+100+120+20, 117,117);
 
 		champ4border = new JLabel();
 		champ4border.setIcon(new ImageIcon(defaultbordericon.getImage().getScaledInstance(117,117,Image.SCALE_SMOOTH)));
-		champ4border.setBounds(32+205, 27, 117,117);
+		champ4border.setBounds(35+205, 27, 117,117);
 
 		champ5border = new JLabel();		// Leader 2
 		champ5border.setIcon(new ImageIcon(leaderbordericon.getImage().getScaledInstance(155,155,Image.SCALE_SMOOTH)));
-		champ5border.setBounds(8+205+5, 22+100+10,155,155);
+		champ5border.setBounds(16+205+5, 18+100+10,155,155);
 
 		champ6border = new JLabel();
 		champ6border.setIcon(new ImageIcon(defaultbordericon.getImage().getScaledInstance(117,117,Image.SCALE_SMOOTH)));
-		champ6border.setBounds(32+205, 27+100+120+20, 117,117);
+		champ6border.setBounds(35+205, 27+100+120+20, 117,117);
 		
 //		champ1.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 //		champ2.setBorder(BorderFactory.createLineBorder(Color.green, 3));
@@ -282,12 +282,12 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //		champ6.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 		
 		
-		champ1.setBounds(50, 50, 70,70);
-		champ2.setBounds(40, 50+100+15 ,90,90);  //Leader 1
-		champ3.setBounds(50, 50+100+120+20, 70,70);
-		champ4.setBounds(50+210, 50, 70,70);
-		champ5.setBounds(40+205+5, 50+100+12, 90,90);  // Leader 2
-		champ6.setBounds(50+210, 50+100+120+20, 70,70);
+		champ1.setBounds(60, 50, 70,70);
+		champ2.setBounds(50, 46+100+15 ,90,90);  //Leader 1
+		champ3.setBounds(60, 50+100+120+20, 70,70);
+		champ4.setBounds(60+204, 50, 70,70);
+		champ5.setBounds(50+204+5, 46+100+12, 90,90);  // Leader 2
+		champ6.setBounds(60+204, 50+100+120+20, 70,70);
 		
 				//sub-labels
 				JLabel pONE = new JLabel(G.getFirstPlayer().getName(), SwingConstants.CENTER);
@@ -297,6 +297,18 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				pONE.setBounds(10, 2, 180, 50);
 				pTWO.setBounds(210, 2, 180, 50);
 		
+				
+				
+		redteam= new JLabel();
+		redteam.setOpaque(true);
+		redteam.setBackground(a7marika);
+		redteam.setBounds(0, 0, 200, 600);
+		
+		blueteam= new JLabel();
+		blueteam.setOpaque(true);
+		blueteam.setBackground(azra2ika);
+		blueteam.setBounds(200, 0, 200, 600);
+			
 		charc.add(champ1);
 		charc.add(champ2);
 		charc.add(champ3);
@@ -311,6 +323,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		charc.add(champ4border);
 		charc.add(champ5border);
 		charc.add(champ6border);
+		charc.add(redteam);
+		charc.add(blueteam);
 		
 		for(int i =0;i<3;i++){
 			if(G.getFirstPlayer().getTeam().get(i) != G.getFirstPlayer().getLeader())
@@ -608,9 +622,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		}
 			
 		
-		
+		clearHighlight();
 		
 		gameframe.setVisible(true);
+		gameframe.revalidate();
 		
 		updateStats();
 
@@ -713,6 +728,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 			    Gridbuttons[G.getCurrentChampion().getLocation().x-1][G.getCurrentChampion().getLocation().y].setIcon(null);
 			}
+			clearHighlight();
 		}
 		if(e.getSource()==down&&!castIsclicked && !attack2.isVisible())
 		{
@@ -732,6 +748,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 			    Gridbuttons[G.getCurrentChampion().getLocation().x+1][G.getCurrentChampion().getLocation().y].setIcon(null);
 			}
+			clearHighlight();
 		}
 		if(e.getSource()==right&&!castIsclicked && !attack2.isVisible())
 		{
@@ -751,6 +768,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y-1].setIcon(null);
 			}
+			clearHighlight();
 		}
 		if(e.getSource()==left&&!castIsclicked && !attack2.isVisible())
 		{
@@ -770,6 +788,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y+1].setIcon(null);
 			}
+			clearHighlight();
 		}
 		
 		if(e.getSource()==up&&castIsclicked){
@@ -1340,7 +1359,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			else
 				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
 			ability1stats.setText(temp);
-			highlight(a, a.getCastArea());
+			//highlight(a, a.getCastArea());
 		}
 		if(e.getSource()== ab2){	
 			ab2.setText("Ability 2");
@@ -1357,7 +1376,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			else
 				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
 			ability1stats.setText(temp);
-			highlight(a, a.getCastArea());
+			//highlight(a, a.getCastArea());
 		}	
 		if(e.getSource()== ab3){	
 			ab3.setText("Ability 3");
@@ -1374,7 +1393,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			else
 				temp += "Healing Amount: "+((HealingAbility)a).getHealAmount();
 			ability1stats.setText(temp);
-			highlight(a, a.getCastArea());
+			//highlight(a, a.getCastArea());
 		}	
 		if(e.getSource()== useleaderab && useleaderab.isEnabled()){
 			String temp=(leaderClicked)?"Use your Leader Ability?":"Ability Details...";
@@ -1778,8 +1797,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 	private void clearHighlight(){
 		for(int i =4; i>=0; i--)
-			for(int j =0; j<5; j++)
-				Gridbuttons[i][j].setBackground(null);
+			for(int j =0; j<5; j++){
+				if(G.getBoard()[i][j]==null || G.getBoard()[i][j] instanceof Cover)
+					Gridbuttons[i][j].setBackground(null);
+				else if(G.getFirstPlayer().getTeam().contains( G.getBoard()[i][j]))
+					Gridbuttons[i][j].setBackground(a7marika);
+				else
+					Gridbuttons[i][j].setBackground(azra2ika);
+					
+				
+			}
 	}
 	
 	private void attackHighlight(){
