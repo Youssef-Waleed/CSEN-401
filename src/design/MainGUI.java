@@ -26,6 +26,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -57,7 +58,7 @@ import exceptions.UnallowedMovementException;
 
 
 public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
-	private JFrame gameframe;
+	private JFrame gameframe, championstats= new JFrame();
 	private boolean castIsclicked=false, isAttackMode= false, leaderClicked = false;
 	private Game G;
 	private Color asfarika = new Color(251, 252, 136);
@@ -81,6 +82,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	private ArrayList<Champion> leadertargs;
+	private int width,height;
 	
 	
 	public static void main(String[] args) {
@@ -153,8 +155,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	//-----------------------------------------GAME PANEL---------------------------------------------------------	
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = (int)screenSize.getWidth();
-		int height = (int)screenSize.getHeight();
+		width = (int)screenSize.getWidth();
+		height = (int)screenSize.getHeight();
 		
 		icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
 		ImageIcon upicon = new ImageIcon(this.getClass().getResource("/resources/icons/up-arrow.png"));
@@ -1154,13 +1156,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 								endturn.setVisible(true);
 								castability.setBackground(null);
 								clearHighlight();
-							} catch (CloneNotSupportedException e1) {
-								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
-							} catch (NotEnoughResourcesException e1) {
-								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
-							} catch (AbilityUseException e1) {
-								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
-							} catch (InvalidTargetException e1) {
+							} catch (CloneNotSupportedException | NotEnoughResourcesException 
+									| AbilityUseException | InvalidTargetException e1) {
 								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 							}
 					}
@@ -1334,6 +1331,66 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					ability1stats.setText(temp+'\n'+'\n'+ "Confirming will stun ALL Champions on the board for 2 turns EXCEPT for the Leaders of each team.");
 			}
 		
+			
+		for(int i =0 ; i<5; i++)
+			for(int j=0; j<5; j++){
+				if(e.getSource() == Gridbuttons[i][j] && !(G.getBoard()[i][j] instanceof Cover)&& G.getBoard()[i][j] !=null){
+					championstats=new JFrame();
+					//championstats.setUndecorated(true);
+					//int xloc= (MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10 ;
+					//int yloc= (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5 ;
+					championstats.setLocation(0, 0);
+					championstats.setSize( 200, 100);
+					
+//					JPanel pp=new JPanel();
+//					pp.setLayout(new FlowLayout(0,1,FlowLayout.LEADING));
+//					
+//					championstats.add(pp, BorderLayout.CENTER);
+//					pp.setBackground(Color.DARK_GRAY);
+//					pp.setOpaque(true);
+//					championstats.setOpacity(0.7f);
+//								
+//					JTextPane chStats = new JTextPane();
+//		
+//					chStats.setText("Stats:");
+//					chStats.setPreferredSize(new Dimension(500,300));
+//					chStats.setFont(new Font("Agency FB", Font.BOLD, 23));
+//					chStats.setBackground(new Color(0x404040));
+//					chStats.setForeground(Color.WHITE);
+//					StyledDocument doc1 = chStats.getStyledDocument();				//Don't mind these here
+//					SimpleAttributeSet center1 = new SimpleAttributeSet();
+//					StyleConstants.setAlignment(center1, StyleConstants.ALIGN_CENTER);
+//					doc1.setParagraphAttributes(0, doc1.getLength(), center1, false);
+//					chStats.setEditable(false);
+//					
+//					
+//					chStats.setText("Stats"+ '\n'+getStats((Champion)G.getBoard()[i][j]));
+//					
+//					
+//					JTextPane appAB = new JTextPane();
+//					appAB.setText("Effects:");
+//					appAB.setPreferredSize(new Dimension(500,300));
+//					appAB.setFont(new Font("Agency FB", Font.BOLD, 23));
+//					appAB.setBackground(new Color(0x404040));
+//					appAB.setForeground(Color.WHITE);
+//					StyledDocument doc = appAB.getStyledDocument();				//Don't mind these here
+//					SimpleAttributeSet center = new SimpleAttributeSet();
+//					StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+//					doc.setParagraphAttributes(0, doc.getLength(), center, false);
+//					appAB.setEditable(false);
+//					appAB.setText("Effects: "+'\n'+ getappEffects((Champion)G.getBoard()[i][j]));
+//					
+//					pp.add(chStats);
+//					pp.add(appAB);		
+//					
+					championstats.setVisible(true);
+					championstats.setAlwaysOnTop(true);
+					
+				}
+			}
+			
+			
+			
 		if(e.getSource() == attack)
 			attackHighlight();
 	}
@@ -1366,6 +1423,14 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		if(e.getSource()== useleaderab && !leaderClicked) ability1stats.setText("Ability Details...");
 		if(e.getSource() == attack && !isAttackMode)
 			clearHighlight();
+		
+		for(int i =0 ; i<5; i++)
+			for(int j=0; j<5; j++){
+				if(e.getSource() == Gridbuttons[i][j]){
+					if(championstats.isVisible())
+						championstats.setVisible(false);
+				}
+			}
 	}
 
 
@@ -1847,22 +1912,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 	//stats TextArea Update
 		Champion c = G.getCurrentChampion();
-		String type ="";
-		if(c instanceof Hero)
-			type = "Hero";
-		else if(c instanceof Villain)
-			type = "Villain";
-		else
-			type = "Antihero";
-		stats1.setText("Name: "+c.getName()+'\n'
-				+"HP: "+c.getCurrentHP()+'\n'
-				+"Mana: "+c.getMana()+'\n'
-				+"Speed: "+c.getSpeed()+'\n'
-				+"Action Points: "+c.getCurrentActionPoints()+'\n'
-				+"Type: "+type+'\n'
-				+"Normal Attack Damage: "+ c.getAttackDamage()+'\n'
-				+"Maximum Range: " + c.getAttackRange()+'\n'
-				+"Current State: "+ c.getCondition());	
+		stats1.setText(getStats(c));	
 		
 	//Grid Stats Update
 		
@@ -1877,4 +1927,39 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					Gridbuttons[i][j].setText("");
 	
 	}
+	
+	private String getappEffects(Champion c){
+		String ret="";
+		
+		for(Effect e : c.getAppliedEffects()){
+			ret+= "Effect: "+e.getName()+", duration: "+e.getDuration()+", Type: "+e.getType()+'\n';
+		}
+		
+		return ret;
+	}
+	
+	private String getStats(Champion c){
+		String ret="";
+		String type ="";
+		if(c instanceof Hero)
+			type = "Hero";
+		else if(c instanceof Villain)
+			type = "Villain";
+		else
+			type = "Antihero";
+		ret= ("Name: "+c.getName()+'\n'
+				+"HP: "+c.getCurrentHP()+'\n'
+				+"Mana: "+c.getMana()+'\n'
+				+"Speed: "+c.getSpeed()+'\n'
+				+"Action Points: "+c.getCurrentActionPoints()+'\n'
+				+"Type: "+type+'\n'
+				+"Normal Attack Damage: "+ c.getAttackDamage()+'\n'
+				+"Maximum Range: " + c.getAttackRange()+'\n'
+				+"Current State: "+ c.getCondition());	
+		
+		
+		return ret;
+	}
+	
+	
 }
