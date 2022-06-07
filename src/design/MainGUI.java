@@ -391,7 +391,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		stats1 = new JTextPane();
 		stats1.setText("Current Champion Stats:");
 		stats1.setBounds(0,0,300,300);
-		stats1.setFont(new Font("Agency FB", Font.BOLD, 25));
+		stats1.setFont(new Font("Agency FB", Font.BOLD, 24));
 		stats1.setBackground(new Color(0x404040));
 		stats1.setForeground(Color.WHITE);
 		StyledDocument doc1 = stats1.getStyledDocument();				//Don't mind these here
@@ -2001,7 +2001,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			ret+= "[] Effect: "+e.getName()+", "+e.getDuration()+" Turn(s), "+e.getType()+'\n';
 		}
 		
-		return ret;
+		return "Applied Effects: \n"+ret;
 	}
 	
 	private String getStats(Champion c){
@@ -2023,8 +2023,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				+"Maximum Range: " + c.getAttackRange()+'\n'
 				+"Current State: "+ c.getCondition());	
 		
-		
-		return ret;
+		if(c == G.getCurrentChampion())
+			return "Current Champion Stats: \n"+ret;
+		else
+			return ret;
 	}
 	
 	
