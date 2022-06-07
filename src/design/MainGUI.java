@@ -611,6 +611,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
 	//---------------------------------------       LEADER  ABILITY      ---------------------------------------------------------------------
 		if(e.getSource()==useleaderab){
 			leadertargs = new ArrayList<>();
@@ -649,7 +650,15 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				for(int i = 0;i<leadertargs.size();i++)
 					Gridbuttons[leadertargs.get(i).getLocation().x][leadertargs.get(i).getLocation().y].setBackground(asfarika);
 				leaderClicked = true;
-				ability1stats.setText("Use Leader Ability?");
+				ability1stats.setText("Use your Leader Ability?");
+				if(G.getCurrentChampion() instanceof Hero)
+					ability1stats.setText(ability1stats.getText()+'\n'+'\n'
+						+"Confirming will Remove all negative effects from the player’s entire team and adds an Embrace effect to them which lasts for 2 turns.");
+				else if(G.getCurrentChampion() instanceof Villain)
+					ability1stats.setText(ability1stats.getText()+'\n'+'\n'+ "Confirming will Immediately eliminates (knocks out) all enemy champions with less than 30% healthpoints");
+				else if(G.getCurrentChampion() instanceof AntiHero)
+					ability1stats.setText(ability1stats.getText()+'\n'+'\n'+ "Confirming will stun ALL Champions on the board for 2 turns EXCEPT for the Leaders of each team.");
+			
 			}
 			else{
 				ability1stats.setText("Ability Details...");
@@ -1314,6 +1323,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				ability1stats.setText(temp);
 				highlight(a, a.getCastArea());
 			}
+			if(e.getSource()== useleaderab && useleaderab.isEnabled()){
+				String temp=(leaderClicked)?"Use your Leader Ability?":"Ability Details...";
+				if(G.getCurrentChampion() instanceof Hero)
+					ability1stats.setText(temp+'\n'+'\n'
+						+"Confirming will Remove all negative effects from the player’s entire team and adds an Embrace effect to them which lasts for 2 turns.");
+				else if(G.getCurrentChampion() instanceof Villain)
+					ability1stats.setText(temp+'\n'+'\n'+ "Confirming will Immediately eliminates (knocks out) all enemy champions with less than 30% healthpoints");
+				else if(G.getCurrentChampion() instanceof AntiHero)
+					ability1stats.setText(temp+'\n'+'\n'+ "Confirming will stun ALL Champions on the board for 2 turns EXCEPT for the Leaders of each team.");
+			}
 		
 		if(e.getSource() == attack)
 			attackHighlight();
@@ -1343,7 +1362,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			else if(e.getSource()== ab3){	/*THEN*/ ab3.setText(ab3.getActionCommand());	ability1stats.setText("Ability Details..."+'\n'+'\n'
 														+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");
 														if(ab3.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  clearHighlight();}
-	
+			//else if(e.getSource()== useleaderab /*&& leaderClicked*/) ability1stats.setText("Use your Leader Ability?");
+		if(e.getSource()== useleaderab && !leaderClicked) ability1stats.setText("Ability Details...");
 		if(e.getSource() == attack && !isAttackMode)
 			clearHighlight();
 	}
@@ -1602,6 +1622,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			ability1stats.setText("Ability applied...");
 		castIsclicked=false;
 		isAttackMode = false;
+		leaderClicked= false;
 		ab1.setVisible(false);
 		ab2.setVisible(false);
 		ab3.setVisible(false);
