@@ -1189,17 +1189,18 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				            String s = getStats((Champion)G.getBoard()[i][j]);
 				            String eff = getappEffects((Champion)G.getBoard()[i][j]);
 				            TextArea stats = new TextArea(s);
-				            TextArea effects = new TextArea(eff);
+				            TextArea effects = new TextArea(getappEffects((Champion) G.getBoard()[i][j]));
 							stats.setBounds(0,0,300,250);
 							stats.setBackground(new Color(0x404040));
-							effects.setBounds(300,0,300,250);
+							effects.setBounds(300,0,350,250);
 							effects.setBackground(new Color(0x404040));
 							//championstats.setUndecorated(true);
 							//int xloc= (MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10 ;
 							//int yloc= (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5 ;
 							Point m = MouseInfo.getPointerInfo().getLocation();
 							championstats.setLocation(m.x+1, m.y+1);
-							championstats.setSize( 600, 250);
+							championstats.setSize(650, 250);
+							championstats.setLayout(null);
 							stats.setFont(new Font("Agency FB", Font.BOLD, 18));
 							stats.setBackground(new Color(0x404040));
 							stats.setForeground(Color.WHITE);
@@ -1211,12 +1212,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 							championstats.setVisible(true);
 							championstats.setAlwaysOnTop(true);
 							//championstats.setFocusable(true);
-							JScrollPane pain1 = new JScrollPane(stats,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-					        JScrollPane pain2 = new JScrollPane(effects,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-					        pain1.setBounds(0,0,300,250);
-					        pain2.setBounds(300,0,300,250);
-							championstats.add(pain1);
-							championstats.add(pain2);
+							championstats.add(stats);
+							championstats.add(effects);
 							alreadyclickedufuckingidiot = true;
 						}
 				
@@ -2001,7 +1998,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private String getappEffects(Champion c){
 		String ret="";
 		for(Effect e : c.getAppliedEffects()){
-			ret+= "- Effect: "+e.getName()+", "+e.getDuration()+" Turn(s), "+e.getType()+'\n';
+			ret+= "[] Effect: "+e.getName()+", "+e.getDuration()+" Turn(s), "+e.getType()+'\n';
 		}
 		
 		return ret;
