@@ -13,20 +13,21 @@ import engine.*;
 
 public class winnerwinnerChickenDinner{
 	JFrame window;
+	JPanel temp;
 	public winnerwinnerChickenDinner(Player winner,Game G){
 		window = new JFrame();
 		window.setLayout(null);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int) screenSize.getWidth();
 		int height = (int) screenSize.getHeight();
 		window.setSize(width+1, height);
 		window.setLocation(1920/2-width/2,0);
-		JPanel temp = new JPanel();
-		temp.setBounds(width-250, height-75, 300, 150);
+		temp = new JPanel();
+		temp.setBounds(0, 0, width, height);
 		JLabel text =  new JLabel(winner.getName()+" WINS");
 		text.setBounds(width-250, height-75, 300, 150);
 		text.setFont(new Font("Agency FB", Font.BOLD, 50));
-		text.setVisible(true);
 		temp.add(text);
 		window.add(temp);
 		window.setVisible(true);
