@@ -652,9 +652,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				}
 				else if(G.getCurrentChampion() instanceof Villain){
 					if(first)
-						leadertargs = G.getSecondPlayer().getTeam();
+						for(Champion c: G.getSecondPlayer().getTeam()){
+							if (c.getCurrentHP() < (0.3 * c.getMaxHP()))
+								leadertargs.add(c);
+						}
+						
 					else
-						leadertargs = G.getFirstPlayer().getTeam();
+						for(Champion c: G.getFirstPlayer().getTeam()){
+							if (c.getCurrentHP() < (0.3 * c.getMaxHP()))
+								leadertargs.add(c);
+						}
 				}
 				else{
 					for(Champion c: G.getFirstPlayer().getTeam())
@@ -697,10 +704,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				G.move(Direction.UP);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -716,10 +723,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				G.move(Direction.DOWN);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -735,10 +742,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				G.move(Direction.RIGHT);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -754,10 +761,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				G.move(Direction.LEFT);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,"Cannot move to this cell. Target Cell is not empty","Marvel", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -1285,7 +1292,6 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	
 //------------------------------------------Generic after every action -----------------------------------------------
 	
-
 	updateStats();
 	cleanGrid();
 	applieff.setText(getappEffects(G.getCurrentChampion()));

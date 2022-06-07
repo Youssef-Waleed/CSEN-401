@@ -542,10 +542,11 @@ public class Game {
 		if (getCurrentChampion() == secondPlayer.getLeader() && secondLeaderAbilityUsed)
 			throw new LeaderAbilityAlreadyUsedException("This leader already used his ability");
 		ArrayList<Champion> targets = new ArrayList<Champion>();
+		ArrayList<Damageable> torgets = new ArrayList<>();
 		if (getCurrentChampion() instanceof Hero) {
 			ArrayList<Champion> team = getCurrentChampion() == firstPlayer.getLeader() ? firstPlayer.getTeam()
 					: secondPlayer.getTeam();
-			targets.add(getCurrentChampion());
+			
 			for (Champion c : team)
 				targets.add(c);
 		} else if (getCurrentChampion() instanceof AntiHero) {
@@ -566,6 +567,9 @@ public class Game {
 			}
 		}
 		getCurrentChampion().useLeaderAbility(targets);
+		for(Champion c: targets)
+			torgets.add(c);
+		cleanup(torgets);
 		if (getCurrentChampion() == firstPlayer.getLeader())
 			firstLeaderAbilityUsed = true;
 		else if (getCurrentChampion() == secondPlayer.getLeader())
