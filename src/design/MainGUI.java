@@ -1349,6 +1349,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	{
 		JOptionPane.showMessageDialog(null,"Gameover, buddy. it's over go home","Marvel", JOptionPane.WARNING_MESSAGE);
 		gameframe.setVisible(false);
+		audio.pause();
 		new winnerwinnerChickenDinner(G.checkGameOver());
 	}
 	}
