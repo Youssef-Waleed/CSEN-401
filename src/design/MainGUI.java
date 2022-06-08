@@ -85,6 +85,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private static ArrayList<Ability> availableAbilities;
 	private ArrayList<Champion> leadertargs;
 	private int width,height;
+	private Media audio;
 	
 	
 	public static void main(String[] args) {
@@ -156,6 +157,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 	//-----------------------------------------GAME PANEL---------------------------------------------------------	
 		
+		audio = new Media(this.getClass().getResource("/resources/audios/maingame.wav") , true);
+		audio.play();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		width = (int)screenSize.getWidth();
 		height = (int)screenSize.getHeight();
@@ -609,15 +612,15 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		
 		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			toolkit = Toolkit.getDefaultToolkit();
 			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p1cursor.png"));
-			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+			c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
 			gameframe.setCursor (c);
 		}
 		else{
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			toolkit = Toolkit.getDefaultToolkit();
 			Image image = toolkit.getImage(this.getClass().getResource("/resources/icons/p2cursor.png"));
-			Cursor c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
+			c = toolkit.createCustomCursor(image , new Point(gameframe.getX(), gameframe.getY()), "img");
 			gameframe.setCursor (c);
 		}
 			
