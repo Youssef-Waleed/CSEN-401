@@ -68,7 +68,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private ImageIcon icon, tmpico, leaderbordericon= new ImageIcon(this.getClass().getResource("/resources/icons/leadercrown.png"))
 								, defaultbordericon = new ImageIcon(this.getClass().getResource("/resources/icons/defaultborder.png"));
 	private JLabel champ1, champ2, champ3, champ4, champ5, champ6,
-								champ1border, champ2border, champ3border, champ4border,champ5border,champ6border, redteam, blueteam;
+								champ1border, champ2border, champ3border, champ4border,champ5border,champ6border, redteam, blueteam, leaderab1, leaderab2;
 	private JTextArea turnorderT,applieff;
 	private JTextPane ability1stats, stats1;
 	private JPanel info,main, container, current, actions,game, charc, allcontentspane;
@@ -417,9 +417,20 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		doc1.setParagraphAttributes(0, doc1.getLength(), center1, false);
 		stats1.setEditable(false);
 		
+		leaderab1 = new JLabel(G.getFirstPlayer().getName()+"'s Leader Ability: Available");
+		leaderab1.setBounds(610, 0, 500, 50);
+		leaderab1.setFont(new Font("Agency FB", Font.BOLD, 30));
+		leaderab1.setForeground(Color.WHITE);
+		leaderab2 = new JLabel(G.getSecondPlayer().getName()+"'s Leader Ability: Available");
+		leaderab2.setBounds(610, 55, 500, 50);
+		leaderab2.setFont(new Font("Agency FB", Font.BOLD, 30));
+		leaderab2.setForeground(Color.WHITE);
+		
 		current.add(stats1);
 		current.add(ability1stats);
 		current.add(applieff);
+		current.add(leaderab1);
+		current.add(leaderab2);
 		
 		
 	//------------------------------------------------BUTTONS----------------------------------------------------------	
@@ -1151,6 +1162,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				clearHighlight();
 				leadertargs = null;
 				leaderClicked = false;
+				if(G.getFirstPlayer().getLeader() == G.getCurrentChampion())
+					leaderab1.setText(G.getFirstPlayer().getName() + "'s Leader Ability: Used");
+				else
+					leaderab2.setText(G.getSecondPlayer().getName() + "'s Leader Ability: Used");
 			} catch (LeaderNotCurrentException e1) {
 				
 			} catch (LeaderAbilityAlreadyUsedException e1) {
