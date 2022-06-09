@@ -1431,71 +1431,45 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		}	
 		
 			
-//		for(int i =0 ; i<5; i++)
-//			for(int j=0; j<5; j++){
-//				if(e.getSource() == Gridbuttons[i][j] && !(G.getBoard()[i][j] instanceof Cover)&& G.getBoard()[i][j] !=null){
-//						championstats=new JFrame();
-//						String s = getStats((Champion)G.getBoard()[i][j]);
-//						TextArea l = new TextArea(s);
-//						l.setBounds(0,0,400,200);
-//						//championstats.setUndecorated(true);
-//						//int xloc= (MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10 ;
-//						//int yloc= (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5 ;
-//						Point m = MouseInfo.getPointerInfo().getLocation();
-//						championstats.setLocation(m.x, m.y);
-//						championstats.setSize( 400, 200);
-//						championstats.setVisible(true);
-//						championstats.setAlwaysOnTop(true);
-//						championstats.setFocusable(false);
-//						//championstats.setUndecorated(true);
-//						championstats.add(l);
-					
-//					JPanel pp=new JPanel();
-//					pp.setLayout(new FlowLayout(0,1,FlowLayout.LEADING));
-//					
-//					championstats.add(pp, BorderLayout.CENTER);
-//					pp.setBackground(Color.DARK_GRAY);
-//					pp.setOpaque(true);
-//					championstats.setOpacity(0.7f);
-//								
-//					JTextPane chStats = new JTextPane();
-//		
-//					chStats.setText("Stats:");
-//					chStats.setPreferredSize(new Dimension(500,300));
-//					chStats.setFont(new Font("Agency FB", Font.BOLD, 23));
-//					chStats.setBackground(new Color(0x404040));
-//					chStats.setForeground(Color.WHITE);
-//					StyledDocument doc1 = chStats.getStyledDocument();				//Don't mind these here
-//					SimpleAttributeSet center1 = new SimpleAttributeSet();
-//					StyleConstants.setAlignment(center1, StyleConstants.ALIGN_CENTER);
-//					doc1.setParagraphAttributes(0, doc1.getLength(), center1, false);
-//					chStats.setEditable(false);
-//					
-//					
-//					chStats.setText("Stats"+ '\n'+getStats((Champion)G.getBoard()[i][j]));
-//					
-//					
-//					JTextPane appAB = new JTextPane();
-//					appAB.setText("Effects:");
-//					appAB.setPreferredSize(new Dimension(500,300));
-//					appAB.setFont(new Font("Agency FB", Font.BOLD, 23));
-//					appAB.setBackground(new Color(0x404040));
-//					appAB.setForeground(Color.WHITE);
-//					StyledDocument doc = appAB.getStyledDocument();				//Don't mind these here
-//					SimpleAttributeSet center = new SimpleAttributeSet();
-//					StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-//					doc.setParagraphAttributes(0, doc.getLength(), center, false);
-//					appAB.setEditable(false);
-//					appAB.setText("Effects: "+'\n'+ getappEffects((Champion)G.getBoard()[i][j]));
-//					
-//					pp.add(chStats);
-//					pp.add(appAB);		
-//					
-					//championstats.setVisible(true);
-					//championstats.setAlwaysOnTop(true);
-					
-				//}
-			//}
+		for (int i = 0; i < 5; i++)
+			for (int j = 0; j < 5; j++) {
+			  if(e.getSource() == Gridbuttons[i][j])
+				if (!(G.getBoard()[i][j] instanceof Cover) && G.getBoard()[i][j] != null && !alreadyclickedufuckingidiot) {
+					championstats = new JFrame();
+					championstats.setUndecorated(true);
+					championstats.setOpacity(0.9f);
+					String s = getStats((Champion) G.getBoard()[i][j]);
+					String eff = getappEffects((Champion) G.getBoard()[i][j]);
+					TextArea stats = new TextArea(s);
+					TextArea effects = new TextArea(
+							getappEffects((Champion) G.getBoard()[i][j]));
+					stats.setBounds(0, 0, 300, 250);
+					stats.setBackground(new Color(0x404040));
+					effects.setBounds(300, 0, 350, 250);
+					effects.setBackground(new Color(0x404040));
+					// championstats.setUndecorated(true);
+					// int xloc=(MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10;
+					// int yloc= (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5;
+					Point m = MouseInfo.getPointerInfo().getLocation();
+					championstats.setLocation(m.x + 1, m.y + 1);
+					championstats.setSize(650, 250);
+					championstats.setLayout(null);
+					stats.setFont(new Font("Agency FB", Font.BOLD, 18));
+					stats.setBackground(new Color(0x404040));
+					stats.setForeground(Color.WHITE);
+					stats.setEditable(false);
+					effects.setFont(new Font("Agency FB", Font.BOLD, 18));
+					effects.setBackground(new Color(0x404040));
+					effects.setForeground(Color.WHITE);
+					effects.setEditable(false);
+					championstats.setVisible(true);
+					championstats.setAlwaysOnTop(true);
+					// championstats.setFocusable(true);
+					championstats.add(stats);
+					championstats.add(effects);
+					alreadyclickedufuckingidiot = true;
+				}
+			}
 			
 			
 			
@@ -1522,15 +1496,15 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		else
 			if(e.getSource()== ab1){	/*THEN*/ ab1.setText(ab1.getActionCommand());	ability1stats.setText("Ability Details..."+'\n'+'\n'
 														+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");
-														if(ab1.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  clearHighlight();}
+														if(ab1.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  /*clearHighlight()*/;}
 			else if(e.getSource()== ab2){	/*THEN*/ ab2.setText(ab2.getActionCommand());	ability1stats.setText("Ability Details..."+'\n'+'\n'
 														+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");
-														if(ab2.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  clearHighlight();}
+														if(ab2.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  /*clearHighlight()*/;}
 			else if(e.getSource()== ab3){	/*THEN*/ ab3.setText(ab3.getActionCommand());	ability1stats.setText("Ability Details..."+'\n'+'\n'
 														+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");
-														if(ab3.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  clearHighlight();}
+														if(ab3.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  /*clearHighlight()*/;}
 			//else if(e.getSource()== useleaderab /*&& leaderClicked*/) ability1stats.setText("Use your Leader Ability?");
-		if(e.getSource()== useleaderab && !leaderClicked) ability1stats.setText("Ability Details...");
+		if(e.getSource()== useleaderab && !leaderClicked)	/*THEN*/ ability1stats.setText("Ability Details...");
 		if(e.getSource() == attack && !isAttackMode)
 			clearHighlight();
 		
