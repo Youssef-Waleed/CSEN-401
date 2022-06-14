@@ -13,7 +13,7 @@ public class Cover implements Damageable {
 	public Cover(int x, int y) {
 		this.currentHP = (int)(( Math.random() * 900) + 100);
 		location = new Point(x, y);
-		icon = new ImageIcon(this.getClass().getResource("/resources/icons/ProfessionalCover.png"));
+		icon = new ImageIcon("icons/ProfessionalCover.png");
 	}
 
 	public ImageIcon getIcon() {

@@ -649,7 +649,17 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 	
 	
+	
+	
+	
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	//============================================================================================================================================
+	
+	
 	
 	
 	
@@ -721,9 +731,34 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				leadertargs = null;
 				leaderClicked = false;
 			}
-		}
+		}/*TRIAL*/else
 		
+
+
+//--------------------------------------------------- A T T A C K  1-----------------------------------------------------------------
+					
+					
+		if(e.getSource()==attack){
+			castability.setVisible(false);
+			confirmability.setVisible(false);
+			useleaderab.setVisible(false);
+			endturn.setVisible(false);
+			ab1.setVisible(false);
+			ab2.setVisible(false);
+			ab3.setVisible(false);
+			up.setVisible(true);
+			down.setVisible(true);
+			right.setVisible(true);
+			left.setVisible(true);
+			isAttackMode=true;
+			attack.setVisible(false);
+			attack2.setVisible(true);
+		}/*TRIAL*/else
+			
+			
 	//-----------------------------------------UP 	DOWN 	LEFT 	RIGHT--------------------------------------------------------
+		
+		
 		
 		if(e.getSource()==up&&!castIsclicked && !attack2.isVisible())
 		{
@@ -745,7 +780,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    noneed = true;
 			}
 			clearHighlight();
-		}
+		}/*TRIAL*/else
 		if(e.getSource()==down&&!castIsclicked && !attack2.isVisible())
 		{
 			resetbuttons();
@@ -766,7 +801,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    noneed = true;
 			}
 			clearHighlight();
-		}
+		}/*TRIAL*/else
 		if(e.getSource()==right&&!castIsclicked && !attack2.isVisible())
 		{
 			resetbuttons();
@@ -787,7 +822,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    noneed = true;
 			}
 			clearHighlight();
-		}
+		}/*TRIAL*/else
 		if(e.getSource()==left&&!castIsclicked && !attack2.isVisible())
 		{
 			resetbuttons();
@@ -808,7 +843,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			    noneed = true;
 			}
 			clearHighlight();
-		}
+		}/*TRIAL*/else
 		
 		if(e.getSource()==up&&castIsclicked){
 			try {
@@ -849,7 +884,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
-		}
+		}/*TRIAL*/else
 		if(e.getSource()==down&&castIsclicked){
 			try {
 				Ability a = null;
@@ -889,7 +924,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
-		}
+		}/*TRIAL*/else
 		
 		if(e.getSource()==right&&castIsclicked){
 			try {
@@ -930,7 +965,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
-		}
+		}/*TRIAL*/else
 		
 		if(e.getSource()==left&&castIsclicked){
 			try {
@@ -971,7 +1006,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 			}
-		}
+		}/*TRIAL*/else
 		
 
 		if(e.getSource()==up && attack2.isVisible()){
@@ -988,11 +1023,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			}catch(NullPointerException | ArrayIndexOutOfBoundsException npe){
+				JOptionPane.showMessageDialog(null,"Target is invalid. Cannot attack outside the board.","Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			clearHighlight();
 			resetbuttons();
 			updateStats();
-		}
+		}/*TRIAL*/else
 		
 		if(e.getSource()==down && attack2.isVisible()){
 			try {
@@ -1008,11 +1045,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			}catch(NullPointerException | ArrayIndexOutOfBoundsException npe){
+				JOptionPane.showMessageDialog(null,"Target is invalid. Cannot attack outside the board.","Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			clearHighlight();
 			resetbuttons();
 			updateStats();
-		}
+		}/*TRIAL*/else
 		
 
 		if(e.getSource()==right && attack2.isVisible()){
@@ -1029,11 +1068,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			}catch(NullPointerException | ArrayIndexOutOfBoundsException npe){
+				JOptionPane.showMessageDialog(null,"Target is invalid. Cannot attack outside the board.","Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			clearHighlight();
 			resetbuttons();
 			updateStats();
-		}
+		}/*TRIAL*/else
 		
 
 		if(e.getSource()==left && attack2.isVisible()){
@@ -1050,11 +1091,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+			}catch(NullPointerException | ArrayIndexOutOfBoundsException npe){
+				JOptionPane.showMessageDialog(null,"Target is invalid. Cannot attack outside the board.","Marvel", JOptionPane.WARNING_MESSAGE);
 			}
 			clearHighlight();
 			resetbuttons();
 			updateStats();
-		}
+		}/*TRIAL*/else
 		
 	//===============================================================================================================================================
 														// CASTABILITY
@@ -1103,7 +1146,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			
 		    
 		}
-	}
+	}/*TRIAL*/else
 		
 		
 	//---------------------------------------------THE THREE ABILITIESSSS BUTTON----------------------------------------------------------------------
@@ -1134,7 +1177,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		else if((e.getSource()== ab1 || e.getSource()== ab2 || e.getSource()== ab3)){
 			((JButton)e.getSource()).setBackground(Color.DARK_GRAY);
 			clearHighlight();
-			}
+		}/*TRIAL*/else
+		
+		
 	//---------------------------------------------THE CONFIRM ABILITYY BUTTON----------------------------------------------------------------------
 		
 		
@@ -1144,7 +1189,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 																&& ab3.getBackground() != Color.GREEN){
 			JOptionPane.showMessageDialog(null,"Please Choose an Ability","Marvel", JOptionPane.WARNING_MESSAGE);
 			return;
-		}
+		}/*TRIAL*/else
 		
 		if(e.getSource()== confirmability){
 			confirmability.setVisible(false);
@@ -1214,7 +1259,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				ab2.setVisible(false);
 				ab3.setVisible(false);
 			}
-		}
+		}/*TRIAL*/else
 		
 		if(e.getSource()==confirmleaderab && leaderClicked){
 			try {
@@ -1239,7 +1284,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 				
 			}
-		}
+		}/*TRIAL*/else/*TRIAL*/{
 		
 		
 	//--------------------------------------------GRIDBUTTONS-------------------------------------------------------------
@@ -1322,33 +1367,34 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 						}
 				
 			}
+
 		
-//--------------------------------------------------- A T T A C K-----------------------------------------------------------------
+//--------------------------------------------------- A T T A C K  2-----------------------------------------------------------------
 		
 		
-		if(e.getSource()==attack){
-			castability.setVisible(false);
-			confirmability.setVisible(false);
-			useleaderab.setVisible(false);
-			endturn.setVisible(false);
-			ab1.setVisible(false);
-			ab2.setVisible(false);
-			ab3.setVisible(false);
-			up.setVisible(true);
-			down.setVisible(true);
-			right.setVisible(true);
-			left.setVisible(true);
-			isAttackMode=true;
-			attack.setVisible(false);
-			attack2.setVisible(true);
-		}
+//		if(e.getSource()==attack){
+//			castability.setVisible(false);
+//			confirmability.setVisible(false);
+//			useleaderab.setVisible(false);
+//			endturn.setVisible(false);
+//			ab1.setVisible(false);
+//			ab2.setVisible(false);
+//			ab3.setVisible(false);
+//			up.setVisible(true);
+//			down.setVisible(true);
+//			right.setVisible(true);
+//			left.setVisible(true);
+//			isAttackMode=true;
+//			attack.setVisible(false);
+//			attack2.setVisible(true);
+//		}/*TRIAL*/else
 		if(e.getSource()==attack2){
 			clearHighlight();
 			resetbuttons();
 			attack.setVisible(true);
 			attack2.setVisible(false);
 			
-		}
+		}/*TRIAL*/else
 		
 		
 //------------------------------------------------E N D I N G   T U R N------------------------------------------------------------------
@@ -1389,6 +1435,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //			gameframe.setCursor (c);
 //		}
 	}
+	
+/*TRIAL*/}
 	
 	
 //------------------------------------------Generic after every action -----------------------------------------------
@@ -2002,7 +2050,6 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	}
 	
 	private void highlight(Ability a, AreaOfEffect e){
-		System.out.println("high");
 		System.out.println("highlight");
 		int oldaction = G.getCurrentChampion().getCurrentActionPoints();
 		int oldmana = G.getCurrentChampion().getMana();
