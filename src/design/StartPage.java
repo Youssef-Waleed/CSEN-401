@@ -22,7 +22,7 @@ public class StartPage implements ActionListener,
 	private JButton startbt;
 	private JPanel pane;
 	private JLabel marvel, marvelgif, teamlogo;
-	private Media audio, intro;
+	private Media audio, intro,record;
 	private int width , height, tMode=1;
 	private static boolean loop = true;
 	private Timer timer;
@@ -34,16 +34,17 @@ public class StartPage implements ActionListener,
         
         
 		
-		ImageIcon icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
-		ImageIcon bkground= new ImageIcon(this.getClass().getResource("/resources/icons/Marvelstart.png"));
-		ImageIcon logo = new ImageIcon(this.getClass().getResource("/resources/icons/team-logo.png"));
+		ImageIcon icon = new ImageIcon("icons/Marvel_Logo.png");
+		ImageIcon bkground= new ImageIcon("icons/Marvelstart.png");
+		ImageIcon logo = new ImageIcon("icons/team-logo.png");
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		width = (int)screenSize.getWidth();
 		height = (int)screenSize.getHeight();
 		
-		audio = new Media(this.getClass().getResource("/resources/audios/startpage-theme.wav") , loop);
-		intro = new Media(this.getClass().getResource("/resources/audios/intro-music.wav") , !loop);
+		audio = new Media("audios/startpage-theme.wav" , loop);
+		record = new Media("audios/yt1s (mp3cut.net) - Copy.wav" ,!loop);
+		intro = new Media("audios/intro-music.wav" , !loop);
 		intro.play();
 		startwindow = new JFrame();
 		
@@ -131,7 +132,7 @@ public class StartPage implements ActionListener,
 		
 		marvel.setBounds(0, 0, width, height);
 		
-		marvelgif.setIcon(new ImageIcon(this.getClass().getResource("/resources/icons/marvel-comics.gif")));
+		marvelgif.setIcon(new ImageIcon("icons/marvel-comics.gif"));
 		marvelgif.setPreferredSize(new Dimension( 550, 206));
 		marvelgif.setHorizontalAlignment(JLabel.CENTER);
 		marvelgif.setOpaque(true);
@@ -180,6 +181,7 @@ public class StartPage implements ActionListener,
 	public void actionPerformed(ActionEvent e) {
 		selectScreen m = new selectScreen();
 		audio.pause();
+		record.play();
 		//startwindow.dispatchEvent(new WindowEvent(startwindow, WindowEvent.WINDOW_CLOSING));
 		startwindow.setVisible(false);
 

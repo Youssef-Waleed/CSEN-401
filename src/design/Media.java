@@ -14,16 +14,26 @@ import javax.swing.JPanel;
     	//private File file;
     	private Clip clip;
     	private URL path;
+    	private String path2;
+    	private File file;
     	private boolean loop;
 
     	public Media(URL path, boolean loop){
     		this.path=path;
     		this.loop=loop;
     	}
+    	public Media(String path, boolean loop){
+    		this.path2=path;
+    		file =  new File(path2);
+    		this.loop=loop;
+    	}
         public void play() {
             try {
-            	//file = new File(path);
-            	AudioInputStream sound =AudioSystem.getAudioInputStream(path); 
+            	AudioInputStream sound;
+            	if(file==null)
+            		sound =AudioSystem.getAudioInputStream(path); 
+            	else
+            		sound =AudioSystem.getAudioInputStream(file); 
                 clip = AudioSystem.getClip();
                 clip.open(sound);
                 if(loop)
@@ -49,18 +59,18 @@ import javax.swing.JPanel;
         public static void main(String[] args){
 //
 //
-//        JFrame f = new JFrame();
-//        JPanel p = new JPanel();
-//        JLabel l = new JLabel();
-//        ImageIcon icon = new ImageIcon("left-arrow.png");    
-//        f.setSize(480, 360);
-//        f.setVisible(true);
-//        l.setIcon(icon);
-//        p.add(l);
-//        f.getContentPane().add(p);
-//        f.setLocationRelativeTo(null);
-//        f.setResizable(false);
-//        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame f = new JFrame();
+        JPanel p = new JPanel();
+        JLabel l = new JLabel();
+        ImageIcon icon = new ImageIcon("icons/left-arrow.png");    
+        f.setSize(480, 360);
+        f.setVisible(true);
+        l.setIcon(icon);
+        p.add(l);
+        f.getContentPane().add(p);
+        f.setLocationRelativeTo(null);
+        f.setResizable(false);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		  Media audio = new Media();
 //          audio.play();
 

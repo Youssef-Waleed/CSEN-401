@@ -49,7 +49,7 @@ private boolean playing=false;
 		window.setLocation(1920/2-width/2,0);
 		window.setResizable(false);
 		
-		creditsong= new Media(this.getClass().getResource("/resources/audios/starwars-theme.wav") , false);
+		creditsong= new Media("audios/starwars-theme.wav" , false);
 		JLabel text =  new JLabel();
 		JLabel backround = new JLabel();
 		creditsicon = new JLabel();
@@ -85,7 +85,7 @@ private boolean playing=false;
 		+'\n'+ "This game was presented to you by the Developers..."+'\n'+ '\n'+'\n'
 					+ "Youssef Walid Ibrahim"+'\n'+ '\n'+ "Mohamed Ayman Tammaa"+'\n'+'\n'
 					+ ",and the great to the end,"+'\n'+"Mahmoud Gamal (The Greek-Kopis)"+'\n' +'\n'+'\n'+'\n'
-					+ "We would like to thank our sponsors and the respective Copyright Holders"+'\n'+ " "+(char)169+"Marvel & "+(char)169+ "StarWars"+
+					+ "We want to thank our sponsors and the respective Copyright Holders"+'\n'+ " "+(char)169+"Marvel & "+(char)169+ "StarWars"+
 					'\n'+'\n'+'\n'+'\n'+'\n'+ ((char)169)+"TEAM-177_ULTIMATE WAR 2022"+'\n'+ '\n'+ "THANK YOU!");
 		
 		credits.setFont(new Font("", Font.BOLD, 80));
@@ -105,7 +105,7 @@ private boolean playing=false;
 		creditspane.add(credits);
 		
 		
-		ImageIcon icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
+		ImageIcon icon = new ImageIcon("icons/Marvel_Logo.png");
 		window.setIconImage(icon.getImage());
 		window.setTitle("Marvel: Ultimate War credits");
 
@@ -149,7 +149,7 @@ private boolean playing=false;
 		text.setFont(new Font("Agency FB", Font.BOLD, 50));
 		text.setForeground(Color.WHITE);
 		text.setBackground(null);
-		ImageIcon bkground= new ImageIcon(this.getClass().getResource("/resources/icons/unknown.png"));
+		ImageIcon bkground= new ImageIcon("icons/unknown.png");
 		
 		backround.setBounds(0, 0, width, height);
 		backround.setIcon(new ImageIcon(bkground.getImage().getScaledInstance(width, height,Image.SCALE_SMOOTH)));

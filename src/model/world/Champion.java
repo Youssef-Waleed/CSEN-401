@@ -43,7 +43,7 @@ public abstract class Champion implements Damageable,Comparable {
 		this.abilities = new ArrayList<Ability>();
 		this.appliedEffects = new ArrayList<Effect>();
 		this.currentActionPoints=maxActionPointsPerTurn;
-		this.icon = new ImageIcon(this.getClass().getResource("/resources/icons/"+name+".png"));
+		this.icon = new ImageIcon("icons/"+name+".png");
 	}
 
 	public ImageIcon getIcon() {

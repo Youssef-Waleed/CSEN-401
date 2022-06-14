@@ -48,8 +48,8 @@ import model.world.Villain;
 	private int count = 0;
 	private String t1,t2 = "";
 	private JTextArea team1,team2,ability1stats,ability2stats = new JTextArea("");
-	private ImageIcon icon, selbkground, leaderbordericon= new ImageIcon(this.getClass().getResource("/resources/icons/leadercrown.png"))
-	, defaultbordericon = new ImageIcon(this.getClass().getResource("/resources/icons/defaultborder.png"));
+	private ImageIcon icon, selbkground, leaderbordericon= new ImageIcon("icons/leadercrown.png")
+	, defaultbordericon = new ImageIcon("icons/defaultborder.png");
 	private JTextField name1,name2;
 	private JFrame selectframe;
 	private JPanel select, loading =new JPanel();;
@@ -61,7 +61,7 @@ import model.world.Villain;
 	private String[] names1, names2;
 	private JLabel strips, ld1b, ld2b, ch1b, ch2b, ch3b, ch4b, ld1, ld2, ch1, ch2, ch3, ch4,
 							loadingframe, loadingbar, marvelLogo;
-	private Media theme;
+	private Media theme, record;
 	private Timer timer;
 	private ActionListener al;
 	private Player p1,p2;
@@ -73,12 +73,14 @@ import model.world.Villain;
 	
 	public selectScreen(){
 		
+		record = new Media("audios/transition.wav" ,false);
+		
 		temp1 = new ArrayList<Champion>();
 		temp2 = new ArrayList<Champion>();
 
 		
-		icon = new ImageIcon(this.getClass().getResource("/resources/icons/Marvel_Logo.png"));
-		theme = new Media(this.getClass().getResource("/resources/audios/selectpage-theme.wav") , true);
+		icon = new ImageIcon("icons/Marvel_Logo.png");
+		theme = new Media("audios/selectpage-theme.wav" , true);
 		theme.play();
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -144,6 +146,7 @@ import model.world.Villain;
 									if(loadingbar.getSize().width== 500){
 										MainGUI newgame = new MainGUI(new Game(p1,p2));
 										theme.pause();
+										record.play();
 										selectframe.setVisible(false);
 										timer.stop();
 									}
@@ -158,7 +161,7 @@ import model.world.Villain;
 		
 		
 		
-		selbkground = new ImageIcon(this.getClass().getResource("/resources/icons/SelectBackground.jpg"));
+		selbkground = new ImageIcon("icons/SelectBackground.jpg");
 		selectframe = new JFrame();
 		selectframe.setTitle("Character Select");
 		selectframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -415,7 +418,7 @@ import model.world.Villain;
 		//System.out.println("HAHAHAHA");
 		if(e.getSource()==(startGame))
 		{
-			boolean alldone = false;
+			//boolean alldone = false;
 			if(!name1.getText().equals("") && !name2.getText().equals("") && !(name1.getForeground()==Color.gray) && !(name2.getForeground()==Color.gray)){
 				p1 = new Player(name1.getText());
 				p2 = new Player(name2.getText());
