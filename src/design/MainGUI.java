@@ -33,6 +33,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputListener;
@@ -60,32 +62,36 @@ import exceptions.UnallowedMovementException;
 
 
 public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
+	private int width=(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(),height= (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	private JFrame gameframe, championstats= new JFrame();
 	private boolean castIsclicked=false, isAttackMode= false, leaderClicked = false,alreadyclickedufuckingidiot = false,noneed;
 	private Game G;
-	private Color asfarika = new Color(251, 252, 136), a7marika = new Color(0xE8ADAD), azra2ika= new Color(0xADC5E8);
+	private Color asfarika = new Color(251, 252, 136,150), a7marika = new Color(232, 173, 173,180), azra2ika= new Color(173, 197, 232, 180);
 	private ArrayList<Damageable> targets;
 	private ImageIcon icon, tmpico, leaderbordericon= new ImageIcon("icons/leadercrown.png")
-								, defaultbordericon = new ImageIcon("icons/defaultborder.png");
-	private JLabel champ1, champ2, champ3, champ4, champ5, champ6,
+								, defaultbordericon = new ImageIcon("icons/defaultborder.png")
+	,bkgimg= new ImageIcon(new ImageIcon("icons/game-background.jpg").getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH)) ;
+	private JLabel gamebackground, champ1, champ2, champ3, champ4, champ5, champ6,
 								champ1border, champ2border, champ3border, champ4border,champ5border,champ6border, redteam, blueteam, leaderab1, leaderab2;
 	private JTextArea turnorderT,applieff;
 	private JTextPane ability1stats, stats1;
-	private JPanel info,main, container, current, actions,game, charc, allcontentspane;
+	private JPanel info,main, container, current, actions,charc;
+	private JLayeredPane game,  bkg;
 	private JButton up,down,right,left,attack,attack2,castability,useleaderab,endturn ,ab1 =new JButton() ,ab2=new JButton() ,ab3=new JButton(), confirmability, confirmleaderab
 				/*,b11,b12,b13,b14,b15,
 					b21,b22,b23,b24,b25,
 					b31,b32,b33,b34,b35,
 					b41,b42,b43,b44,b45,
 					b51,b52,b53,b54,b55*/;
-	private JButton[][] Gridbuttons;
+	private JLabel[][] Gridbuttons;
 	private Toolkit toolkit;
 	private Cursor c;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	private ArrayList<Champion> leadertargs;
-	private int width,height;
 	private Media audio , record;
+	private Timer timer1;
+	private ActionListener al;
 	
 	
 	public static void main(String[] args) {
@@ -118,6 +124,42 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		p2.getTeam().add(availableChampions.get(4));
 		p2.getTeam().add(availableChampions.get(5));
 		MainGUI bla = new MainGUI(new Game( p1 , p2 ));
+		
+		
+//		JFrame test = new JFrame();
+//		test.setSize(700,700);
+//		test.setLayout(null);
+//		JLabel lll= new JLabel(new ImageIcon(new ImageIcon("icons/Loki.png").getImage().getScaledInstance(700, 300, Image.SCALE_SMOOTH)));JLabel pic = new JLabel(new ImageIcon(new ImageIcon("icons/game-background.jpg").getImage().getScaledInstance(700, 700, Image.SCALE_SMOOTH)));
+//		lll.setText("bla bla");
+//		lll.setPreferredSize(new Dimension(700,400));
+//		lll.setFont(new Font("", Font.BOLD, 39));
+//		lll.setHorizontalAlignment(JLabel.CENTER);
+//		lll.setForeground(Color.WHITE);
+//		lll.setOpaque(true);
+//		lll.setBackground(new Color(255,255,55,0));
+//		lll.setBorder(BorderFactory.createLineBorder(Color.GREEN, 4));
+//		lll.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//		
+//		lll.addMouseListener(new MouseListener() {
+//			
+//			@Override
+//			public void mouseReleased(MouseEvent arg0) {
+//				
+//				System.out.println("Hello");
+//			}@Override public void mousePressed(MouseEvent arg0) {}@Override public void mouseExited(MouseEvent arg0) {}@Override public void mouseEntered(MouseEvent arg0) {}@Override public void mouseClicked(MouseEvent arg0) {}
+//		});
+//		JPanel ppp= new JPanel();
+//		JPanel ppp2= new JPanel();
+//		ppp.setBounds(0,0,700,700);
+//		ppp2.setBackground(new Color(255,255,255,0));
+//		ppp2.setBounds(0,150,700,700);
+//		
+//		test.add(ppp2);
+//		test.add(ppp);
+//		ppp.add(pic);
+//		ppp2.add(lll);
+//		test.setVisible(true);
+//		test.validate();
 	}
 	
 	public MainGUI(Game newGame){
@@ -141,6 +183,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		record = new Media("audios/transition.wav" ,false);
 		G = newGame;
 		targets = new ArrayList<Damageable>();
+		
 		
 //			||===============================================||
 //			||		 ----------------------					 ||
@@ -174,10 +217,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		ImageIcon leadicon = new ImageIcon("icons/wizard.png");
 		
 		
+		
 		gameframe = new JFrame();
 		gameframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		gameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameframe.setLayout(new BorderLayout());
+		gameframe.setLayout(new BorderLayout()/*null*/ );
 		gameframe.setSize(width+1, height);
 		gameframe.setLocation(1920/2-width/2,0);
 		//gameframe.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
@@ -186,15 +230,20 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		gameframe.addMouseListener(this);
 		JLabel l = new JLabel("i work");
 		l.setBounds(0,0,90,10);
-		gameframe.add(l);
+		//gameframe.add(l);
+		
+		game = new JLayeredPane();
+		game.setBounds(0, 0, width, height);
+		game.setLayout(new BorderLayout());
+		game.setOpaque(true);
+		game.setBackground(new Color(0,0,255,0));
+		game.setVisible(true);
+		
+		
+		
 		
 //========================================================================================================================
 		//											PANELS
-		
-		game = new JPanel();
-		game.setBounds(0, 0, width, height);
-		game.setLayout(new BorderLayout());
-		game.setVisible(true);
 		
 		
 		main = new JPanel();			//the new Panels
@@ -203,6 +252,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		laylay.setVgap(5);
 		main.setLayout(laylay);
 		main.setVisible(true);
+		main.setOpaque(true);
+		main.setBackground(new Color(0,0,0,0));
+		main.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		
 		info = new JPanel();
 		info.setBackground(new Color(0xBB381D));
@@ -237,13 +289,22 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		info.add(charc,BorderLayout.CENTER);
 		
 		
+		bkg= new JLayeredPane();
+		bkg.setLayout(null);
+		bkg.setBounds(0, 0, width, height);
+		
+		
 		game.add(current, BorderLayout.SOUTH);
 		game.add(main, BorderLayout.CENTER);
 		game.add(container, BorderLayout.EAST);
 		
 		container.add(actions, BorderLayout.SOUTH);
 		container.add(info, BorderLayout.CENTER);
-		gameframe.add(game, BorderLayout.CENTER);
+		
+		game.setBounds(0, 0, width, height);
+		bkg.setBounds(0, 0, width, height);
+		gameframe.add(bkg, BorderLayout.CENTER);
+		bkg.add(game, Integer.valueOf(99));
 		
 		
 	//------------------------------------------------LABELS----------------------------------------------------------	
@@ -312,6 +373,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		blueteam.setOpaque(true);
 		blueteam.setBackground(azra2ika);
 		blueteam.setBounds(200, 0, 200, 600);
+		
+		gamebackground = new JLabel(new ImageIcon(bkgimg.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH)));
+		gamebackground.setBounds(0,0,width,height);
+		gameframe.getContentPane().add(gamebackground, BorderLayout.CENTER);
 			
 		charc.add(champ1);
 		charc.add(champ2);
@@ -603,15 +668,22 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		
 		
-		Gridbuttons = new JButton[5][5];
+		Gridbuttons = new JLabel[5][5];
 		for(int i =4; i>=0; i--)
 			for(int j =0; j<5; j++){
-				Gridbuttons[i][j]= new JButton();
+				Gridbuttons[i][j]= new JLabel();
 				Gridbuttons[i][j].setFont(new Font("Comic Sans MS", Font.BOLD, 13));
+				Gridbuttons[i][j].setForeground(Color.WHITE);
 				Gridbuttons[i][j].setVerticalTextPosition(JLabel.BOTTOM);
 				Gridbuttons[i][j].setHorizontalTextPosition(JLabel.CENTER);
+				Gridbuttons[i][j].setHorizontalAlignment(JLabel.CENTER);
+				Gridbuttons[i][j].setVerticalAlignment(JLabel.CENTER);
+				Gridbuttons[i][j].setOpaque(true);
+				Gridbuttons[i][j].setBackground(new Color(0,0,0,0));
 				Gridbuttons[i][j].setFocusable(false);
-				Gridbuttons[i][j].addActionListener(this);
+				Gridbuttons[i][j].setCursor(new Cursor(Cursor.HAND_CURSOR));
+				Gridbuttons[i][j].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 3));
+				//Gridbuttons[i][j].addActionListener(this);
 				Gridbuttons[i][j].addMouseListener(this);
 				//Gridbuttons[i][j].setBackground(new Color(0xA2CCE8));
 				Object[][] board = G.getBoard();
@@ -622,7 +694,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				main.add(Gridbuttons[i][j]);
 			}
 		
-		
+
+		main.setOpaque(true);
+		main.setBackground(new Color(0,0,0,0));
 		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
 			toolkit = Toolkit.getDefaultToolkit();
 			Image image = toolkit.getImage("icons/p1cursor.png");
@@ -643,8 +717,23 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		gameframe.revalidate();
 		
 		updateStats();
+		
 
-		}
+			al=new ActionListener() { public void actionPerformed(ActionEvent ae) {
+
+				gameframe.revalidate();
+				gamebackground.setIcon(null);
+				gamebackground.setIcon(bkgimg);
+		
+			}
+			};
+
+
+		timer1 = new Timer(1, al);
+		//timer.setInitialDelay(500);
+		timer1.start();
+
+	}
 
 
 	
@@ -809,6 +898,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
 			try {
 				G.move(Direction.RIGHT);
+				System.out.println("hehehehehe");
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
@@ -830,6 +920,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			System.out.println(G.getCurrentChampion().getLocation().x +" "+ G.getCurrentChampion().getLocation().y);
 			try {
 				G.move(Direction.LEFT);
+				System.out.println("hehehehehe");
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
@@ -1010,15 +1101,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 
 		if(e.getSource()==up && attack2.isVisible()){
+			ArrayList<Damageable> targets = null;
 			try {
-				G.attack(Direction.UP);
+				targets = G.attack(Direction.UP);
 				Object[][] board = G.getBoard();
-				if(board[G.getCurrentChampion().getLocation().x+1][G.getCurrentChampion().getLocation().y] instanceof Cover){
-					((Cover)board[G.getCurrentChampion().getLocation().x+1][G.getCurrentChampion().getLocation().y]).setIcon(new ImageIcon("icons/ProfessionalCover.png"));
-					//Gridbuttons[G.getCurrentChampion().getLocation().x+1][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
+				if(targets.get(0) instanceof Cover){
+					((Cover)targets.get(0)).setIcon(new ImageIcon("icons/ProfessionalCover.png"));
+					Gridbuttons[targets.get(0).getLocation().x][targets.get(0).getLocation().y].setIcon( new ImageIcon((((Cover)targets.get(0)).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 				}
-				ArrayList<Damageable> targets = new ArrayList<Damageable>();
-				targets.add((Damageable)board[G.getCurrentChampion().getLocation().x+1][G.getCurrentChampion().getLocation().y]);
+				
+				//targets.add((Damageable)board[G.getCurrentChampion().getLocation().x+1][G.getCurrentChampion().getLocation().y]);
 				cleanGrid(targets);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
@@ -1032,15 +1124,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		}/*TRIAL*/else
 		
 		if(e.getSource()==down && attack2.isVisible()){
+			ArrayList<Damageable> targets = null;
 			try {
-				G.attack(Direction.DOWN);
+				targets = G.attack(Direction.DOWN);
 				Object[][] board = G.getBoard();
-				if(board[G.getCurrentChampion().getLocation().x-1][G.getCurrentChampion().getLocation().y] instanceof Cover){
-					((Cover)board[G.getCurrentChampion().getLocation().x-1][G.getCurrentChampion().getLocation().y]).setIcon(new ImageIcon("icons/ProfessionalCover.png"));
-					//Gridbuttons[G.getCurrentChampion().getLocation().x-1][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
+				if(targets.get(0) instanceof Cover){
+					((Cover)targets.get(0)).setIcon(new ImageIcon("icons/ProfessionalCover.png"));
+					Gridbuttons[targets.get(0).getLocation().x][targets.get(0).getLocation().y].setIcon( new ImageIcon((((Cover)targets.get(0)).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 				}
-				ArrayList<Damageable> targets = new ArrayList<Damageable>();
-				targets.add((Damageable)board[G.getCurrentChampion().getLocation().x-1][G.getCurrentChampion().getLocation().y]);
+				
+				//targets.add((Damageable)board[G.getCurrentChampion().getLocation().x-1][G.getCurrentChampion().getLocation().y]);
 				cleanGrid(targets);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
@@ -1055,15 +1148,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 
 		if(e.getSource()==right && attack2.isVisible()){
+			ArrayList<Damageable> targets = null;
 			try {
-				G.attack(Direction.RIGHT);
+				targets = G.attack(Direction.RIGHT);
 				Object[][] board = G.getBoard();
-				if(board[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y+1] instanceof Cover){
-					((Cover)board[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y+1]).setIcon(new ImageIcon("icons/ProfessionalCover.png"));
-					//Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y+1].setIcon(new ImageIcon(((Cover)board[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y+1]).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
+				if(targets.get(0) instanceof Cover){
+					((Cover)targets.get(0)).setIcon(new ImageIcon("icons/ProfessionalCover.png"));
+					Gridbuttons[targets.get(0).getLocation().x][targets.get(0).getLocation().y].setIcon( new ImageIcon((((Cover)targets.get(0)).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 				}
-				ArrayList<Damageable> targets = new ArrayList<Damageable>();
-				targets.add((Damageable)board[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y+1]);
+				
+				//targets.add((Damageable)board[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y+1]);
 				cleanGrid(targets);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
@@ -1078,15 +1172,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 
 		if(e.getSource()==left && attack2.isVisible()){
+			ArrayList<Damageable> targets = null;
 			try {
-				G.attack(Direction.LEFT);
+				targets = G.attack(Direction.LEFT);
 				Object[][] board = G.getBoard();
-				if(board[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y-1] instanceof Cover){
-					((Cover)board[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y-1]).setIcon(new ImageIcon("icons/ProfessionalCover.png"));
-					//Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y-1].setIcon(new ImageIcon(((Cover)board[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y-1]).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
+				if(targets.get(0) instanceof Cover){
+					((Cover)targets.get(0)).setIcon(new ImageIcon("icons/ProfessionalCover.png"));
+					Gridbuttons[targets.get(0).getLocation().x][targets.get(0).getLocation().y].setIcon( new ImageIcon((((Cover)targets.get(0)).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
 				}
-				ArrayList<Damageable> targets = new ArrayList<Damageable>();
-				targets.add((Damageable)board[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y-1]);
+				
+				//targets.add((Damageable)board[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y-1]);
 				cleanGrid(targets);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
@@ -1211,7 +1306,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				down.setVisible(true);
 				right.setVisible(true);
 				left.setVisible(true);
-				clearHighlight();
+				//clearHighlight();
 				//highlight(a, AreaOfEffect.DIRECTIONAL);	wtf is this?
 			}
 			else if(a.getCastArea() == AreaOfEffect.SELFTARGET || a.getCastArea() == AreaOfEffect.TEAMTARGET || a.getCastArea() == AreaOfEffect.SURROUND){
@@ -1284,89 +1379,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
 				
 			}
-		}/*TRIAL*/else/*TRIAL*/{
+		}/*TRIAL*/else
 		
 		
-	//--------------------------------------------GRIDBUTTONS-------------------------------------------------------------
-		for(int i =0 ; i<5; i++)
-			for(int j=0; j<5; j++){
-				if(e.getSource() == Gridbuttons[i][j])
-					if(castIsclicked){
-						Ability a = null;
-						if(ab1.getBackground()== Color.GREEN){
-							a=G.getCurrentChampion().getAbilities().get(0);
-						} else if(ab2.getBackground()== Color.GREEN){
-							a=G.getCurrentChampion().getAbilities().get(1);
-						}else if(ab3.getBackground()== Color.GREEN){
-							a=G.getCurrentChampion().getAbilities().get(2);
-						}
-						if(a.getCastArea() == AreaOfEffect.SINGLETARGET)
-							try {
-								targets=G.castAbility(a, i, j);
-								G.FinishHim(targets, a);
-								for(Damageable d: targets)
-								{
-									Object[][] board = G.getBoard();
-									if(board[d.getLocation().x][d.getLocation().y] instanceof Cover){
-										((Cover)board[d.getLocation().x][d.getLocation().y]).setIcon(new ImageIcon("icons/ProfessionalCover.png"));
-									}
-								}
-								cleanGrid(targets);
-								resetbuttons();
-								castIsclicked=false;
-								ability1stats.setText("Ability applied...");
-								ab1.setVisible(false);
-								ab2.setVisible(false);
-								ab3.setVisible(false);
-								up.setVisible(true);
-								down.setVisible(true);
-								right.setVisible(true);
-								left.setVisible(true);
-								attack.setVisible(true);
-								useleaderab.setVisible(true);
-								endturn.setVisible(true);
-								castability.setBackground(null);
-								clearHighlight();
-							} catch (CloneNotSupportedException | NotEnoughResourcesException 
-									| AbilityUseException | InvalidTargetException e1) {
-								JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
-							}
-					}
-					else if(!(G.getBoard()[i][j] instanceof Cover)&& G.getBoard()[i][j] !=null && !alreadyclickedufuckingidiot){
-							championstats=new JFrame();
-							championstats.setUndecorated(true);
-				            String s = getStats((Champion)G.getBoard()[i][j]);
-				            String eff = getappEffects((Champion)G.getBoard()[i][j]);
-				            TextArea stats = new TextArea(s);
-				            TextArea effects = new TextArea(getappEffects((Champion) G.getBoard()[i][j]));
-							stats.setBounds(0,0,300,250);
-							stats.setBackground(new Color(0x404040));
-							effects.setBounds(300,0,350,250);
-							effects.setBackground(new Color(0x404040));
-							//championstats.setUndecorated(true);
-							//int xloc= (MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10 ;
-							//int yloc= (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5 ;
-							Point m = MouseInfo.getPointerInfo().getLocation();
-							championstats.setLocation(m.x+1, m.y+1);
-							championstats.setSize(650, 250);
-							championstats.setLayout(null);
-							stats.setFont(new Font("Agency FB", Font.BOLD, 18));
-							stats.setBackground(new Color(0x404040));
-							stats.setForeground(Color.WHITE);
-							stats.setEditable(false);
-							effects.setFont(new Font("Agency FB", Font.BOLD, 18));
-							effects.setBackground(new Color(0x404040));
-							effects.setForeground(Color.WHITE);
-							effects.setEditable(false);
-							championstats.setVisible(true);
-							championstats.setAlwaysOnTop(true);
-							//championstats.setFocusable(true);
-							championstats.add(stats);
-							championstats.add(effects);
-							alreadyclickedufuckingidiot = true;
-						}
-				
-			}
+	
 
 		
 //--------------------------------------------------- A T T A C K  2-----------------------------------------------------------------
@@ -1436,13 +1452,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //		}
 	}
 	
-/*TRIAL*/}
+
 	
 	
 //------------------------------------------Generic after every action -----------------------------------------------
 	
 	updateStats();
-	cleanGrid();
+	//cleanGrid();
 	applieff.setText(getappEffects(G.getCurrentChampion()));
 	System.out.println("it should work");
 	
@@ -1468,7 +1484,12 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		gameframe.setVisible(false);
 		new winnerwinnerChickenDinner(G.checkGameOver());
 	}
-	}
+	
+
+	gameframe.revalidate();
+	gamebackground.setIcon(null);
+	gamebackground.setIcon(bkgimg);
+}
 	
 	
 	
@@ -1546,77 +1567,56 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				ability1stats.setText(temp+'\n'+'\n'+ "Confirming will stun ALL Champions on the board for 2 turns EXCEPT for the Leaders of each team.");
 		}	
 		
-			
-//		for(int i =0 ; i<5; i++)
-//			for(int j=0; j<5; j++){
-//				if(e.getSource() == Gridbuttons[i][j] && !(G.getBoard()[i][j] instanceof Cover)&& G.getBoard()[i][j] !=null){
-//						championstats=new JFrame();
-//						String s = getStats((Champion)G.getBoard()[i][j]);
-//						TextArea l = new TextArea(s);
-//						l.setBounds(0,0,400,200);
-//						//championstats.setUndecorated(true);
-//						//int xloc= (MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10 ;
-//						//int yloc= (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5 ;
-//						Point m = MouseInfo.getPointerInfo().getLocation();
-//						championstats.setLocation(m.x, m.y);
-//						championstats.setSize( 400, 200);
-//						championstats.setVisible(true);
-//						championstats.setAlwaysOnTop(true);
-//						championstats.setFocusable(false);
-//						//championstats.setUndecorated(true);
-//						championstats.add(l);
-					
-//					JPanel pp=new JPanel();
-//					pp.setLayout(new FlowLayout(0,1,FlowLayout.LEADING));
-//					
-//					championstats.add(pp, BorderLayout.CENTER);
-//					pp.setBackground(Color.DARK_GRAY);
-//					pp.setOpaque(true);
-//					championstats.setOpacity(0.7f);
-//								
-//					JTextPane chStats = new JTextPane();
-//		
-//					chStats.setText("Stats:");
-//					chStats.setPreferredSize(new Dimension(500,300));
-//					chStats.setFont(new Font("Agency FB", Font.BOLD, 23));
-//					chStats.setBackground(new Color(0x404040));
-//					chStats.setForeground(Color.WHITE);
-//					StyledDocument doc1 = chStats.getStyledDocument();				//Don't mind these here
-//					SimpleAttributeSet center1 = new SimpleAttributeSet();
-//					StyleConstants.setAlignment(center1, StyleConstants.ALIGN_CENTER);
-//					doc1.setParagraphAttributes(0, doc1.getLength(), center1, false);
-//					chStats.setEditable(false);
-//					
-//					
-//					chStats.setText("Stats"+ '\n'+getStats((Champion)G.getBoard()[i][j]));
-//					
-//					
-//					JTextPane appAB = new JTextPane();
-//					appAB.setText("Effects:");
-//					appAB.setPreferredSize(new Dimension(500,300));
-//					appAB.setFont(new Font("Agency FB", Font.BOLD, 23));
-//					appAB.setBackground(new Color(0x404040));
-//					appAB.setForeground(Color.WHITE);
-//					StyledDocument doc = appAB.getStyledDocument();				//Don't mind these here
-//					SimpleAttributeSet center = new SimpleAttributeSet();
-//					StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-//					doc.setParagraphAttributes(0, doc.getLength(), center, false);
-//					appAB.setEditable(false);
-//					appAB.setText("Effects: "+'\n'+ getappEffects((Champion)G.getBoard()[i][j]));
-//					
-//					pp.add(chStats);
-//					pp.add(appAB);		
-//					
-					//championstats.setVisible(true);
-					//championstats.setAlwaysOnTop(true);
-					
-				//}
-			//}
+		for (int i = 0; i < 5; i++)
+			for (int j = 0; j < 5; j++) {
+			  if(e.getSource() == Gridbuttons[i][j])
+				if (!(G.getBoard()[i][j] instanceof Cover) && G.getBoard()[i][j] != null && !alreadyclickedufuckingidiot) {
+					championstats = new JFrame();
+					championstats.setUndecorated(true);
+					championstats.setOpacity(0.9f);
+					championstats.setAlwaysOnTop(true);
+					String s = getStats((Champion) G.getBoard()[i][j]);
+					String eff = getappEffects((Champion) G.getBoard()[i][j]);
+					TextArea stats = new TextArea(s);
+					TextArea effects = new TextArea(
+							getappEffects((Champion) G.getBoard()[i][j]));
+					stats.setBounds(0, 0, 300, 250);
+					stats.setBackground(new Color(0x404040));
+					effects.setBounds(300, 0, 350, 250);
+					effects.setBackground(new Color(0x404040));
+					// championstats.setUndecorated(true);
+					// int xloc=(MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10;
+					// int yloc= (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5;
+					Point m = MouseInfo.getPointerInfo().getLocation();
+					championstats.setLocation(m.x + 1, m.y + 1);
+					championstats.setSize(650, 250);
+					championstats.setLayout(null);
+					stats.setFont(new Font("Agency FB", Font.BOLD, 18));
+					stats.setBackground(new Color(0x404040));
+					stats.setForeground(Color.WHITE);
+					stats.setEditable(false);
+					effects.setFont(new Font("Agency FB", Font.BOLD, 18));
+					effects.setBackground(new Color(0x404040));
+					effects.setForeground(Color.WHITE);
+					effects.setEditable(false);
+					championstats.setVisible(true);
+					championstats.setAlwaysOnTop(true);
+					// championstats.setFocusable(true);
+					championstats.add(stats);
+					championstats.add(effects);
+					alreadyclickedufuckingidiot = true;
+				}
+			}
 			
 			
 			
 		if(e.getSource() == attack)
 			attackHighlight();
+	
+
+		gameframe.revalidate();
+		gamebackground.setIcon(null);
+		gamebackground.setIcon(bkgimg);
 	}
 
 
@@ -1638,15 +1638,15 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		else
 			if(e.getSource()== ab1){	/*THEN*/ ab1.setText(ab1.getActionCommand());	ability1stats.setText("Ability Details..."+'\n'+'\n'
 														+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");
-														if(ab1.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  clearHighlight();}
+														if(ab1.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  /*clearHighlight()*/;}
 			else if(e.getSource()== ab2){	/*THEN*/ ab2.setText(ab2.getActionCommand());	ability1stats.setText("Ability Details..."+'\n'+'\n'
 														+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");
-														if(ab2.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  clearHighlight();}
+														if(ab2.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  /*clearHighlight()*/;}
 			else if(e.getSource()== ab3){	/*THEN*/ ab3.setText(ab3.getActionCommand());	ability1stats.setText("Ability Details..."+'\n'+'\n'
 														+'\n'+"Get over one to see details."+'\n'+"Click to select"+'\n'+"& Confirm to execute");
-														if(ab3.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  clearHighlight();}
+														if(ab3.getBackground()!=Color.GREEN && ab2.getBackground()!=Color.GREEN && ab3.getBackground()!=Color.GREEN)  /*clearHighlight()*/;}
 			//else if(e.getSource()== useleaderab /*&& leaderClicked*/) ability1stats.setText("Use your Leader Ability?");
-		if(e.getSource()== useleaderab && !leaderClicked) ability1stats.setText("Ability Details...");
+		if(e.getSource()== useleaderab && !leaderClicked)	/*THEN*/  ability1stats.setText("Ability Details...");
 		if(e.getSource() == attack && !isAttackMode)
 			clearHighlight();
 		
@@ -1657,6 +1657,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 						alreadyclickedufuckingidiot = false;
 				}
 			}
+	
+
+		gameframe.revalidate();
+		gamebackground.setIcon(null);
+		gamebackground.setIcon(bkgimg);
 	}
 
 
@@ -1665,12 +1670,112 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 
-	@Override public void mouseClicked(MouseEvent e){}
-	@Override public void mousePressed(MouseEvent e) {}
-	@Override public void mouseReleased(MouseEvent arg0) {}
+	@Override public void mouseClicked(MouseEvent e){gameframe.revalidate();gamebackground.setIcon(null);gamebackground.setIcon(bkgimg);}
+	@Override public void mousePressed(MouseEvent e) {gameframe.revalidate();gamebackground.setIcon(null);gamebackground.setIcon(bkgimg);}
 	@Override public void mouseDragged(MouseEvent e) {}
-	@Override public void mouseMoved(MouseEvent e) {}
+	@Override public void mouseMoved(MouseEvent e) {gameframe.revalidate();gamebackground.setIcon(null);gamebackground.setIcon(bkgimg);}
 	
+	@Override public void mouseReleased(MouseEvent e) {
+		
+		
+		// --------------------------------------------GRIDBUTTONS-------------------------------------------------------------
+		for (int i = 0; i < 5; i++)
+			for (int j = 0; j < 5; j++) {
+				if (e.getSource() == Gridbuttons[i][j])
+					if (castIsclicked) {
+						Ability a = null;
+						if (ab1.getBackground() == Color.GREEN) {
+							a = G.getCurrentChampion().getAbilities().get(0);
+						} else if (ab2.getBackground() == Color.GREEN) {
+							a = G.getCurrentChampion().getAbilities().get(1);
+						} else if (ab3.getBackground() == Color.GREEN) {
+							a = G.getCurrentChampion().getAbilities().get(2);
+						}
+						if (a.getCastArea() == AreaOfEffect.SINGLETARGET)
+							try {
+								targets = G.castAbility(a, i, j);
+								G.FinishHim(targets, a);
+								for (Damageable d : targets) {
+									Object[][] board = G.getBoard();
+									if (board[d.getLocation().x][d
+											.getLocation().y] instanceof Cover) {
+										((Cover) board[d.getLocation().x][d
+												.getLocation().y])
+												.setIcon(new ImageIcon(
+														"icons/ProfessionalCover.png"));
+									}
+								}
+								cleanGrid(targets);
+								resetbuttons();
+								castIsclicked = false;
+								ability1stats.setText("Ability applied...");
+								ab1.setVisible(false);
+								ab2.setVisible(false);
+								ab3.setVisible(false);
+								up.setVisible(true);
+								down.setVisible(true);
+								right.setVisible(true);
+								left.setVisible(true);
+								attack.setVisible(true);
+								useleaderab.setVisible(true);
+								endturn.setVisible(true);
+								castability.setBackground(null);
+								clearHighlight();
+							} catch (CloneNotSupportedException
+									| NotEnoughResourcesException
+									| AbilityUseException
+									| InvalidTargetException e1) {
+								JOptionPane.showMessageDialog(null,
+										e1.getMessage(), "Marvel",
+										JOptionPane.WARNING_MESSAGE);
+							}
+					} else if (!(G.getBoard()[i][j] instanceof Cover)
+							&& G.getBoard()[i][j] != null
+							&& !alreadyclickedufuckingidiot) {
+						championstats = new JFrame();
+						championstats.setUndecorated(true);
+						String s = getStats((Champion) G.getBoard()[i][j]);
+						String eff = getappEffects((Champion) G.getBoard()[i][j]);
+						TextArea stats = new TextArea(s);
+						TextArea effects = new TextArea(
+								getappEffects((Champion) G.getBoard()[i][j]));
+						stats.setBounds(0, 0, 300, 250);
+						stats.setBackground(new Color(0x404040));
+						effects.setBounds(300, 0, 350, 250);
+						effects.setBackground(new Color(0x404040));
+						// championstats.setUndecorated(true);
+						// int xloc=
+						// (MouseInfo.getPointerInfo().getLocation().x+210>width)?width-200:MouseInfo.getPointerInfo().getLocation().x+10
+						// ;
+						// int yloc=
+						// (MouseInfo.getPointerInfo().getLocation().y+105>height)?height-100:MouseInfo.getPointerInfo().getLocation().y+5
+						// ;
+						Point m = MouseInfo.getPointerInfo().getLocation();
+						championstats.setLocation(m.x + 1, m.y + 1);
+						championstats.setSize(650, 250);
+						championstats.setLayout(null);
+						stats.setFont(new Font("Agency FB", Font.BOLD, 18));
+						stats.setBackground(new Color(0x404040));
+						stats.setForeground(Color.WHITE);
+						stats.setEditable(false);
+						effects.setFont(new Font("Agency FB", Font.BOLD, 18));
+						effects.setBackground(new Color(0x404040));
+						effects.setForeground(Color.WHITE);
+						effects.setEditable(false);
+						championstats.setVisible(true);
+						championstats.setAlwaysOnTop(true);
+						// championstats.setFocusable(true);
+						championstats.add(stats);
+						championstats.add(effects);
+						alreadyclickedufuckingidiot = true;
+					}
+
+			}
+		
+		gameframe.revalidate();
+		gamebackground.setIcon(null);
+		gamebackground.setIcon(bkgimg);
+	}
 
 	
 	@Override
@@ -1939,7 +2044,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		for(int i =4; i>=0; i--)
 			for(int j =0; j<5; j++){
 				if(G.getBoard()[i][j]==null || G.getBoard()[i][j] instanceof Cover)
-					Gridbuttons[i][j].setBackground(null);
+					Gridbuttons[i][j].setBackground(new Color(0,0,0,0));
 				else if(G.getFirstPlayer().getTeam().contains( G.getBoard()[i][j]))
 					Gridbuttons[i][j].setBackground(a7marika);
 				else
@@ -1947,6 +2052,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					
 				
 			}
+		gameframe.revalidate();
+		gamebackground.setIcon(null);
+		gamebackground.setIcon(bkgimg);
+		
 	}
 	
 	private void attackHighlight(){
@@ -2047,6 +2156,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		for(int i =0; i<4;i++)
 			if(ls[i]!=null)
 				Gridbuttons[ls[i].x][ls[i].y].setBackground(asfarika);
+		
+
+		gameframe.revalidate();
+		gamebackground.setIcon(null);
+		gamebackground.setIcon(bkgimg);
 	}
 	
 	private void highlight(Ability a, AreaOfEffect e){
@@ -2132,17 +2246,33 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		for(int i =4; i>=0; i--)
 			for(int j =0; j<5; j++){
 				Object[][] board = G.getBoard();
-				if(board[i][j] instanceof Champion)
+				if(board[i][j] instanceof Champion){
 					Gridbuttons[i][j].setIcon(	new ImageIcon(((((Champion)board[i][j])).getIcon().getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH))));
-				else if(board[i][j] instanceof Cover)
+					gameframe.revalidate();
+					gamebackground.setIcon(null);
+					gamebackground.setIcon(bkgimg);
+					}
+				else if(board[i][j] instanceof Cover){
 					Gridbuttons[i][j].setIcon(new ImageIcon(((((Cover)board[i][j])).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
-				else
+					gameframe.revalidate();
+					gamebackground.setIcon(null);
+					gamebackground.setIcon(bkgimg);
+					}
+				else{
 					Gridbuttons[i][j].setIcon(null);
+
+					gameframe.revalidate();
+					gamebackground.setIcon(null);
+					gamebackground.setIcon(bkgimg);
+					}
 		}
+		gameframe.revalidate();
+		gamebackground.setIcon(null);
+		gamebackground.setIcon(bkgimg);
 	}
 	
 	private void cleanGrid(ArrayList<Damageable> a){
-		for(Damageable d: targets){
+		for(Damageable d: a){
 				Object[][] board = G.getBoard();
 				if(board[d.getLocation().x][d.getLocation().y] instanceof Champion)
 					Gridbuttons[d.getLocation().x][d.getLocation().y].setIcon(	new ImageIcon(((((Champion)board[d.getLocation().x][d.getLocation().y])).getIcon().getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH))));
@@ -2151,6 +2281,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				else
 					Gridbuttons[d.getLocation().x][d.getLocation().y].setIcon(null);
 		}
+
+		gameframe.revalidate();
+		gamebackground.setIcon(null);
+		gamebackground.setIcon(bkgimg);
 	}
 
 	private void updateStats(){

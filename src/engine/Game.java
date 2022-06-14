@@ -265,7 +265,7 @@ public class Game {
 		return false;
 	}
 
-	public void attack(Direction d)
+	public ArrayList<Damageable> attack(Direction d)
 			throws NotEnoughResourcesException, ChampionDisarmedException, InvalidTargetException {
 		if (hasEffect(getCurrentChampion(), "Disarm"))
 			throw new ChampionDisarmedException("Can not attack while being disarmed");
@@ -273,6 +273,8 @@ public class Game {
 			throw new NotEnoughResourcesException("You need at least two action point to perform a normal attack");
 		int currx = (int) getCurrentChampion().getLocation().getX();
 		int curry = (int) getCurrentChampion().getLocation().getY();
+
+		ArrayList<Damageable> targets = new ArrayList<Damageable>();
 		for (int i = 0; i < getCurrentChampion().getAttackRange(); i++) {
 			if (d == Direction.UP)
 				currx++;
@@ -283,16 +285,17 @@ public class Game {
 			else if (d == Direction.RIGHT)
 				curry++;
 			if (currx < 0 || currx >= BOARDHEIGHT || curry < 0 || curry >= BOARDWIDTH)
-				return;
+				return null;
 			else if (board[currx][curry] != null) {
 				if (board[currx][curry] instanceof Cover) {
 					int curhp = ((Cover) board[currx][curry]).getCurrentHP();
 					curhp -= getCurrentChampion().getAttackDamage();
 					((Cover) board[currx][curry]).setCurrentHP(curhp);
+					targets.add((Cover) board[currx][curry]);
 					if (curhp <= 0)
 						board[currx][curry] = null;
 					this.getCurrentChampion().setCurrentActionPoints(this.getCurrentChampion().getCurrentActionPoints() - 2);
-					return;
+					return targets;
 				} else if (board[currx][curry] instanceof Champion) {
 
 					int damage = getCurrentChampion().getAttackDamage();
@@ -307,7 +310,7 @@ public class Game {
 						int r = ((int) (Math.random() * 100)) + 1;
 						if (r <= 50) {
 							curr.setCurrentActionPoints(curr.getCurrentActionPoints() - 2);
-							return;
+							return null;
 						}
 					} 
 					if (hasEffect(target, "Shield")) {
@@ -316,7 +319,7 @@ public class Game {
 								e.remove(target);
 								target.getAppliedEffects().remove(e);
 								curr.setCurrentActionPoints(curr.getCurrentActionPoints() - 2);
-								return;
+								return null;
 							}
 						}
 					}
@@ -329,16 +332,16 @@ public class Game {
 					target.setCurrentHP(target.getCurrentHP() - damage);
 					System.out.println("should decrement APs");
 					curr.setCurrentActionPoints(curr.getCurrentActionPoints() - 2);
-					ArrayList<Damageable> targets = new ArrayList<Damageable>();
 					targets.add(target);
 					cleanup(targets);
-					return;
+					return targets;
 
 				}
 
 			}
 
 		}
+		return null;
 	}
 
 	public ArrayList<Damageable> castAbility(Ability a)
