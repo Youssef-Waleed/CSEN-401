@@ -24,6 +24,8 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.MouseInfo;
@@ -32,6 +34,8 @@ import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -61,7 +65,7 @@ import exceptions.NotEnoughResourcesException;
 import exceptions.UnallowedMovementException;
 
 
-public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener {
+public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener, KeyListener  {
 	private int width=(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(),height= (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	private JFrame gameframe, championstats= new JFrame();
 	private boolean castIsclicked=false, isAttackMode= false, leaderClicked = false,alreadyclickedufuckingidiot = false,noneed;
@@ -70,7 +74,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private ArrayList<Damageable> targets;
 	private ImageIcon icon, tmpico, leaderbordericon= new ImageIcon("icons/leadercrown.png")
 								, defaultbordericon = new ImageIcon("icons/defaultborder.png")
-	,bkgimg= new ImageIcon(new ImageIcon("icons/game-background.jpg").getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH)) ;
+	,bkgimg= new ImageIcon(new ImageIcon("icons/game-background.png").getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH)) ;
 	private JLabel gamebackground, champ1, champ2, champ3, champ4, champ5, champ6,
 								champ1border, champ2border, champ3border, champ4border,champ5border,champ6border, redteam, blueteam, leaderab1, leaderab2;
 	private JTextArea turnorderT,applieff;
@@ -92,7 +96,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private Media audio , record;
 	private Timer timer1;
 	private ActionListener al;
-	
+	private static GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
 	
 	public static void main(String[] args) {
 		availableChampions = new ArrayList<Champion>();
@@ -202,7 +206,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	//-----------------------------------------GAME PANEL---------------------------------------------------------	
 		
 		audio = new Media("audios/maingame.wav" , true);
-		audio.play();
+		//audio.play();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		width = (int)screenSize.getWidth();
 		height = (int)screenSize.getHeight();
@@ -228,6 +232,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		gameframe.setTitle("Marvel: Ultimate War");
 		gameframe.setIconImage(icon.getImage());
 		gameframe.addMouseListener(this);
+		gameframe.addKeyListener(this);
+		gameframe.setFocusable(true);
 		JLabel l = new JLabel("i work");
 		l.setBounds(0,0,90,10);
 		//gameframe.add(l);
@@ -238,7 +244,6 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		game.setOpaque(true);
 		game.setBackground(new Color(0,0,255,0));
 		game.setVisible(true);
-		
 		
 		
 		
@@ -257,32 +262,32 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		main.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		
 		info = new JPanel();
-		info.setBackground(new Color(0xBB381D));
+		info.setBackground(new Color(187, 56, 29,00));
 		info.setPreferredSize(new Dimension(500, 600));
 		info.setLayout(new BorderLayout());
 		info.setVisible(true);
 		
 		container = new JPanel();
-		container.setBackground(new Color(0xFFFFFF));
+		container.setBackground(new Color(255,255,255));
 		container.setPreferredSize(new Dimension(600, 200));
 		container.setLayout(new BorderLayout());
 		container.setVisible(true);
 		
 		current = new JPanel();
-		current.setBackground(new Color(0x353535));
+		current.setBackground(new Color(53, 53, 53));
 		current.setPreferredSize(new Dimension(800, 300));
 		current.setLayout(null);
 		current.setVisible(true);
 		
 		
 		actions = new JPanel();
-		actions.setBackground(new Color(0x555510));
+		actions.setBackground(new Color(85, 85, 16));
 		actions.setPreferredSize(new Dimension(500, 325));
 		actions.setLayout(null);
 		actions.setVisible(true);
 		
 		charc = new JPanel();
-		charc.setBackground(new Color(0x9D2E18));
+		charc.setBackground(new Color(157, 46, 24 ));
 		charc.setPreferredSize(new Dimension(200, 600));
 		charc.setLayout(null);
 		charc.setVisible(true);
@@ -309,11 +314,23 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 	//------------------------------------------------LABELS----------------------------------------------------------	
 		champ1 = new JLabel();
+		champ1.setOpaque(true);
+		champ1.setBackground(Color.LIGHT_GRAY);
 		champ2 = new JLabel();
+		champ2.setOpaque(true);
+		champ2.setBackground(Color.LIGHT_GRAY);
 		champ3 = new JLabel();
+		champ3.setOpaque(true);
+		champ3.setBackground(Color.LIGHT_GRAY);
 		champ4 = new JLabel();
+		champ4.setOpaque(true);
+		champ4.setBackground(Color.LIGHT_GRAY);
 		champ5 = new JLabel();
+		champ5.setOpaque(true);
+		champ5.setBackground(Color.LIGHT_GRAY);
 		champ6 = new JLabel();
+		champ6.setOpaque(true);
+		champ6.setBackground(Color.LIGHT_GRAY);
 		
 		champ1border = new JLabel();
 		champ1border.setIcon(new ImageIcon(defaultbordericon.getImage().getScaledInstance(117,117,Image.SCALE_SMOOTH)));
@@ -358,7 +375,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				JLabel pONE = new JLabel(G.getFirstPlayer().getName(), SwingConstants.CENTER);
 				JLabel pTWO = new JLabel(G.getSecondPlayer().getName(), SwingConstants.CENTER);
 				pONE.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+				pONE.setForeground(Color.WHITE);
 				pTWO.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+				pTWO.setForeground(Color.WHITE);
 				pONE.setBounds(10, 2, 180, 50);
 				pTWO.setBounds(210, 2, 180, 50);
 		
@@ -448,7 +467,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		turnorderT = new JTextArea("The Turn Order:" + '\n' );
 		turnorderT.setPreferredSize(new Dimension(200,400));
 		turnorderT.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-		turnorderT.setBackground(new Color(0xE7694F));
+		turnorderT.setForeground(Color.BLACK);
+		turnorderT.setBackground(new Color(231, 105, 79));
 		turnorderT.setEditable(false);
 		turnOrderSetText();
 		info.add(turnorderT, BorderLayout.EAST);
@@ -458,7 +478,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		ability1stats.setText("Ability Details...");
 		ability1stats.setBounds(width-550*width/1920,0,500,300);
 		ability1stats.setFont(new Font("Agency FB", Font.BOLD, 25));
-		ability1stats.setBackground(new Color(0x4A4A4A));
+		ability1stats.setBackground(new Color(74, 74, 74));
 		ability1stats.setForeground(Color.WHITE);
 		StyledDocument doc = ability1stats.getStyledDocument();				//Don't mind these here
 		SimpleAttributeSet center = new SimpleAttributeSet();
@@ -468,14 +488,14 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		//System.out.println(getappEffects(G.getCurrentChampion()));
 		applieff = new JTextArea(getappEffects(G.getCurrentChampion()));
 		applieff.setFont(new Font("Agency FB", Font.BOLD, 25));
-		applieff.setBackground(new Color(0x404040));
+		applieff.setBackground(new Color(64,64,64));
 		applieff.setForeground(Color.WHITE);
 		applieff.setBounds(305, 0, 300, 300);
 		stats1 = new JTextPane();
 		stats1.setText("Current Champion Stats:");
 		stats1.setBounds(0,0,300,300);
 		stats1.setFont(new Font("Agency FB", Font.BOLD, 24));
-		stats1.setBackground(new Color(0x404040));
+		stats1.setBackground(new Color(64,64,64));
 		stats1.setForeground(Color.WHITE);
 		StyledDocument doc1 = stats1.getStyledDocument();				//Don't mind these here
 		SimpleAttributeSet center1 = new SimpleAttributeSet();
@@ -682,7 +702,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				Gridbuttons[i][j].setBackground(new Color(0,0,0,0));
 				Gridbuttons[i][j].setFocusable(false);
 				Gridbuttons[i][j].setCursor(new Cursor(Cursor.HAND_CURSOR));
-				Gridbuttons[i][j].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 3));
+				Gridbuttons[i][j].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 3));
 				//Gridbuttons[i][j].addActionListener(this);
 				Gridbuttons[i][j].addMouseListener(this);
 				//Gridbuttons[i][j].setBackground(new Color(0xA2CCE8));
@@ -712,9 +732,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			
 		
 		clearHighlight();
-		
+
+		device.setFullScreenWindow(gameframe);		//Fullscreen capability
 		gameframe.setVisible(true);
 		gameframe.revalidate();
+		gameframe.setExtendedState(JFrame.ICONIFIED);
+		gameframe.setExtendedState(JFrame.NORMAL);
+		gameframe.setResizable(false);
 		
 		updateStats();
 		
@@ -858,10 +882,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				G.move(Direction.UP);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -879,10 +903,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				G.move(Direction.DOWN);
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -901,10 +925,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				System.out.println("hehehehehe");
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -923,10 +947,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				System.out.println("hehehehehe");
 			} catch (NotEnoughResourcesException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (UnallowedMovementException e1) {
 				no = true;
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}
 			if(!no){
 			    Gridbuttons[G.getCurrentChampion().getLocation().x][G.getCurrentChampion().getLocation().y].setIcon(new ImageIcon((G.getCurrentChampion().getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
@@ -964,16 +988,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					clearHighlight();
 					}
 				else
-					JOptionPane.showMessageDialog(null,"Please choose an ability","Marvel", JOptionPane.ERROR_MESSAGE);
+					showErrorMessage("Please choose an ability");
 			} catch (NotEnoughResourcesException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (AbilityUseException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (CloneNotSupportedException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}
 		}/*TRIAL*/else
 		if(e.getSource()==down&&castIsclicked){
@@ -1004,16 +1028,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					clearHighlight();
 					}
 				else
-					JOptionPane.showMessageDialog(null,"Please choose an ability","Marvel", JOptionPane.ERROR_MESSAGE);
+					showErrorMessage("Please choose an ability");
 			} catch (NotEnoughResourcesException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (AbilityUseException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (CloneNotSupportedException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}
 		}/*TRIAL*/else
 		
@@ -1045,16 +1069,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					clearHighlight();
 					}
 				else
-					JOptionPane.showMessageDialog(null,"Please choose an ability","Marvel", JOptionPane.ERROR_MESSAGE);
+					showErrorMessage("Please choose an ability");
 			} catch (NotEnoughResourcesException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (AbilityUseException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (CloneNotSupportedException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}
 		}/*TRIAL*/else
 		
@@ -1086,16 +1110,16 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					clearHighlight();
 					}
 				else
-					JOptionPane.showMessageDialog(null,"Please choose an ability","Marvel", JOptionPane.ERROR_MESSAGE);
+					showErrorMessage("Please choose an ability");
 			} catch (NotEnoughResourcesException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (AbilityUseException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			} catch (CloneNotSupportedException e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}
 		}/*TRIAL*/else
 		
@@ -1114,9 +1138,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				cleanGrid(targets);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}catch(NullPointerException | ArrayIndexOutOfBoundsException npe){
-				JOptionPane.showMessageDialog(null,"Target is invalid. Cannot attack outside the board.","Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage("Target is invalid. Cannot attack outside the board.");
 			}
 			clearHighlight();
 			resetbuttons();
@@ -1137,9 +1161,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				cleanGrid(targets);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}catch(NullPointerException | ArrayIndexOutOfBoundsException npe){
-				JOptionPane.showMessageDialog(null,"Target is invalid. Cannot attack outside the board.","Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage("Target is invalid. Cannot attack outside the board.");
 			}
 			clearHighlight();
 			resetbuttons();
@@ -1161,9 +1185,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				cleanGrid(targets);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}catch(NullPointerException | ArrayIndexOutOfBoundsException npe){
-				JOptionPane.showMessageDialog(null,"Target is invalid. Cannot attack outside the board.","Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage("Target is invalid. Cannot attack outside the board.");
 			}
 			clearHighlight();
 			resetbuttons();
@@ -1185,9 +1209,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				cleanGrid(targets);
 			} catch (NotEnoughResourcesException | ChampionDisarmedException
 					| InvalidTargetException e1) {
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 			}catch(NullPointerException | ArrayIndexOutOfBoundsException npe){
-				JOptionPane.showMessageDialog(null,"Target is invalid. Cannot attack outside the board.","Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage("Target is invalid. Cannot attack outside the board.");
 			}
 			clearHighlight();
 			resetbuttons();
@@ -1282,7 +1306,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		if(e.getSource()== confirmability && ab1.getBackground() != Color.GREEN 
 																&& ab2.getBackground() != Color.GREEN 
 																&& ab3.getBackground() != Color.GREEN){
-			JOptionPane.showMessageDialog(null,"Please Choose an Ability","Marvel", JOptionPane.WARNING_MESSAGE);
+			showErrorMessage("Please choose an ability");
 			return;
 		}/*TRIAL*/else
 		
@@ -1337,13 +1361,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				resetbuttons();
 				castIsclicked=false;
 			} catch (NotEnoughResourcesException e1) {
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 				castIsclicked=false;
 			} catch (AbilityUseException e1) {
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 				castIsclicked=false;
 			} catch (CloneNotSupportedException e1) {
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 				castIsclicked=false;
 			}
 		
@@ -1376,7 +1400,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				leadertargs = null;
 				leaderClicked = false;
 				ability1stats.setText("Ability Details...");
-				JOptionPane.showMessageDialog(null,e1.getMessage(),"Marvel", JOptionPane.WARNING_MESSAGE);
+				showErrorMessage(e1.getMessage());
 				
 			}
 		}/*TRIAL*/else
@@ -1478,11 +1502,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		ab3.setEnabled(true);
 	if(G.checkGameOver()!=null)
 	{
-		audio.pause();
-		record.play();
-		JOptionPane.showMessageDialog(null,"Gameover, buddy. it's over go home","Marvel", JOptionPane.WARNING_MESSAGE);
-		gameframe.setVisible(false);
-		new winnerwinnerChickenDinner(G.checkGameOver());
+		
+		showErrorMessage("Gameover, buddy. it's over go home");
 	}
 	
 
@@ -1725,9 +1746,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 									| NotEnoughResourcesException
 									| AbilityUseException
 									| InvalidTargetException e1) {
-								JOptionPane.showMessageDialog(null,
-										e1.getMessage(), "Marvel",
-										JOptionPane.WARNING_MESSAGE);
+								showErrorMessage(e1.getMessage());
 							}
 					} else if (!(G.getBoard()[i][j] instanceof Cover)
 							&& G.getBoard()[i][j] != null
@@ -2351,6 +2370,160 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		else
 			return ret;
 	}
+	
+	private void showErrorMessage(String msg){
+		JFrame err = new JFrame();
+		err.setBounds(width/2 -250, height/2-100, 500, 200);
+		err.setAlwaysOnTop(true);
+		err.setUndecorated(true);
+		err.getContentPane().setBackground(Color.DARK_GRAY);
+		err.setLayout(null);
+		err.setIconImage(icon.getImage());
+		
+		JTextPane mg = new JTextPane();
+		mg.setText(msg);
+		mg.setFont(new Font("Agency FB", Font.BOLD, 24));
+		mg.setForeground(Color.WHITE);
+		mg.setBackground(Color.DARK_GRAY);
+		StyledDocument doc1 = mg.getStyledDocument();				//Don't mind these here
+		SimpleAttributeSet center1 = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center1, StyleConstants.ALIGN_CENTER);
+		doc1.setParagraphAttributes(0, doc1.getLength(), center1, false);
+		mg.setEditable(false);
+		mg.setBounds(0,20,500,100);
+		
+		JButton ok = new JButton("OKAY");
+		ok.setFont(new Font("Agency FB", Font.BOLD, 20));
+		ok.setBounds(250-85, 150, 170,40);
+		ok.setBackground(new Color(93, 92, 79));
+		ok.setForeground(Color.WHITE);
+		ok.setFocusable(false);
+		
+		ok.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!msg.equals("Gameover, buddy. it's over go home"))
+					err.dispatchEvent(new WindowEvent(err, WindowEvent.WINDOW_CLOSING));
+				else{
+					audio.pause();
+					record.play();
+					gameframe.setVisible(false);
+					new winnerwinnerChickenDinner(G.checkGameOver());
+				}
+				
+			}
+		});
+		
+		err.add(mg, BorderLayout.CENTER);
+		err.add(ok, BorderLayout.SOUTH);
+		
+		err.setVisible(true);
+		
+		
+		
+	}
+	
+	
+	private void confirmExitMessage(){
+		JFrame conf = new JFrame();
+		conf.setBounds(width/2 -250, height/2-100, 500, 200);
+		conf.setAlwaysOnTop(true);
+		conf.setUndecorated(true);
+		conf.getContentPane().setBackground(Color.DARK_GRAY);
+		conf.setIconImage(icon.getImage());
+		
+		JLabel mg = new JLabel("ARE YOU SURE YOU WANT TO EXIT?");
+		mg.setFont(new Font("Agency FB", Font.BOLD, 24));
+		mg.setHorizontalAlignment(JLabel.CENTER);
+		mg.setForeground(Color.WHITE);
+		
+		JPanel p= new JPanel();
+		p.setPreferredSize(new Dimension(700,50));
+		p.setBackground(Color.DARK_GRAY);
+		
+		JButton yes = new JButton("Yes");
+		yes.setFont(new Font("Agency FB", Font.BOLD, 20));
+		yes.setPreferredSize(new Dimension(100,30));
+		yes.setFocusable(false);
+		yes.setBackground(new Color(93, 92, 79));
+		yes.setForeground(Color.WHITE);
+		
+		JButton no = new JButton("No");
+		no.setFont(new Font("Agency FB", Font.BOLD, 20));
+		no.setPreferredSize(new Dimension(100,30));
+		no.setFocusable(false);
+		no.setBackground(new Color(93, 92, 79));
+		no.setForeground(Color.WHITE);
+		
+		JButton minimize = new JButton("MINIMIZE");
+		minimize.setFont(new Font("Agency FB", Font.BOLD, 20));
+		minimize.setPreferredSize(new Dimension(150,30));
+		minimize.setFocusable(false);
+		minimize.setBackground(new Color(93, 92, 79));
+		minimize.setForeground(Color.WHITE);
+		
+		yes.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameframe.dispatchEvent(new WindowEvent(gameframe, WindowEvent.WINDOW_CLOSING));
+				
+			}
+		});
+		
+		no.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				conf.dispatchEvent(new WindowEvent(conf, WindowEvent.WINDOW_CLOSING));
+				
+			}
+		});
+		
+		minimize.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameframe.setExtendedState(JFrame.ICONIFIED);
+				conf.dispatchEvent(new WindowEvent(conf, WindowEvent.WINDOW_CLOSING));
+				
+			}
+		});
+		conf.add(mg, BorderLayout.CENTER);
+		conf.add(p, BorderLayout.SOUTH);
+		p.add(yes);
+		p.add(no);
+		p.add(minimize);
+		
+		conf.setVisible(true);
+		
+		
+		
+	}
+	
+	
+	
+
+	@Override
+	public void keyPressed(KeyEvent k) {
+		// TODO Auto-generated method stub
+		if(k.getKeyCode() == KeyEvent.VK_ESCAPE)
+			confirmExitMessage();
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent k) {
+		
+		
+	}
+	
 	
 	
 }
