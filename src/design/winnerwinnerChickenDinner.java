@@ -140,7 +140,7 @@ private boolean playing=false;
 	timer = new Timer(20, al);
     //timer.setInitialDelay(500);
 		
-		text.setText("Fantastic WINS");
+		text.setText(winner.getName()+" WINS");
 		text.setBounds(width/2-250, height/2-75, width, 350);
 		text.setHorizontalTextPosition(JLabel.CENTER);
 		text.setVerticalAlignment(JLabel.CENTER);

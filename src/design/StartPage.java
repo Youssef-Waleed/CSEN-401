@@ -11,14 +11,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 
 @SuppressWarnings("serial")
 public class StartPage implements ActionListener,
-		MouseInputListener {
-	private JFrame startwindow;
+		MouseInputListener , WindowListener{
+	private JFrame startwindow,gifcontain;
 	private JButton startbt;
 	private JPanel pane;
 	private JLabel marvel, marvelgif, teamlogo;
@@ -62,9 +63,11 @@ public class StartPage implements ActionListener,
 		teamlogo.setPreferredSize(new Dimension(width/4,height/2));
 		teamlogo.setHorizontalAlignment(JLabel.CENTER);
 		
-		JFrame gifcontain= new JFrame();
+		gifcontain= new JFrame();
 		gifcontain.setUndecorated(true);
 		gifcontain.setAlwaysOnTop(true);
+		gifcontain.setIconImage(icon.getImage());
+		gifcontain.addWindowListener(this);
 		
 		
 		marvelgif = new JLabel();
@@ -123,6 +126,7 @@ public class StartPage implements ActionListener,
 		startwindow.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		startwindow.setTitle("Marvel: Ultimate War");
 		startwindow.setIconImage(icon.getImage());
+		startwindow.addWindowListener(this);
 		
 		pane = new JPanel();
 		pane.setLayout(null);
@@ -203,5 +207,27 @@ public class StartPage implements ActionListener,
 	@Override public void mouseReleased(MouseEvent arg0) {}
 	@Override public void mouseDragged(MouseEvent arg0) {}
 	@Override public void mouseMoved(MouseEvent arg0) {}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		gifcontain.setExtendedState(JFrame.NORMAL);
+		startwindow.setExtendedState(JFrame.NORMAL);
+		
+	}
+
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		gifcontain.setExtendedState(JFrame.ICONIFIED);
+		startwindow.setExtendedState(JFrame.ICONIFIED);
+		
+	}
+
+
+	@Override public void windowActivated(WindowEvent arg0) { }
+	@Override public void windowClosed(WindowEvent arg0) { }
+	@Override public void windowClosing(WindowEvent arg0) { }
+	@Override public void windowDeactivated(WindowEvent arg0) {}
+	@Override public void windowOpened(WindowEvent arg0) { }
 
 }

@@ -39,6 +39,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -65,7 +66,7 @@ import exceptions.NotEnoughResourcesException;
 import exceptions.UnallowedMovementException;
 
 
-public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener, KeyListener  {
+public class MainGUI implements ActionListener, MouseInputListener, ListSelectionListener, KeyListener, WindowListener  {
 	private int width=(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(),height= (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	private JFrame gameframe, championstats= new JFrame();
 	private boolean castIsclicked=false, isAttackMode= false, leaderClicked = false,alreadyclickedufuckingidiot = false,noneed;
@@ -117,16 +118,22 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		Player p2 = new Player("mohamed el gamed awy aaa");
 		Player p1 = new Player("CPU el fashel awy aaa");
 		p1.getTeam().add(availableChampions.get(0));
-		p1.setLeader(availableChampions.get(0));
-		//p1.getLeader().setCurrentHP(0);
+		p1.setLeader(availableChampions.get(0));				//EXAMPLE players
 		p1.getTeam().add(availableChampions.get(1));
 		p1.getTeam().add(availableChampions.get(2));
+		p1.getTeam().get(0).setCurrentHP(0);
+		p1.getTeam().get(1).setCurrentHP(0);
+		p1.getTeam().get(2).setCurrentHP(0);
+		p1.getLeader().setCurrentHP(5000);			
 		
 		p2.getTeam().add(availableChampions.get(3));
 		p2.setLeader(availableChampions.get(3));
-		//p2.getLeader().setCurrentHP(0);
+		p2.getLeader().setCurrentHP(0);
 		p2.getTeam().add(availableChampions.get(4));
 		p2.getTeam().add(availableChampions.get(5));
+		p2.getTeam().get(0).setCurrentHP(1);
+		p2.getTeam().get(1).setCurrentHP(1);
+		p2.getTeam().get(2).setCurrentHP(1);
 		MainGUI bla = new MainGUI(new Game( p1 , p2 ));
 		
 		
@@ -224,7 +231,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		gameframe = new JFrame();
 		gameframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		gameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gameframe.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		gameframe.setLayout(new BorderLayout()/*null*/ );
 		gameframe.setSize(width+1, height);
 		gameframe.setLocation(1920/2-width/2,0);
@@ -234,6 +241,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		gameframe.addMouseListener(this);
 		gameframe.addKeyListener(this);
 		gameframe.setFocusable(true);
+		gameframe.addWindowListener(this);
 		JLabel l = new JLabel("i work");
 		l.setBounds(0,0,90,10);
 		//gameframe.add(l);
@@ -1802,6 +1810,32 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					}
 
 			}
+//------------------------------------------Generic after every action -----------------------------------------------
+		
+		updateStats();
+		//cleanGrid();
+		applieff.setText(getappEffects(G.getCurrentChampion()));
+		System.out.println("it should work");
+		
+		if(G.getCurrentChampion().getAbilities().get(0).getCurrentCooldown()!=0)
+			ab1.setEnabled(false);
+		else	
+			ab1.setEnabled(true);
+		
+		if(G.getCurrentChampion().getAbilities().get(1).getCurrentCooldown()!=0)
+			ab2.setEnabled(false);
+		else	
+			ab2.setEnabled(true);
+		
+		if(G.getCurrentChampion().getAbilities().get(2).getCurrentCooldown()!=0)
+			ab3.setEnabled(false);
+		else	
+			ab3.setEnabled(true);
+		if(G.checkGameOver()!=null)
+		{
+			
+			showErrorMessage("Gameover, buddy. it's over go home");
+		}
 		
 		gameframe.revalidate();
 		gamebackground.setIcon(null);
@@ -2391,6 +2425,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		err.getContentPane().setBackground(Color.DARK_GRAY);
 		err.setLayout(null);
 		err.setIconImage(icon.getImage());
+		err.setFocusable(false);
 		
 		JTextPane mg = new JTextPane();
 		mg.setText(msg);
@@ -2402,6 +2437,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		StyleConstants.setAlignment(center1, StyleConstants.ALIGN_CENTER);
 		doc1.setParagraphAttributes(0, doc1.getLength(), center1, false);
 		mg.setEditable(false);
+		mg.setFocusable(false);
 		mg.setBounds(0,20,500,100);
 		
 		JButton ok = new JButton("OKAY");
@@ -2420,7 +2456,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				else{
 					audio.pause();
 					record.play();
-					gameframe.setVisible(false);
+					gameframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gameframe.dispatchEvent(new WindowEvent(gameframe, WindowEvent.WINDOW_CLOSING));
+					err.dispatchEvent(new WindowEvent(err, WindowEvent.WINDOW_CLOSING));
 					new winnerwinnerChickenDinner(G.checkGameOver());
 				}
 				
@@ -2479,6 +2517,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				gameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				gameframe.dispatchEvent(new WindowEvent(gameframe, WindowEvent.WINDOW_CLOSING));
 				
 			}
@@ -2489,7 +2528,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				conf.dispatchEvent(new WindowEvent(conf, WindowEvent.WINDOW_CLOSING));
-				
+				gameframe.transferFocus();
 			}
 		});
 		
@@ -2524,16 +2563,19 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			confirmExitMessage();
 	}
 
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	@Override public void keyReleased(KeyEvent arg0) { }
+	@Override public void keyTyped(KeyEvent k) { }
+	
+	@Override public void windowActivated(WindowEvent arg0) { }
+	@Override public void windowClosed(WindowEvent arg0) { }
+	@Override public void windowDeactivated(WindowEvent arg0) { }
+	@Override public void windowOpened(WindowEvent arg0) { }
+	@Override public void windowDeiconified(WindowEvent arg0) { }
+	@Override public void windowIconified(WindowEvent arg0) { }
 
-	@Override
-	public void keyTyped(KeyEvent k) {
-		
-		
+	@Override public void windowClosing(WindowEvent e) {
+		gameframe.setExtendedState(JFrame.NORMAL);
+		confirmExitMessage();
 	}
 	
 	
