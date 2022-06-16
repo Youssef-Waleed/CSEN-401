@@ -206,7 +206,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	//-----------------------------------------GAME PANEL---------------------------------------------------------	
 		
 		audio = new Media("audios/maingame.wav" , true);
-		//audio.play();
+	    audio.play();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		width = (int)screenSize.getWidth();
 		height = (int)screenSize.getHeight();
@@ -262,7 +262,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		main.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		
 		info = new JPanel();
-		info.setBackground(new Color(187, 56, 29,00));
+		info.setBackground(new Color(53, 53, 53));
 		info.setPreferredSize(new Dimension(500, 600));
 		info.setLayout(new BorderLayout());
 		info.setVisible(true);
@@ -281,7 +281,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		
 		actions = new JPanel();
-		actions.setBackground(new Color(85, 85, 16));
+		actions.setBackground(new Color(53, 53, 53));
 		actions.setPreferredSize(new Dimension(500, 325));
 		actions.setLayout(null);
 		actions.setVisible(true);
@@ -374,12 +374,12 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				//sub-labels
 				JLabel pONE = new JLabel(G.getFirstPlayer().getName(), SwingConstants.CENTER);
 				JLabel pTWO = new JLabel(G.getSecondPlayer().getName(), SwingConstants.CENTER);
-				pONE.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+				pONE.setFont(new Font("Agency FB", Font.BOLD, 20));
 				pONE.setForeground(Color.WHITE);
-				pTWO.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+				pTWO.setFont(new Font("Agency FB", Font.BOLD, 20));
 				pTWO.setForeground(Color.WHITE);
-				pONE.setBounds(10, 2, 180, 50);
-				pTWO.setBounds(210, 2, 180, 50);
+				pONE.setBounds(10, 0, 180, 50);
+				pTWO.setBounds(210, 0, 180, 50);
 		
 				
 				
@@ -396,7 +396,19 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		gamebackground = new JLabel(new ImageIcon(bkgimg.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH)));
 		gamebackground.setBounds(0,0,width,height);
 		gameframe.getContentPane().add(gamebackground, BorderLayout.CENTER);
-			
+		
+		leaderab1 = new JLabel("Leader Ability: Available");
+		leaderab1.setBounds(30, 370, 150, 50);
+		leaderab1.setFont(new Font("Agency FB", Font.BOLD, 20));
+		leaderab1.setForeground(Color.WHITE);
+		leaderab2 = new JLabel("Leader Ability: Available");
+		leaderab2.setBounds(230, 370, 150, 50);
+		leaderab2.setFont(new Font("Agency FB", Font.BOLD, 20));
+		leaderab2.setForeground(Color.WHITE);
+		
+		
+		charc.add(leaderab1);
+		charc.add(leaderab2);
 		charc.add(champ1);
 		charc.add(champ2);
 		charc.add(champ3);
@@ -467,8 +479,8 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		turnorderT = new JTextArea("The Turn Order:" + '\n' );
 		turnorderT.setPreferredSize(new Dimension(200,400));
 		turnorderT.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-		turnorderT.setForeground(Color.BLACK);
-		turnorderT.setBackground(new Color(231, 105, 79));
+		turnorderT.setForeground(Color.WHITE);
+		turnorderT.setBackground(new Color(74, 74, 74));
 		turnorderT.setEditable(false);
 		turnOrderSetText();
 		info.add(turnorderT, BorderLayout.EAST);
@@ -503,20 +515,20 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		doc1.setParagraphAttributes(0, doc1.getLength(), center1, false);
 		stats1.setEditable(false);
 		
-		leaderab1 = new JLabel(G.getFirstPlayer().getName()+"'s Leader Ability: Available");
-		leaderab1.setBounds(610, 0, 500, 50);
-		leaderab1.setFont(new Font("Agency FB", Font.BOLD, 30));
-		leaderab1.setForeground(Color.WHITE);
-		leaderab2 = new JLabel(G.getSecondPlayer().getName()+"'s Leader Ability: Available");
-		leaderab2.setBounds(610, 55, 500, 50);
-		leaderab2.setFont(new Font("Agency FB", Font.BOLD, 30));
-		leaderab2.setForeground(Color.WHITE);
+//		leaderab1 = new JLabel(G.getFirstPlayer().getName()+"'s Leader Ability: Available");
+//		leaderab1.setBounds(610, 0, 500, 50);
+//		leaderab1.setFont(new Font("Agency FB", Font.BOLD, 30));
+//		leaderab1.setForeground(Color.WHITE);
+//		leaderab2 = new JLabel(G.getSecondPlayer().getName()+"'s Leader Ability: Available");
+//		leaderab2.setBounds(610, 55, 500, 50);
+//		leaderab2.setFont(new Font("Agency FB", Font.BOLD, 30));
+//		leaderab2.setForeground(Color.WHITE);
 		
 		current.add(stats1);
 		current.add(ability1stats);
 		current.add(applieff);
-		current.add(leaderab1);
-		current.add(leaderab2);
+		//current.add(leaderab1);
+		//current.add(leaderab2);
 		
 		
 	//------------------------------------------------BUTTONS----------------------------------------------------------	
@@ -621,7 +633,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		ab1.setActionCommand(G.getCurrentChampion().getAbilities().get(0).getName());
 		ab1.setBounds(170, 70, 250, 50);
 		ab1.setFont(new Font("Comic Sans MS", Font.BOLD, 19));
-		ab1.setBackground(Color.DARK_GRAY);
+		ab1.setBackground(new Color(74, 74, 74));
 		ab1.setForeground(Color.white);
 		ab1.setFocusable(false);
 		ab1.setEnabled(true);
@@ -633,7 +645,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		ab2.setActionCommand(G.getCurrentChampion().getAbilities().get(1).getName());
 		ab2.setBounds(170, 70+50+25, 250, 50);
 		ab2.setFont(new Font("Comic Sans MS", Font.BOLD, 19));
-		ab2.setBackground(Color.DARK_GRAY);
+		ab2.setBackground(new Color(74, 74, 74));
 		ab2.setForeground(Color.white);
 		ab2.setFocusable(false);
 		ab2.setEnabled(true);
@@ -645,7 +657,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		ab3.setActionCommand(G.getCurrentChampion().getAbilities().get(2).getName());
 		ab3.setBounds(170, 70+50+50+50, 250, 50);
 		ab3.setFont(new Font("Comic Sans MS", Font.BOLD, 19));
-		ab3.setBackground(Color.DARK_GRAY);
+		ab3.setBackground(new Color(74, 74, 74));
 		ab3.setForeground(Color.white);
 		ab3.setFocusable(false);
 		ab3.setEnabled(true);
@@ -1389,9 +1401,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				leadertargs = null;
 				leaderClicked = false;
 				if(G.getFirstPlayer().getLeader() == G.getCurrentChampion())
-					leaderab1.setText(G.getFirstPlayer().getName() + "'s Leader Ability: Used");
+					leaderab1.setText("Leader Ability: Used");
 				else
-					leaderab2.setText(G.getSecondPlayer().getName() + "'s Leader Ability: Used");
+					leaderab2.setText("Leader Ability: Used");
 			} catch (LeaderNotCurrentException e1) {
 				
 			} catch (LeaderAbilityAlreadyUsedException e1) {
@@ -1950,7 +1962,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		PriorityQueue turnz= G.getTurnOrder().clone();
 		turnorderT.setText("The Turn order:" +'\n' );
 		while(!turnz.isEmpty())
-			turnorderT.setText(turnorderT.getText()+'\n' +((Champion)turnz.remove()).getName());
+			turnorderT.setText(turnorderT.getText()+'\n' +"  "+((Champion)turnz.remove()).getName());
 		
 		//Updating Abilities Button
 		
