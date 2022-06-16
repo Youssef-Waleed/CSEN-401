@@ -73,8 +73,7 @@ private boolean playing=false;
 		
 		creditspane.add(creditsicon);
 
-		creditsicon.setIcon(new ImageIcon(new ImageIcon(this.getClass()
-				.getResource("/resources/icons/creditsicon.png"))
+		creditsicon.setIcon(new ImageIcon(new ImageIcon("icons/creditsicon.png")
 				.getImage().getScaledInstance(1384, 408, Image.SCALE_SMOOTH)));
 		
 		
@@ -113,10 +112,10 @@ private boolean playing=false;
 		al=new ActionListener() { public void actionPerformed(ActionEvent ae) {
 									//do your task
 									time+=0.1f;
-									if(!playing&& time>17f){
+									if(!playing&& time>13f){
 										creditsong.play();
 										playing =true;}
-									if(time>20f){
+									if(time>15f){
 										backround.setVisible(false);
 										text.setVisible(false);
 										temp.setBackground(Color.BLACK);
@@ -141,7 +140,7 @@ private boolean playing=false;
 	timer = new Timer(20, al);
     //timer.setInitialDelay(500);
 		
-		text.setText(winner.getName()+" WINS");
+		text.setText("Fantastic WINS");
 		text.setBounds(width/2-250, height/2-75, width, 350);
 		text.setHorizontalTextPosition(JLabel.CENTER);
 		text.setVerticalAlignment(JLabel.CENTER);
