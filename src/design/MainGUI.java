@@ -249,7 +249,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		game = new JLayeredPane();
 		game.setBounds(0, 0, width, height);
 		game.setLayout(new BorderLayout());
-		game.setOpaque(true);
+		game.setOpaque(false);
 		game.setBackground(new Color(0,0,255,0));
 		game.setVisible(true);
 		
@@ -265,7 +265,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		laylay.setVgap(5);
 		main.setLayout(laylay);
 		main.setVisible(true);
-		main.setOpaque(true);
+		main.setOpaque(false);
 		main.setBackground(new Color(0,0,0,0));
 		main.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		
@@ -304,6 +304,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		bkg= new JLayeredPane();
 		bkg.setLayout(null);
+		bkg.setOpaque(false);
 		bkg.setBounds(0, 0, width, height);
 		
 		
@@ -316,8 +317,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		
 		game.setBounds(0, 0, width, height);
 		bkg.setBounds(0, 0, width, height);
-		gameframe.add(bkg, BorderLayout.CENTER);
-		bkg.add(game, Integer.valueOf(99));
+		//bkg.add(game, Integer.valueOf(99));
 		
 		
 	//------------------------------------------------LABELS----------------------------------------------------------	
@@ -404,6 +404,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		gamebackground = new JLabel(new ImageIcon(bkgimg.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH)));
 		gamebackground.setBounds(0,0,width,height);
 		gameframe.getContentPane().add(gamebackground, BorderLayout.CENTER);
+		gameframe.setContentPane(gamebackground);
+
+		gameframe.getContentPane().add(game, BorderLayout.CENTER);
 		
 		leaderab1 = new JLabel("Leader Ability: Available");
 		leaderab1.setBounds(30, 370, 150, 50);
