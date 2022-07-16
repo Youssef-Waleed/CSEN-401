@@ -76,11 +76,11 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private ImageIcon icon, tmpico, leaderbordericon= new ImageIcon("icons/leadercrown.png")
 								, defaultbordericon = new ImageIcon("icons/defaultborder.png")
 	,bkgimg= new ImageIcon(new ImageIcon("icons/game-background.png").getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH)) ;
-	private JLabel gamebackground, champ1, champ2, champ3, champ4, champ5, champ6,
+	private JLabel gamebackground,healthframe,healthbar,currCHpic, currentActionPts,manaLeft,attackrange, currstate, champ1, champ2, champ3, champ4, champ5, champ6,
 								champ1border, champ2border, champ3border, champ4border,champ5border,champ6border, redteam, blueteam, leaderab1, leaderab2;
 	private JTextArea turnorderT,applieff;
 	private JTextPane ability1stats, stats1;
-	private JPanel info,main, container, current, actions,charc;
+	private JPanel info,main, container, current, actions,charc, currCharacter,currDetails,health,actionpointspane;
 	private JLayeredPane game,  bkg;
 	private JButton up,down,right,left,attack,attack2,castability,useleaderab,endturn ,ab1 =new JButton() ,ab2=new JButton() ,ab3=new JButton(), confirmability, confirmleaderab
 				/*,b11,b12,b13,b14,b15,
@@ -91,6 +91,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	private JLabel[][] Gridbuttons;
 	private Toolkit toolkit;
 	private Cursor c;
+	private static boolean shiftkey=false;
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	private ArrayList<Champion> leadertargs;
@@ -121,19 +122,19 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		p1.setLeader(availableChampions.get(0));				//EXAMPLE players
 		p1.getTeam().add(availableChampions.get(1));
 		p1.getTeam().add(availableChampions.get(2));
-		p1.getTeam().get(0).setCurrentHP(0);
-		p1.getTeam().get(1).setCurrentHP(0);
-		p1.getTeam().get(2).setCurrentHP(0);
-		p1.getLeader().setCurrentHP(5000);			
+//		p1.getTeam().get(0).setCurrentHP(0);
+//		p1.getTeam().get(1).setCurrentHP(0);
+//		p1.getTeam().get(2).setCurrentHP(0);
+		p1.getLeader().setCurrentHP(p1.getLeader().getMaxHP()/2);			
 		
 		p2.getTeam().add(availableChampions.get(3));
 		p2.setLeader(availableChampions.get(3));
-		p2.getLeader().setCurrentHP(0);
+//		p2.getLeader().setCurrentHP(0);
 		p2.getTeam().add(availableChampions.get(4));
 		p2.getTeam().add(availableChampions.get(5));
-		p2.getTeam().get(0).setCurrentHP(1);
-		p2.getTeam().get(1).setCurrentHP(1);
-		p2.getTeam().get(2).setCurrentHP(1);
+//		p2.getTeam().get(0).setCurrentHP(1);
+//		p2.getTeam().get(1).setCurrentHP(1);
+//		p2.getTeam().get(2).setCurrentHP(1);
 		MainGUI bla = new MainGUI(new Game( p1 , p2 ));
 		
 		
@@ -284,7 +285,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		current = new JPanel();
 		current.setBackground(new Color(53, 53, 53));
 		current.setPreferredSize(new Dimension(800, 300));
-		current.setLayout(null);
+		current.setLayout(null/*new FlowLayout(FlowLayout.LEFT,70,0)*/);
 		current.setVisible(true);
 		
 		
@@ -306,6 +307,28 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		bkg.setLayout(null);
 		bkg.setOpaque(false);
 		bkg.setBounds(0, 0, width, height);
+		
+		
+		currCharacter = new JPanel(new BorderLayout());
+		currCharacter.setOpaque(true);
+		currCharacter.setBackground(new Color(64,64,64));
+		currCharacter.setPreferredSize(new Dimension(400, 300));
+		currCharacter.setBounds(800, 0, 400, 300);
+		
+		currDetails = new JPanel(new BorderLayout());
+		currDetails.setOpaque(false);
+		currDetails.setPreferredSize(new Dimension(300, 300));
+		currCharacter.add(currDetails,BorderLayout.CENTER);
+		
+		health = new JPanel(null);
+		health.setOpaque(false);
+		health.setPreferredSize(new Dimension(300, 130));
+		currDetails.add(health,BorderLayout.NORTH);
+		
+		actionpointspane = new JPanel(new FlowLayout(FlowLayout.LEFT, 50, 10));
+		actionpointspane.setOpaque(false);
+		actionpointspane.setPreferredSize(new Dimension(300, 150));
+		currDetails.add(actionpointspane,BorderLayout.CENTER);
 		
 		
 		game.add(current, BorderLayout.SOUTH);
@@ -437,6 +460,51 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		charc.add(redteam);
 		charc.add(blueteam);
 		
+		currCHpic= new JLabel();
+		currCHpic.setPreferredSize(new Dimension(100,300));
+		selectScreen.setIcon(currCHpic,"icons/"+G.getCurrentChampion().getName()+"CH.png",100,230);
+		currCharacter.add(currCHpic,BorderLayout.WEST);
+		
+		JLabel healthhhh = new JLabel("Health:");
+		healthhhh.setBounds(10, 5, 140, 20);
+		healthhhh.setForeground(Color.WHITE);
+		healthhhh.setFont(new Font("Agency FB", Font.BOLD, (int)(((20)*width)/1920)));
+		health.add(healthhhh);
+		
+		healthframe = new JLabel();
+		healthframe.setBounds(10,30, 280, 80);
+		healthframe.setBorder(BorderFactory.createLineBorder(Color.WHITE,4 ));
+		health.add(healthframe);
+		
+		healthbar = new JLabel();
+		healthbar.setBounds(10+15,30+10, 250, 60);	
+		healthbar.setText("100"+"% ("+G.getCurrentChampion().getCurrentHP()+" hp)");
+		healthbar.setHorizontalTextPosition(JLabel.RIGHT);
+		healthbar.setFont(new Font("Agency FB", Font.BOLD, (int)(((20)*width)/1920)));
+		healthbar.setOpaque(true);
+		healthbar.setBackground(Color.RED);
+		health.add(healthbar);
+		
+		currentActionPts = new JLabel("Action Points Left: "+ G.getCurrentChampion().getCurrentActionPoints());
+		currentActionPts.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		currentActionPts.setForeground(Color.WHITE);
+		actionpointspane.add(currentActionPts);
+		
+		manaLeft = new JLabel("Mana Left: "+ G.getCurrentChampion().getMana());
+		manaLeft.setFont(new Font("Agency FB", Font.BOLD, (int)(((25)*width)/1920)));
+		manaLeft.setForeground(Color.WHITE);
+		actionpointspane.add(manaLeft);
+		
+		attackrange = new JLabel("Normal attack range: "+G.getCurrentChampion().getAttackRange()+", damage: "+G.getCurrentChampion().getAttackDamage());
+		attackrange.setFont(new Font("Agency FB", Font.BOLD, (int)(((20)*width)/1920)));
+		attackrange.setForeground(Color.LIGHT_GRAY);
+		actionpointspane.add(attackrange);
+		
+		currstate = new JLabel("State: "+G.getCurrentChampion().getCondition());
+		currstate.setFont(new Font("Agency FB", Font.BOLD, (int)(((20)*width)/1920)));
+		currstate.setForeground(Color.LIGHT_GRAY);
+		actionpointspane.add(currstate);
+		
 		for(int i =0;i<3;i++){
 			if(G.getFirstPlayer().getTeam().get(i) != G.getFirstPlayer().getLeader())
 				if(champ1.getIcon()==null){
@@ -500,6 +568,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		ability1stats = new JTextPane();
 		ability1stats.setText("Ability Details...");
 		ability1stats.setBounds(width-550*width/1920,0,500,300);
+		ability1stats.setPreferredSize(new Dimension(500,300));
 		ability1stats.setFont(new Font("Agency FB", Font.BOLD, 25));
 		ability1stats.setBackground(new Color(74, 74, 74));
 		ability1stats.setForeground(Color.WHITE);
@@ -508,15 +577,21 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		ability1stats.setEditable(false);
+		
 		//System.out.println(getappEffects(G.getCurrentChampion()));
+		
 		applieff = new JTextArea(getappEffects(G.getCurrentChampion()));
 		applieff.setFont(new Font("Agency FB", Font.BOLD, 25));
 		applieff.setBackground(new Color(64,64,64));
 		applieff.setForeground(Color.WHITE);
 		applieff.setBounds(305, 0, 300, 300);
+		applieff.setPreferredSize(new Dimension(300,300));
+		applieff.setEditable(false);
+		
 		stats1 = new JTextPane();
 		stats1.setText("Current Champion Stats:");
 		stats1.setBounds(0,0,300,300);
+		stats1.setPreferredSize(new Dimension(300,300));
 		stats1.setFont(new Font("Agency FB", Font.BOLD, 24));
 		stats1.setBackground(new Color(64,64,64));
 		stats1.setForeground(Color.WHITE);
@@ -536,8 +611,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 //		leaderab2.setForeground(Color.WHITE);
 		
 		current.add(stats1);
-		current.add(ability1stats);
 		current.add(applieff);
+		current.add(currCharacter);
+		current.add(ability1stats);
 		//current.add(leaderab1);
 		//current.add(leaderab2);
 		
@@ -709,6 +785,15 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		useleaderab.addActionListener(this);
 		
 		
+		JButton pause = new JButton("<html>"+"Pause"+"<br>"+ "(shift+P)"+ "</html>");
+		pause.setBackground(new Color(100,64,64));
+		pause.setFont(new Font("Agency FB", Font.BOLD, (int)(((20)*width)/1920)));
+		pause.setFocusable(false);
+		pause.setForeground(Color.LIGHT_GRAY);
+		pause.setPreferredSize(new Dimension(80,50));
+		pause.setBounds(1250, 20, 80, 50);
+		current.add(pause);
+		pause.addActionListener(new ActionListener() { @Override public void actionPerformed(ActionEvent e) {pauseGame();}});
 		
 		
 		Gridbuttons = new JLabel[5][5];
@@ -737,7 +822,10 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 				main.add(Gridbuttons[i][j]);
 			}
 		
+		
+//============================================VISIBILITY AND OTHER SETTINGS========================================================
 
+		
 		main.setOpaque(true);
 		main.setBackground(new Color(0,0,0,0));
 		if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
@@ -777,9 +865,9 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 
 
 		timer1 = new Timer(1, al);
-		//timer.setInitialDelay(500);
-		timer1.start();
-
+		//timer1.setInitialDelay(500);
+		//timer1.start();
+		//pauseGame();
 	}
 
 
@@ -1406,6 +1494,19 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		if(e.getSource()==confirmleaderab && leaderClicked){
 			try {
 				G.useLeaderAbility();
+				if(G.getCurrentChampion() instanceof Villain)
+					if(G.getFirstPlayer().getTeam().contains(G.getCurrentChampion())){
+						ArrayList<Damageable> d = new ArrayList<>();
+						for(int i=0;i<G.getSecondPlayer().getTeam().size();i++)
+							d.add(G.getSecondPlayer().getTeam().get(i));
+						cleanGrid(d);
+						}
+					else{
+						ArrayList<Damageable> d = new ArrayList<>();
+						for(int i=0;i<G.getFirstPlayer().getTeam().size();i++)
+							d.add(G.getFirstPlayer().getTeam().get(i));
+						cleanGrid(d);
+					}
 				ability1stats.setText("Leader Ability Used");
 				resetbuttons();
 				clearHighlight();
@@ -1465,6 +1566,7 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	if(e.getSource() == endturn){
 		G.endTurn();
 		turnOrderSetText();
+		selectScreen.setIcon(currCHpic,"icons/"+G.getCurrentChampion().getName()+"CH.png",100,230);
 		if(G.getCurrentChampion() == G.getFirstPlayer().getLeader() || G.getCurrentChampion() == G.getSecondPlayer().getLeader())
 			useleaderab.setEnabled(true);
 		else
@@ -2346,8 +2448,25 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 					Gridbuttons[d.getLocation().x][d.getLocation().y].setIcon(	new ImageIcon(((((Champion)board[d.getLocation().x][d.getLocation().y])).getIcon().getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH))));
 				else if(board[d.getLocation().x][d.getLocation().y] instanceof Cover)
 					Gridbuttons[d.getLocation().x][d.getLocation().y].setIcon(new ImageIcon(((((Cover)board[d.getLocation().x][d.getLocation().y])).getIcon()).getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH)));
-				else
+				else{
 					Gridbuttons[d.getLocation().x][d.getLocation().y].setIcon(null);
+//					if(d instanceof Champion){
+//						JFrame f = new JFrame();
+//						f.setSize(width, height);
+//						f.setUndecorated(true);
+//						f.setBackground(new Color(0,0,0,0));
+//						f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//						f.setAlwaysOnTop(true);
+//						f.setOpacity(0.5f);
+//						JLabel l = new JLabel("K.O");
+//						l.setHorizontalAlignment(JLabel.CENTER);
+//						l.setHorizontalTextPosition(JLabel.CENTER);
+//						l.setFont(new Font("Agency FB", Font.BOLD, (int)(((200)*width)/1920)));
+//						l.setForeground(Color.LIGHT_GRAY);
+//						f.add(l,BorderLayout.CENTER);
+//						f.setVisible(true);
+//					}
+				}
 		}
 
 		gameframe.revalidate();
@@ -2361,6 +2480,15 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		Champion c = G.getCurrentChampion();
 		stats1.setText(getStats(c));	
 		
+	//health bar\\
+		healthbar.setBounds(10+15,30+10, (int)( ( 250*c.getCurrentHP() )/c.getMaxHP() ), 60);	
+		healthbar.setText((int)( ( 100*c.getCurrentHP() )/c.getMaxHP() )+"% ("+G.getCurrentChampion().getCurrentHP()+" hp)");
+	
+	//Current details(action points, attack, condition)\\
+		currentActionPts .setText("Action Points Left: "+ G.getCurrentChampion().getCurrentActionPoints());
+		manaLeft.setText("Mana Left: "+ G.getCurrentChampion().getMana());
+		attackrange.setText("Normal attack range: "+G.getCurrentChampion().getAttackRange()+", damage: "+G.getCurrentChampion().getAttackDamage());
+		currstate.setText("State: "+G.getCurrentChampion().getCondition());
 	//Grid Stats Update
 		
 		for(int i=0; i<5; i++)
@@ -2406,12 +2534,13 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 			type = "Antihero";
 		ret= ("Name: "+c.getName()+'\n'
 				+"HP: "+c.getCurrentHP()+'\n'
+				+"Max HP: "+c.getMaxHP()+'\n'
 				+"Mana: "+c.getMana()+'\n'
 				+"Speed: "+c.getSpeed()+'\n'
-				+"Action Points: "+c.getCurrentActionPoints()+'\n'
+				/*+"Action Points: "+c.getCurrentActionPoints()+'\n'*/
 				+"Type: "+type+'\n'
-				+"Normal Attack Damage: "+ c.getAttackDamage()+'\n'
-				+"Maximum Range: " + c.getAttackRange()+'\n'
+				/*+"Normal Attack Damage: "+ c.getAttackDamage()+'\n'
+				+"Maximum Range: " + c.getAttackRange()+'\n'*/
 				+"Current State: "+ c.getCondition());	
 		
 		if(c == G.getCurrentChampion())
@@ -2564,9 +2693,14 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 		// TODO Auto-generated method stub
 		if(k.getKeyCode() == KeyEvent.VK_ESCAPE)
 			confirmExitMessage();
+		if(k.getKeyCode() == KeyEvent.VK_SHIFT)
+			shiftkey=true;
+		if(k.getKeyCode() == KeyEvent.VK_P)
+			if(shiftkey)
+				pauseGame();
 	}
 
-	@Override public void keyReleased(KeyEvent arg0) { }
+	@Override public void keyReleased(KeyEvent k) {if(k.getKeyCode() == KeyEvent.VK_SHIFT)   shiftkey=false; }
 	@Override public void keyTyped(KeyEvent k) { }
 	
 	@Override public void windowActivated(WindowEvent arg0) { }
@@ -2579,6 +2713,138 @@ public class MainGUI implements ActionListener, MouseInputListener, ListSelectio
 	@Override public void windowClosing(WindowEvent e) {
 		gameframe.setExtendedState(JFrame.NORMAL);
 		confirmExitMessage();
+	}
+	
+	public void pauseGame(){
+		
+		JFrame pause = new JFrame();
+		//pause.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pause.setIconImage(icon.getImage());
+		pause.setAlwaysOnTop(true);
+		pause.setUndecorated(true);
+		pause.setSize(width, height);
+		pause.setBackground(Color.DARK_GRAY);
+		pause.setOpacity(0.9f);
+		
+		JLabel bkg = new JLabel();
+		selectScreen.setIcon(bkg,"icons/PauseMenu.png",(int)(((1024*1.5)*width)/1920),(int)(((768*1.5)*width)/1920));
+		bkg.setHorizontalAlignment(JLabel.CENTER);
+		pause.add(bkg,BorderLayout.CENTER);
+		
+		pause.setContentPane(bkg);
+		pause.getContentPane().setLayout(null);
+		
+		JButton music = new JButton();
+		if(!audio.isPlaying()) /*then*/ music.setText("/");
+		music.setFont(new Font("", Font.PLAIN, (int)(((50)*width)/1920)));
+		music.setForeground(Color.RED);
+		music.setFocusable(false);
+		music.setHorizontalTextPosition(JLabel.CENTER);
+		music.setBackground(new Color(35, 65, 93 ));
+		music.setBorder(BorderFactory.createLineBorder(new Color(30, 125, 192), 3));
+		music.setBounds(width/2-25, (int)(((750)*width)/1920), 50, 50);
+		selectScreen.setIcon(music, "icons/music.png", 30, 30);
+		pause.add(music);
+		music.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(audio.isPlaying()){
+					audio.pause();
+					music.setText("/");
+				}else{
+					audio.play();
+					music.setText("");
+				}
+				
+			}
+		});
+		
+		
+		JButton resume = new JButton("Resume");
+		resume.setBackground(new Color(0,0,0,0));
+		resume.setOpaque(false);
+		resume.setBorder(null);
+		resume.setFocusable(false);
+		selectScreen.setIcon(resume,"icons/PauseMenuButton.png",299, 72);
+		resume.setBounds(width/2-149,(int)(((400)*height)/1080),310,80);
+		resume.setForeground(Color.WHITE);
+		resume.setHorizontalTextPosition(JLabel.CENTER);
+		resume.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		resume.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {pause.dispatchEvent(new WindowEvent(pause, WindowEvent.WINDOW_CLOSING));	}});
+		pause.add(resume);
+		
+		JButton quit = new JButton("Quit Game");
+		quit.setBackground(new Color(0,0,0,0));
+		quit.setOpaque(false);
+		quit.setBorder(null);
+		quit.setFocusable(false);
+		selectScreen.setIcon(quit,"icons/PauseMenuButton.png",299, 72);
+		quit.setBounds(width/2-149,(int)(((600)*height)/1080),310,80);
+		quit.setForeground(Color.WHITE);
+		quit.setHorizontalTextPosition(JLabel.CENTER);
+		quit.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		quit.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {gameframe.dispatchEvent(new WindowEvent(gameframe, WindowEvent.WINDOW_CLOSING));	}});
+		pause.add(quit);
+		
+		JButton howtoplay = new JButton("How to play?");
+		howtoplay.setBackground(new Color(0,0,0,0));
+		howtoplay.setOpaque(false);
+		howtoplay.setBorder(null);
+		howtoplay.setFocusable(false);
+		selectScreen.setIcon(howtoplay,"icons/PauseMenuButton.png",299, 72);
+		howtoplay.setBounds(width/2-149,(int)(((500)*height)/1080),310,80);
+		howtoplay.setForeground(Color.WHITE);
+		howtoplay.setHorizontalTextPosition(JLabel.CENTER);
+		howtoplay.setFont(new Font("Agency FB", Font.BOLD, (int)(((30)*width)/1920)));
+		howtoplay.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				howtoplay.setVisible(false);
+				quit.setVisible(false);
+				music.setVisible(false);
+				//resume
+				selectScreen.setIcon(bkg,"icons/PauseMenu.png",(int)(((1024*4)*width)/1920),(int)(((768*2)*width)/1920));
+		
+				JTextPane tutorial = new JTextPane();
+				tutorial.setBounds(width/2-460,(int)(((220)*width)/1920),(int)(((900)*width)/1920),(int)(((750)*width)/1920));
+				tutorial.setPreferredSize(new Dimension(900,750));
+				tutorial.setFont(new Font("Agency FB", Font.BOLD, (int)(((21)*width)/1920)));
+				tutorial.setBackground(null);
+				tutorial.setOpaque(false);
+				tutorial.setForeground(Color.WHITE);
+				StyledDocument doc = tutorial.getStyledDocument();				//Don't mind these here
+				SimpleAttributeSet center = new SimpleAttributeSet();
+				StyleConstants.setAlignment(center, StyleConstants.ALIGN_LEFT);
+				doc.setParagraphAttributes(0, doc.getLength(), center, false);
+				tutorial.setEditable(false);
+				tutorial.setText("----------------------Welcome to our game!----------------------"+'\n'+'\n'
++"The players take turns to fight the other player’s champions. During the battle, each player will use his champions to attack the opponent champions either by using normal attacks or using special attacks/abilities. The battle takes place on a 5x5 grid.Each cell in the grid can either be empty, or contain a champion or obstacle/cover(rocks). The turns will keep going back and forth until a player is able to defeat all of the other player’s champions which will make him the winner of the battle."+'\n'
++"-How to achieve this?"+'\n'
++"Every character has his own Attack range & damage in addition to his 3 Abilities. Moving, normal attacks or abilities requires action points, however abilities need additional Mana to be casted. Every Ability has its own maximum castrange, damage and AREA."+'\n' 
++"-> Areas has 5 types:"+'\n'
++"*SURROUND area of effect can only affect specific points (if possible) on the board regardless of the cast range of the ability, which are the 8 cells surrounding the Champion."+'\n'
++"*DIRECTIONAL area of effect, the palyer is prompted to choose a direction, and it can affect all target in the chosen direction and within castrange."+'\n'
++"*SELFTARGET area of effect affects the champion only (by healing etc...)."+'\n'
++"*SINGLETARGET, the player may choose any target on the board [within his castrange with counting total cells between champion and target]."+'\n'
++"*TEAMTARGET area of effect depends on the type, in which; 'Damaging Abilities' affects all opponent team, 'Healing Abilities' affects all the allies (current) team,  'CrowdControl Ability' applies an effect on targets for a number of turns (effects can be negative and positive same as damaging and healing abilities). All TEAMTARGET abilities are applied regardless of location and range of the targets."
++'\n'
++"-All Abilities have a cooldown rate for a specific number of turns, that a specific ability cannot be used until its cooldown reaches Zero again."+'\n'
++'\n'+"->Leader of each team has a special Leader Ability which can be only used once throughout the game, and there is a status to indicate whether it's used or not. Leader abilities depends on the type of the leader champion; a Hero, Anti-Hero or a Villain (details will be shown in the game)."+'\n'
++"-Stats of the current champion are always showed in the bottom of the screen, and whenever you want to see the stats of any other player just move the mouse over him."+'\n'
++"-Further assistance and details will be shown throughout the game regarding Abilities, range, areas, etc..."
++'\n'+'\n'+"--------HAVE FUN!!--------");
+				pause.add(tutorial);
+						
+				resume.setBounds((int)(((width/2+450-320)*width)/1920),(int)(((200+750-90)*height)/1080),310,80);
+				
+				}});
+		pause.add(howtoplay);
+		
+		
+		pause.setVisible(true);
+		pause.validate();
 	}
 	
 	

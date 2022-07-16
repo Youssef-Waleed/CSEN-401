@@ -83,7 +83,7 @@ private boolean playing=false;
 		"LET ME TAKE THIS OPPORTUNITY TO PRESENT YOU THE PEOPLE"+'\n'+ "THAT WERE WORKING BEHIND THE SCENES"+'\n'+'\n'
 		+'\n'+ "This game was presented to you by the Developers..."+'\n'+ '\n'+'\n'
 					+ "Youssef Walid Ibrahim"+'\n'+ '\n'+ "Mohamed Ayman Tammaa"+'\n'+'\n'
-					+ ",and the great to the end,"+'\n'+"Mahmoud Gamal (The Greek-Kopis)"+'\n' +'\n'+'\n'+'\n'
+					+ "& Mahmoud Gamal"+'\n' +'\n'+'\n'+'\n'
 					+ "We would like to thank our sponsors and the respective Copyright Holders"+'\n'+ " "+(char)169+"Marvel & "+(char)169+ "StarWars"+
 					'\n'+'\n'+'\n'+'\n'+'\n'+ ((char)169)+"TEAM-177_ULTIMATE WAR 2022"+'\n'+ '\n'+ "THANK YOU!");
 		
@@ -159,7 +159,7 @@ private boolean playing=false;
 		timer.start();
 	}
 	public static void main(String[]args){
-		Player test = new Player("Mohaaaaaaaaameeeeeeeeeedd el Gamed awy");
+		Player test = new Player("Mohamed");
 		winnerwinnerChickenDinner w = new winnerwinnerChickenDinner(test);
 	}
 

@@ -606,10 +606,15 @@ public class Game {
 		turnOrder.remove();
 		if (turnOrder.isEmpty())
 			prepareChampionTurns();
-		while (!turnOrder.isEmpty() && hasEffect((Champion) turnOrder.peekMin(), "Stun")) {
-			Champion current = (Champion) turnOrder.peekMin();
-			updateTimers(current);
-			turnOrder.remove();
+		while (true) {
+			if(!turnOrder.isEmpty()){
+				if(hasEffect((Champion) turnOrder.peekMin(), "Stun")){
+					Champion current = (Champion) turnOrder.peekMin();
+					updateTimers(current);
+					turnOrder.remove();
+				}else 	break;
+			}else
+				prepareChampionTurns();
 		}
 		Champion current = (Champion) turnOrder.peekMin();
 		updateTimers(current);
